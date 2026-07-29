@@ -1,0 +1,26 @@
+# IMAGECAROUSEL
+
+Similar to [SLIDER](slider.md), but a flat horizontally-scrolling row of
+individual images (not paged), optionally over a background image. Slides
+are fetched by `id` via `SerBuilderCallbacks.fetchSlides`.
+
+```json
+{
+  "type": "IMAGECAROUSEL",
+  "params": {
+    "id": 2,
+    "height_percent": 0.3,
+    "item_count": 2,
+    "bg_image": "https://.../background.jpg"
+  }
+}
+```
+
+- `height_percent` — row height as a fraction of width.
+- `item_count` — how many items are visible at once; each item's width is
+  computed from this so more items = narrower items (default `2`).
+- `bg_image` — optional background image behind the row; omit or leave
+  empty for no background.
+
+No `zoom`/`modal` handling here (unlike SLIDER) — every tap goes through the
+default [action resolver](action-contract.md).
