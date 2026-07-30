@@ -1,4 +1,4 @@
-# serenay_ecommerce_widgets
+# mobile_ecommerce_widgets
 
 A dynamic widget system, **SerBuilder**, that renders e-commerce
 home/category screens from a backend-driven JSON payload. For the full
@@ -9,8 +9,8 @@ examples — see [docs/widgets/](docs/widgets/README.md).
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets:
-    path: ../serenay_ecommerce_widgets # or a pub.dev version
+  mobile_ecommerce_widgets:
+    path: ../mobile_ecommerce_widgets # or a pub.dev version
 ```
 
 ## Quick start

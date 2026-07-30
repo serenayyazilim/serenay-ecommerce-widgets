@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'serenay_ecommerce_widgets.dart';
+import 'mobile_ecommerce_widgets.dart';
 
 void main() {
   runApp(const DemoApp());
