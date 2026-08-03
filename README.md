@@ -1,4 +1,4 @@
-# mobile_ecommerce_widgets
+# serenay_ecommerce_widgets
 
 A dynamic widget system that renders e-commerce home/category screens from
 a backend-driven JSON payload. For the full widget catalog — one usage doc
@@ -9,7 +9,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  mobile_ecommerce_widgets: ^1.0.0
+  serenay_ecommerce_widgets: ^1.0.0
 ```
 
 ## Quick start

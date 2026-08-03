@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_ecommerce_widgets/mobile_ecommerce_widgets.dart';
+import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
 
 void main() {
   runApp(const DemoApp());

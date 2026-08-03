@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mobile_ecommerce_widgets/mobile_ecommerce_widgets.dart';
+import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
 
 WidgetCallbacks _callbacks({
   void Function(WidgetAction action)? onAction,

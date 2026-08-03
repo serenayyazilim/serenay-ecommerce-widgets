@@ -1,5 +1,5 @@
 name: example
-description: "Demo app for the mobile_ecommerce_widgets package."
+description: "Demo app for the serenay_ecommerce_widgets package."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -12,7 +12,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
-  mobile_ecommerce_widgets:
+  serenay_ecommerce_widgets:
     path: ../
 
 dev_dependencies:

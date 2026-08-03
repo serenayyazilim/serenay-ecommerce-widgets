@@ -1,6 +1,6 @@
 {
-    "name": "mobile_ecommerce_widgets",
-    "short_name": "mobile_ecommerce_widgets",
+    "name": "serenay_ecommerce_widgets",
+    "short_name": "serenay_ecommerce_widgets",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
