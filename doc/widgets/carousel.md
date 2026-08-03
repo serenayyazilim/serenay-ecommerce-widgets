@@ -13,7 +13,7 @@ slider, favorite heart, discount badge, variant picker — see
 ```
 
 `params` is passed straight to `ProductQuery.fromParams`, then
-`SerBuilderCallbacks.fetchProducts(query)` supplies the products. Renders
+`WidgetCallbacks.fetchProducts(query)` supplies the products. Renders
 nothing while loading resolves to an empty list.
 
 CAROUSEL, [GRID](grid.md), [PRODUCTCARD](product-card.md) and

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_action.dart';
-import '../../contracts/ser_slide_item.dart';
-import 'ser_network_image.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/widget_action.dart';
+import '../../contracts/slide_item.dart';
+import 'catalog_network_image.dart';
 
 /// SLIDER: a scrollable image slider whose slides are fetched by [id].
 /// Slides follow the shared tap contract, plus two slider-only targets:
 /// `zoom` (full-screen pinch-zoom gallery) and `modal` (fetch popup content
 /// and show it in a bottom sheet).
-class SerSliderWidget extends StatefulWidget {
-  const SerSliderWidget({
+class SliderWidget extends StatefulWidget {
+  const SliderWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerSliderWidget> createState() => _SerSliderWidgetState();
+  State<SliderWidget> createState() => _SerSliderWidgetState();
 }
 
-class _SerSliderWidgetState extends State<SerSliderWidget> {
-  late final Future<List<SerSlideItem>> _future = _load();
+class _SerSliderWidgetState extends State<SliderWidget> {
+  late final Future<List<SlideItem>> _future = _load();
   final _pageController = PageController();
   int _currentPage = 0;
 
@@ -34,17 +34,17 @@ class _SerSliderWidgetState extends State<SerSliderWidget> {
     super.dispose();
   }
 
-  Future<List<SerSlideItem>> _load() {
+  Future<List<SlideItem>> _load() {
     final id = widget.params['id'];
     final fetch = widget.callbacks.fetchSlides;
     if (id == null || fetch == null) return Future.value(const []);
     return fetch(id);
   }
 
-  void _handleTap(List<SerSlideItem> slides, int index) {
+  void _handleTap(List<SlideItem> slides, int index) {
     final action = slides[index].action;
     switch (action.type) {
-      case SerActionType.zoom:
+      case WidgetActionType.zoom:
         showDialog(
           context: context,
           builder: (context) => _ZoomGallery(
@@ -53,14 +53,14 @@ class _SerSliderWidgetState extends State<SerSliderWidget> {
           ),
         );
         break;
-      case SerActionType.modal:
+      case WidgetActionType.modal:
         final fetchModal = widget.callbacks.fetchModal;
         if (fetchModal == null) return;
         fetchModal(action.id).then((image) {
           if (!mounted || image == null) return;
           showModalBottomSheet(
             context: context,
-            builder: (context) => SerNetworkImage(url: image),
+            builder: (context) => CatalogNetworkImage(url: image),
           );
         });
         break;
@@ -75,7 +75,7 @@ class _SerSliderWidgetState extends State<SerSliderWidget> {
     final paddingH = (widget.params['padding_horizontal'] as num?)?.toDouble() ?? 0.0;
     final paddingV = (widget.params['padding_vertical'] as num?)?.toDouble() ?? 0.0;
 
-    return FutureBuilder<List<SerSlideItem>>(
+    return FutureBuilder<List<SlideItem>>(
       future: _future,
       builder: (context, snapshot) {
         final slides = snapshot.data ?? const [];
@@ -99,7 +99,7 @@ class _SerSliderWidgetState extends State<SerSliderWidget> {
                       itemCount: slides.length,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () => _handleTap(slides, index),
-                        child: SerNetworkImage(url: slides[index].image),
+                        child: CatalogNetworkImage(url: slides[index].image),
                       ),
                     ),
                   ),
@@ -146,7 +146,7 @@ class _ZoomGallery extends StatelessWidget {
         controller: PageController(initialPage: initialIndex),
         itemCount: images.length,
         itemBuilder: (context, index) => InteractiveViewer(
-          child: SerNetworkImage(url: images[index], fit: BoxFit.contain),
+          child: CatalogNetworkImage(url: images[index], fit: BoxFit.contain),
         ),
       ),
     );

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import 'image_widget.dart';
 
 /// IMAGELIST: several IMAGE widgets laid out side by side, each taking an
 /// equal share of the row's width.
-class SerImageListWidget extends StatelessWidget {
-  const SerImageListWidget({
+class ImageListWidget extends StatelessWidget {
+  const ImageListWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class SerImageListWidget extends StatelessWidget {
           .whereType<Map>()
           .map(
             (item) => Expanded(
-              child: SerImageWidget(
+              child: ImageWidget(
                 params: Map<String, dynamic>.from(item),
                 callbacks: callbacks,
               ),

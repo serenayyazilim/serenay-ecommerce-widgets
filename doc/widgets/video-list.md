@@ -1,7 +1,7 @@
 # VIDEOLIST
 
 One or more silent, looping, auto-playing videos fetched by `id` via
-`SerBuilderCallbacks.fetchVideos`, which returns a list of `SerVideoItem`
+`WidgetCallbacks.fetchVideos`, which returns a list of `VideoItem`
 (`video` URL, [action](action-contract.md), optional `title`/`subtitle`).
 
 ```json

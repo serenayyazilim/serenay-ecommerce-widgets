@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
-import '../../contracts/ser_action.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_colors.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// A plain image/title/price tile with no favorite heart or variant picker —
 /// used by MIXEDCAROUSEL's mini 2x2 product grid, which only needs to show
@@ -18,7 +18,7 @@ class MiniProductTile extends StatelessWidget {
   });
 
   final ProductCardData data;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
   final double? imageSize;
 
   String _currencySymbol(String currency) {
@@ -90,14 +90,14 @@ class MiniProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => callbacks.onAction(SerAction(type: SerActionType.product, id: data.id)),
+      onTap: () => callbacks.onAction(WidgetAction(type: WidgetActionType.product, id: data.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: SerNetworkImage(url: data.image, width: imageSize, height: imageSize),
+            child: CatalogNetworkImage(url: data.image, width: imageSize, height: imageSize),
           ),
           const SizedBox(height: 6),
           if (data.title.isNotEmpty) ...[

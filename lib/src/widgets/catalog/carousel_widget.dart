@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import 'rich_product_card.dart';
@@ -8,21 +8,21 @@ import 'rich_product_card.dart';
 /// CAROUSEL: a horizontally-scrolling row of the shared rich product card,
 /// backed by the shared product-query contract (§1.4 of the widget catalog
 /// doc).
-class SerCarouselWidget extends StatefulWidget {
-  const SerCarouselWidget({
+class CarouselWidget extends StatefulWidget {
+  const CarouselWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerCarouselWidget> createState() => _SerCarouselWidgetState();
+  State<CarouselWidget> createState() => _SerCarouselWidgetState();
 }
 
-class _SerCarouselWidgetState extends State<SerCarouselWidget> {
+class _SerCarouselWidgetState extends State<CarouselWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
 

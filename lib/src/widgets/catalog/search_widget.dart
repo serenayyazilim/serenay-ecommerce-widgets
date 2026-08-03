@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_action.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_colors.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// SEARCH: a full-width background image with a floating, editable search
 /// bar near the bottom and a separate "Search" button that navigates with
 /// whatever text was typed.
-class SerSearchWidget extends StatefulWidget {
-  const SerSearchWidget({
+class SearchWidget extends StatefulWidget {
+  const SearchWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerSearchWidget> createState() => _SerSearchWidgetState();
+  State<SearchWidget> createState() => _SerSearchWidgetState();
 }
 
-class _SerSearchWidgetState extends State<SerSearchWidget> {
+class _SerSearchWidgetState extends State<SearchWidget> {
   final _controller = TextEditingController();
 
   @override
@@ -33,7 +33,7 @@ class _SerSearchWidgetState extends State<SerSearchWidget> {
 
   void _submit() {
     widget.callbacks.onAction(
-      SerAction(type: SerActionType.search, searchText: _controller.text),
+      WidgetAction(type: WidgetActionType.search, searchText: _controller.text),
     );
   }
 
@@ -52,7 +52,7 @@ class _SerSearchWidgetState extends State<SerSearchWidget> {
           children: [
             SizedBox(
               width: width,
-              child: SerNetworkImage(url: url, height: width * heightPercent),
+              child: CatalogNetworkImage(url: url, height: width * heightPercent),
             ),
             Positioned(
               bottom: bottom.toDouble(),

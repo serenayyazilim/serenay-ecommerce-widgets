@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// TIMEIMAGE: a banner image with an optional "countdown to date" overlay —
 /// a title plus boxed day/hour/minute/second fields, positioned via
 /// `position_top`/`position_bottom`/`position_left`/`position_right` (or a
 /// nested `position` map) and aligned left/right via `title_position`.
-class SerTimeImageWidget extends StatefulWidget {
-  const SerTimeImageWidget({super.key, required this.params});
+class TimeImageWidget extends StatefulWidget {
+  const TimeImageWidget({super.key, required this.params});
 
   final Map<String, dynamic> params;
 
   @override
-  State<SerTimeImageWidget> createState() => _SerTimeImageWidgetState();
+  State<TimeImageWidget> createState() => _SerTimeImageWidgetState();
 }
 
-class _SerTimeImageWidgetState extends State<SerTimeImageWidget> {
+class _SerTimeImageWidgetState extends State<TimeImageWidget> {
   Timer? _ticker;
   DateTime? _target;
   bool _active = false;
@@ -74,7 +74,7 @@ class _SerTimeImageWidgetState extends State<SerTimeImageWidget> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          SerNetworkImage(url: url),
+          CatalogNetworkImage(url: url),
           if (_active) _buildOverlay(),
         ],
       ),

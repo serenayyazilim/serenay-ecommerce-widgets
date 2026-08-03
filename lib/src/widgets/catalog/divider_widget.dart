@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 /// DIVIDER: pure vertical spacing between widgets.
-class SerDividerWidget extends StatelessWidget {
-  const SerDividerWidget({super.key, required this.params});
+class DividerWidget extends StatelessWidget {
+  const DividerWidget({super.key, required this.params});
 
   final Map<String, dynamic> params;
 

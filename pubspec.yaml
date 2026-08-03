@@ -5,9 +5,6 @@ description: >-
   more from a JSON payload, with navigation/data/cart injected by the host
   app.
 version: 1.0.0
-homepage: https://github.com/serenayyazilim/mobile-ecommerce-widgets
-repository: https://github.com/serenayyazilim/mobile-ecommerce-widgets
-issue_tracker: https://github.com/serenayyazilim/mobile-ecommerce-widgets/issues
 topics:
   - widgets
   - ecommerce

@@ -1,9 +1,9 @@
 # mobile_ecommerce_widgets
 
-A dynamic widget system, **SerBuilder**, that renders e-commerce
-home/category screens from a backend-driven JSON payload. For the full
-widget catalog — one usage doc per widget type, with JSON schemas and
-examples — see [doc/widgets/](doc/widgets/README.md).
+A dynamic widget system that renders e-commerce home/category screens from
+a backend-driven JSON payload. For the full widget catalog — one usage doc
+per widget type, with JSON schemas and examples — see
+[doc/widgets/](doc/widgets/README.md).
 
 ## Installation
 
@@ -15,10 +15,10 @@ dependencies:
 ## Quick start
 
 The package is backend-agnostic: navigation, data fetching, and auth/cart
-state are all injected from the host app through `SerBuilderCallbacks`.
+state are all injected from the host app through `WidgetCallbacks`.
 
 ```dart
-final callbacks = SerBuilderCallbacks(
+final callbacks = WidgetCallbacks(
   onAction: (action) {
     // Navigate based on action.type (category, product, collection, ...).
   },
@@ -30,12 +30,12 @@ final callbacks = SerBuilderCallbacks(
 );
 
 final screenJson = await myApi.fetchScreen(); // { "data": [ ... ] }
-final data = SerWidgets.fromJson(screenJson);
+final data = WidgetCatalog.fromJson(screenJson);
 
-ListView(children: SerWidgets.getScreen(data: data, callbacks: callbacks));
+ListView(children: WidgetCatalog.getScreen(data: data, callbacks: callbacks));
 ```
 
-Only `onAction` and `fetchProducts` are required on `SerBuilderCallbacks`;
+Only `onAction` and `fetchProducts` are required on `WidgetCallbacks`;
 callbacks for widget types you don't use (`fetchVideos`, `fetchModal`,
 `visitedProducts`, ...) can be left unset — the corresponding widget just
 hides itself when no data comes back, it never crashes.

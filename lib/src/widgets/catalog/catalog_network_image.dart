@@ -4,10 +4,10 @@ import '../../core/constants/app_colors.dart';
 
 /// A network image that falls back to a placeholder icon instead of
 /// crashing/erroring when it fails to load — the graceful-degradation
-/// pattern every SerBuilder widget follows for images (§2 of the widget
+/// pattern every backend-driven widget follows for images (§2 of the widget
 /// catalog doc).
-class SerNetworkImage extends StatelessWidget {
-  const SerNetworkImage({
+class CatalogNetworkImage extends StatelessWidget {
+  const CatalogNetworkImage({
     super.key,
     required this.url,
     this.height,

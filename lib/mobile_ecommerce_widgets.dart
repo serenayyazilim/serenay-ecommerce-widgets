@@ -1,5 +1,5 @@
-/// SerBuilder: a backend-driven dynamic widget system for e-commerce home
-/// screens. Feed it a backend JSON response and a [SerBuilderCallbacks]
+/// A backend-driven dynamic widget system for e-commerce home screens. Feed
+/// it a backend JSON response and a [WidgetCallbacks]
 /// implementation; it renders the screen and delegates every navigation,
 /// data-fetch and auth/cart decision back to the host app.
 library;
@@ -12,14 +12,14 @@ export 'src/core/theme/app_text_styles.dart';
 // Data contracts
 export 'src/contracts/product_card_data.dart';
 export 'src/contracts/product_query.dart';
-export 'src/contracts/ser_action.dart';
-export 'src/contracts/ser_slide_item.dart';
-export 'src/contracts/ser_video_item.dart';
-export 'src/contracts/ser_widget_data.dart';
-export 'src/contracts/ser_widget_type.dart';
+export 'src/contracts/widget_action.dart';
+export 'src/contracts/slide_item.dart';
+export 'src/contracts/video_item.dart';
+export 'src/contracts/widget_entry.dart';
+export 'src/contracts/widget_type.dart';
 
 // Injection layer
-export 'src/callbacks/ser_builder_callbacks.dart';
+export 'src/callbacks/widget_callbacks.dart';
 
 // Entry point
-export 'src/widgets/ser_widgets.dart';
+export 'src/widgets/widget_catalog.dart';

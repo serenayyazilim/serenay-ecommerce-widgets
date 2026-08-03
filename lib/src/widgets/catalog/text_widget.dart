@@ -5,8 +5,8 @@ import '../../core/constants/app_dimens.dart';
 
 /// TEXT: a simple or compound text block with three visual styles
 /// (`default`, `section`, `banner_text` — §2 of the widget catalog doc).
-class SerTextWidget extends StatelessWidget {
-  const SerTextWidget({super.key, required this.params});
+class TextWidget extends StatelessWidget {
+  const TextWidget({super.key, required this.params});
 
   final Map<String, dynamic> params;
 

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_action.dart';
-import 'ser_network_image.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/widget_action.dart';
+import 'catalog_network_image.dart';
 
 /// IMAGE: a tappable single banner image following the shared tap contract
 /// (§1.3 of the widget catalog doc). Hides itself when its target is
 /// LOGIN/REGISTER and the user is already logged in.
-class SerImageWidget extends StatelessWidget {
-  const SerImageWidget({
+class ImageWidget extends StatelessWidget {
+  const ImageWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   Widget build(BuildContext context) {
-    final action = SerAction.fromParams(params);
+    final action = WidgetAction.fromParams(params);
     final isAuthShortcut =
-        action.type == SerActionType.login || action.type == SerActionType.register;
+        action.type == WidgetActionType.login || action.type == WidgetActionType.register;
     if (isAuthShortcut && (callbacks.isLoggedIn?.call() ?? false)) {
       return const SizedBox();
     }
@@ -38,7 +38,7 @@ class SerImageWidget extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final width = constraints.maxWidth;
-            return SerNetworkImage(
+            return CatalogNetworkImage(
               url: url,
               width: width,
               height: heightPercent != null ? width * heightPercent : null,

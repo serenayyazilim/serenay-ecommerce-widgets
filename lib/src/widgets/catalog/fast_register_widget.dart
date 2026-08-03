@@ -6,16 +6,16 @@ import 'package:url_launcher/url_launcher.dart';
 /// country code + phone field and a "Send" button that opens a WhatsApp
 /// chat. `params` is currently unused — reserved by the backend contract for
 /// future configuration.
-class SerFastRegisterWidget extends StatefulWidget {
-  const SerFastRegisterWidget({super.key, required this.params});
+class FastRegisterWidget extends StatefulWidget {
+  const FastRegisterWidget({super.key, required this.params});
 
   final Map<String, dynamic> params;
 
   @override
-  State<SerFastRegisterWidget> createState() => _SerFastRegisterWidgetState();
+  State<FastRegisterWidget> createState() => _SerFastRegisterWidgetState();
 }
 
-class _SerFastRegisterWidgetState extends State<SerFastRegisterWidget> {
+class _SerFastRegisterWidgetState extends State<FastRegisterWidget> {
   static const _countryCodes = ['90', '1', '44', '49', '7'];
 
   String _countryCode = _countryCodes.first;

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_action.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// MODAL: shows an announcement/campaign popup automatically once per app
 /// session for a given `url`+`type`+`id` combination — not persisted, so it
 /// reappears on the next app launch. Occupies no layout space itself.
-class SerModalWidget extends StatefulWidget {
-  const SerModalWidget({
+class ModalWidget extends StatefulWidget {
+  const ModalWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerModalWidget> createState() => _SerModalWidgetState();
+  State<ModalWidget> createState() => _SerModalWidgetState();
 }
 
-class _SerModalWidgetState extends State<SerModalWidget> {
+class _SerModalWidgetState extends State<ModalWidget> {
   static final Set<String> _shownKeys = {};
 
   @override
@@ -39,7 +39,7 @@ class _SerModalWidgetState extends State<SerModalWidget> {
     final params = widget.params;
     final url = params['url'] as String? ?? '';
     final radius = ((params['radius'] as num?) ?? 16).toDouble();
-    final action = SerAction.fromParams(params);
+    final action = WidgetAction.fromParams(params);
 
     showDialog(
       context: context,
@@ -53,7 +53,7 @@ class _SerModalWidgetState extends State<SerModalWidget> {
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(radius),
-            child: SerNetworkImage(url: url),
+            child: CatalogNetworkImage(url: url),
           ),
         ),
       ),

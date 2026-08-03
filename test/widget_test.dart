@@ -3,21 +3,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mobile_ecommerce_widgets/mobile_ecommerce_widgets.dart';
 
-SerBuilderCallbacks _callbacks({
-  void Function(SerAction action)? onAction,
+WidgetCallbacks _callbacks({
+  void Function(WidgetAction action)? onAction,
   Future<List<ProductCardData>> Function(ProductQuery query)? fetchProducts,
 }) {
-  return SerBuilderCallbacks(
+  return WidgetCallbacks(
     onAction: onAction ?? (_) {},
     fetchProducts: fetchProducts ?? (_) async => const [],
   );
 }
 
 void main() {
-  testWidgets('SerWidgetData.listFromJson parses the backend {data: []} shape', (
+  testWidgets('WidgetEntry.listFromJson parses the backend {data: []} shape', (
     tester,
   ) async {
-    final data = SerWidgets.fromJson({
+    final data = WidgetCatalog.fromJson({
       'data': [
         {'type': 'TEXT', 'params': {'text': 'Hello'}},
         {'type': 'DIVIDER', 'params': {}},
@@ -26,13 +26,13 @@ void main() {
     });
 
     expect(data, hasLength(3));
-    expect(data[0].type, SerWidgetType.text);
-    expect(data[1].type, SerWidgetType.divider);
-    expect(data[2].type, SerWidgetType.unknown);
+    expect(data[0].type, WidgetType.text);
+    expect(data[1].type, WidgetType.divider);
+    expect(data[2].type, WidgetType.unknown);
   });
 
-  testWidgets('SerWidgetData accepts params as a JSON-encoded string', (tester) async {
-    final data = SerWidgets.fromJson({
+  testWidgets('WidgetEntry accepts params as a JSON-encoded string', (tester) async {
+    final data = WidgetCatalog.fromJson({
       'data': [
         {'type': 'TEXT', 'params': '{"text":"From string"}'},
       ],
@@ -42,7 +42,7 @@ void main() {
   });
 
   testWidgets('TEXT and DIVIDER render through getScreen', (tester) async {
-    final data = SerWidgets.fromJson({
+    final data = WidgetCatalog.fromJson({
       'data': [
         {'type': 'TEXT', 'params': {'text': 'Section title'}},
         {'type': 'DIVIDER', 'params': {'height': 20}},
@@ -53,7 +53,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: ListView(
-            children: SerWidgets.getScreen(data: data, callbacks: _callbacks()),
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
           ),
         ),
       ),
@@ -65,7 +65,7 @@ void main() {
   testWidgets('unknown widget type renders as an empty 1px box, never a crash', (
     tester,
   ) async {
-    final data = SerWidgets.fromJson({
+    final data = WidgetCatalog.fromJson({
       'data': [
         {'type': 'SOMETHING_FROM_THE_FUTURE', 'params': {}},
       ],
@@ -75,7 +75,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Column(
-            children: SerWidgets.getScreen(data: data, callbacks: _callbacks()),
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
           ),
         ),
       ),
@@ -85,8 +85,8 @@ void main() {
   });
 
   testWidgets('IMAGE tap resolves through the shared action contract', (tester) async {
-    SerAction? tapped;
-    final data = SerWidgets.fromJson({
+    WidgetAction? tapped;
+    final data = WidgetCatalog.fromJson({
       'data': [
         {
           'type': 'IMAGE',
@@ -99,7 +99,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Column(
-            children: SerWidgets.getScreen(
+            children: WidgetCatalog.getScreen(
               data: data,
               callbacks: _callbacks(onAction: (action) => tapped = action),
             ),
@@ -113,7 +113,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(tapped?.type, SerActionType.category);
+    expect(tapped?.type, WidgetActionType.category);
     expect(tapped?.id, 42);
   });
 
@@ -121,7 +121,7 @@ void main() {
     tester,
   ) async {
     ProductQuery? query;
-    final data = SerWidgets.fromJson({
+    final data = WidgetCatalog.fromJson({
       'data': [
         {
           'type': 'CAROUSEL',
@@ -134,7 +134,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Column(
-            children: SerWidgets.getScreen(
+            children: WidgetCatalog.getScreen(
               data: data,
               callbacks: _callbacks(
                 fetchProducts: (q) async {

@@ -3,7 +3,7 @@
 Shared by CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and MIXEDCAROUSEL's
 `item_type: "products"` page. Each of these widgets converts its `params`
 into a `ProductQuery` via `ProductQuery.fromParams`, then calls
-`SerBuilderCallbacks.fetchProducts(query)` to get the products to render.
+`WidgetCallbacks.fetchProducts(query)` to get the products to render.
 
 Two equivalent shapes are accepted:
 

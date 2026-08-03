@@ -22,7 +22,7 @@ A single tappable banner image, using the shared
 - `radius` — corner radius; `0` (default) means square corners.
 - `padding` — outer padding on all sides; `0` (default) means none.
 - A failed image load falls back to a placeholder icon instead of erroring.
-- When `type` is `login` or `register` and `SerBuilderCallbacks.isLoggedIn`
+- When `type` is `login` or `register` and `WidgetCallbacks.isLoggedIn`
   returns `true`, the widget hides itself entirely (no point telling an
   already-logged-in user to log in).
 

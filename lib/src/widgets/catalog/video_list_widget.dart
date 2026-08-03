@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_video_item.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/video_item.dart';
 
 /// VIDEOLIST: one or more silent, looping, auto-playing videos fetched by
 /// [id]. A single video renders full-width with an optional `textparams`
 /// title/subtitle overlay (custom color/size/weight/alignment); multiple
 /// videos scroll in a row/column per `scroll_direction`.
-class SerVideoListWidget extends StatefulWidget {
-  const SerVideoListWidget({
+class VideoListWidget extends StatefulWidget {
+  const VideoListWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerVideoListWidget> createState() => _SerVideoListWidgetState();
+  State<VideoListWidget> createState() => _SerVideoListWidgetState();
 }
 
-class _SerVideoListWidgetState extends State<SerVideoListWidget> {
-  late final Future<List<SerVideoItem>> _future = _load();
+class _SerVideoListWidgetState extends State<VideoListWidget> {
+  late final Future<List<VideoItem>> _future = _load();
 
   Map<String, dynamic>? get _textParams {
     final raw = widget.params['textparams'];
     return raw is Map ? Map<String, dynamic>.from(raw) : null;
   }
 
-  Future<List<SerVideoItem>> _load() {
+  Future<List<VideoItem>> _load() {
     final id = widget.params['id'];
     final fetch = widget.callbacks.fetchVideos;
     if (id == null || fetch == null) return Future.value(const []);
@@ -77,7 +77,7 @@ class _SerVideoListWidgetState extends State<SerVideoListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<SerVideoItem>>(
+    return FutureBuilder<List<VideoItem>>(
       future: _future,
       builder: (context, snapshot) {
         final videos = snapshot.data ?? const [];
@@ -89,7 +89,7 @@ class _SerVideoListWidgetState extends State<SerVideoListWidget> {
     );
   }
 
-  Widget _buildSingle(BuildContext context, SerVideoItem video) {
+  Widget _buildSingle(BuildContext context, VideoItem video) {
     final textParams = _textParams;
     final width = MediaQuery.of(context).size.width * _pd('width_percent', 1.0);
     final height = MediaQuery.of(context).size.height * _pd('height_percent', 0.3);
@@ -149,7 +149,7 @@ class _SerVideoListWidgetState extends State<SerVideoListWidget> {
     return value != null ? Color(value) : Colors.white;
   }
 
-  Widget _buildList(BuildContext context, List<SerVideoItem> videos) {
+  Widget _buildList(BuildContext context, List<VideoItem> videos) {
     return Container(
       color: Colors.white,
       height: MediaQuery.of(context).size.height * _pd('container_height', 0.3),

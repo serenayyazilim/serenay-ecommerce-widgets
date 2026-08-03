@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
-import '../../contracts/ser_action.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_colors.dart';
 import '../badges/discount_badge.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// VISITEDPRODUCTS: the locally-tracked "recently visited" list — never
 /// fetched from the backend. Shows a history-icon header, then a row of
 /// simple cards (image + discount badge, subtitle, title, price — no
 /// favorite heart or variant picker).
-class SerVisitedProductsWidget extends StatelessWidget {
-  const SerVisitedProductsWidget({
+class VisitedProductsWidget extends StatelessWidget {
+  const VisitedProductsWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _VisitedProductCard extends StatelessWidget {
   const _VisitedProductCard({required this.data, required this.callbacks});
 
   final ProductCardData data;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   static const double _cardWidth = 128;
   static const double _imageSize = 128;
@@ -93,7 +93,7 @@ class _VisitedProductCard extends StatelessWidget {
     final symbol = _currencySymbol(data.currency);
 
     return GestureDetector(
-      onTap: () => callbacks.onAction(SerAction(type: SerActionType.product, id: data.id)),
+      onTap: () => callbacks.onAction(WidgetAction(type: WidgetActionType.product, id: data.id)),
       child: SizedBox(
         width: _cardWidth,
         child: Column(
@@ -116,7 +116,7 @@ class _VisitedProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(11.5),
                       child: Container(
                         color: const Color(0xFFF5F5F5),
-                        child: SerNetworkImage(url: data.image),
+                        child: CatalogNetworkImage(url: data.image),
                       ),
                     ),
                   ),

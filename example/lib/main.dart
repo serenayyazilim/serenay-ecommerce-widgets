@@ -6,7 +6,7 @@ void main() {
 }
 
 /// A small showcase app that renders a mock backend JSON payload through
-/// [SerWidgets] to manually exercise every catalog widget during
+/// [WidgetCatalog] to manually exercise every catalog widget during
 /// development.
 class DemoApp extends StatelessWidget {
   const DemoApp({super.key});
@@ -14,14 +14,14 @@ class DemoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SerBuilder Demo',
+      title: 'Widget Catalog Demo',
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary)),
       home: const ScreenPage(),
     );
   }
 }
 
-/// Demonstrates a full SerBuilder screen backed by an in-memory mock
+/// Demonstrates a full backend-driven screen backed by an in-memory mock
 /// repository standing in for a real backend.
 class ScreenPage extends StatefulWidget {
   const ScreenPage({super.key});
@@ -35,7 +35,7 @@ class _ScreenPageState extends State<ScreenPage> {
   final List<ProductCardData> _products = _mockProducts();
   final List<ProductCardData> _visited = _mockProducts().take(3).toList();
 
-  late final _callbacks = SerBuilderCallbacks(
+  late final _callbacks = WidgetCallbacks(
     onAction: (action) => ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Action: ${action.type.name} id=${action.id ?? action.goto ?? '-'}')),
     ),
@@ -47,16 +47,16 @@ class _ScreenPageState extends State<ScreenPage> {
       await Future.delayed(const Duration(milliseconds: 200));
       return List.generate(
         3,
-        (i) => SerSlideItem(
+        (i) => SlideItem(
           image: 'https://picsum.photos/seed/slide$id$i/800/400',
-          action: const SerAction(type: SerActionType.category, id: 1),
+          action: const WidgetAction(type: WidgetActionType.category, id: 1),
         ),
       );
     },
     fetchVideos: (id) async => const [
-      SerVideoItem(
+      VideoItem(
         video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        action: SerAction(type: SerActionType.category, id: 1),
+        action: WidgetAction(type: WidgetActionType.category, id: 1),
       ),
     ],
     fetchModal: (id) async => 'https://picsum.photos/seed/modal$id/600/800',
@@ -82,8 +82,8 @@ class _ScreenPageState extends State<ScreenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenData = SerWidgets.fromJson(_mockScreenJson);
-    final widgets = SerWidgets.getScreen(data: screenData, callbacks: _callbacks);
+    final screenData = WidgetCatalog.fromJson(_mockScreenJson);
+    final widgets = WidgetCatalog.getScreen(data: screenData, callbacks: _callbacks);
 
     return Scaffold(
       body: ListView(children: widgets),
@@ -118,7 +118,7 @@ final _mockScreenJson = {
   'data': [
     {
       'type': 'TEXT',
-      'params': {'text': 'SerBuilder Demo', 'style': 'section', 'subtitle': 'Full widget catalog'},
+      'params': {'text': 'Widget Catalog Demo', 'style': 'section', 'subtitle': 'Full widget catalog'},
     },
     {
       'type': 'SEARCH',

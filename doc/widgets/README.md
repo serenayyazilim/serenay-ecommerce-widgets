@@ -1,6 +1,6 @@
 # Widget catalog
 
-Usage docs for every widget type `SerWidgets.getScreen` can render. Each page
+Usage docs for every widget type `WidgetCatalog.getScreen` can render. Each page
 covers the `params` a backend sends for that widget, an example JSON entry,
 and any widget-specific behavior. Three contracts are shared across most
 widgets and documented once:
@@ -37,5 +37,5 @@ widgets and documented once:
 | `FASTREGISTER` | [fast-register.md](fast-register.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
-For install and quick-start (`SerBuilderCallbacks`, `SerWidgets.getScreen`),
+For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),
 see the [root README](../README.md).

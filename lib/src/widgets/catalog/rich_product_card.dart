@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
-import '../../contracts/ser_action.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_colors.dart';
 import '../badges/discount_badge.dart';
 import '../buttons/add_to_cart_button.dart';
 import '../buttons/favorite_button.dart';
 import '../cart/quantity_picker.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// The rich, variant-capable product card shared by CAROUSEL, GRID,
 /// PRODUCTCARD and FLASHSALE's product grid: a bordered square image (with a
@@ -24,7 +24,7 @@ class RichProductCard extends StatefulWidget {
   });
 
   final ProductCardData data;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   /// Fixed image/card width. When null, the card fills its parent (e.g. a
   /// grid cell).
@@ -72,7 +72,7 @@ class _RichProductCardState extends State<RichProductCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => widget.callbacks
-          .onAction(SerAction(type: SerActionType.product, id: _data.id)),
+          .onAction(WidgetAction(type: WidgetActionType.product, id: _data.id)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final double size = widget.imageSize ?? constraints.maxWidth;
@@ -117,9 +117,9 @@ class _RichProductCardState extends State<RichProductCard> {
                         onPageChanged: (index) =>
                             setState(() => _currentVariantPage = index),
                         itemBuilder: (context, index) =>
-                            SerNetworkImage(url: images[index]),
+                            CatalogNetworkImage(url: images[index]),
                       )
-                    : SerNetworkImage(url: images.first),
+                    : CatalogNetworkImage(url: images.first),
                 if (hasMultiple)
                   Positioned(
                     bottom: 8,
@@ -321,7 +321,7 @@ class _VariantSheet extends StatefulWidget {
   const _VariantSheet({required this.data, required this.callbacks});
 
   final ProductCardData data;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   State<_VariantSheet> createState() => _VariantSheetState();
@@ -399,7 +399,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(14),
-                            child: SerNetworkImage(url: variants[index].image ?? data.image),
+                            child: CatalogNetworkImage(url: variants[index].image ?? data.image),
                           ),
                         ),
                         const SizedBox(height: 6),

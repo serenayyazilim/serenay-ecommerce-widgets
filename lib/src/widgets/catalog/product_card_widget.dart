@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import 'rich_product_card.dart';
@@ -9,21 +9,21 @@ import 'rich_product_card.dart';
 /// component GRID and CAROUSEL use. In the source app this widget and GRID
 /// are visually identical; PRODUCTCARD is kept as its own catalog entry
 /// because the backend addresses them as distinct widget types.
-class SerProductCardWidget extends StatefulWidget {
-  const SerProductCardWidget({
+class ProductCardWidget extends StatefulWidget {
+  const ProductCardWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerProductCardWidget> createState() => _SerProductCardWidgetState();
+  State<ProductCardWidget> createState() => _SerProductCardWidgetState();
 }
 
-class _SerProductCardWidgetState extends State<SerProductCardWidget> {
+class _SerProductCardWidgetState extends State<ProductCardWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
 

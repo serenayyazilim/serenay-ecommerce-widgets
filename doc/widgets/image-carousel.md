@@ -2,7 +2,7 @@
 
 Similar to [SLIDER](slider.md), but a flat horizontally-scrolling row of
 individual images (not paged), optionally over a background image. Slides
-are fetched by `id` via `SerBuilderCallbacks.fetchSlides`.
+are fetched by `id` via `WidgetCallbacks.fetchSlides`.
 
 ```json
 {

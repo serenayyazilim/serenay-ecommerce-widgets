@@ -2,23 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_action.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// STORY: an Instagram-style story tray. Built from scratch (no third-party
 /// story package) so the standalone widget kit stays dependency-light, per
 /// §4 of the widget catalog doc.
-class SerStoryWidget extends StatelessWidget {
-  const SerStoryWidget({
+class StoryWidget extends StatelessWidget {
+  const StoryWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   List<Map<String, dynamic>> get _stories => ((params['list'] as List?) ?? const [])
       .whereType<Map>()
@@ -68,7 +68,7 @@ class SerStoryWidget extends StatelessWidget {
                       child: SizedBox(
                         width: 56,
                         height: 56,
-                        child: SerNetworkImage(url: thumbnail),
+                        child: CatalogNetworkImage(url: thumbnail),
                       ),
                     ),
                   ),
@@ -91,7 +91,7 @@ class _StoryViewer extends StatefulWidget {
 
   final List<Map<String, dynamic>> stories;
   final int initialIndex;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   State<_StoryViewer> createState() => _StoryViewerState();
@@ -142,9 +142,9 @@ class _StoryViewerState extends State<_StoryViewer> {
     final type = story['type'] as String?;
     final target = story['product_id_or_url'];
     if (type == 'product') {
-      widget.callbacks.onAction(SerAction(type: SerActionType.product, id: target));
+      widget.callbacks.onAction(WidgetAction(type: WidgetActionType.product, id: target));
     } else if (target is String) {
-      widget.callbacks.onAction(SerAction(type: SerActionType.link, goto: target));
+      widget.callbacks.onAction(WidgetAction(type: WidgetActionType.link, goto: target));
     }
   }
 
@@ -169,7 +169,7 @@ class _StoryViewerState extends State<_StoryViewer> {
                 _advance();
               }
             },
-            child: SerNetworkImage(url: image, fit: BoxFit.contain),
+            child: CatalogNetworkImage(url: image, fit: BoxFit.contain),
           ),
           Positioned(
             top: 8,

@@ -1,9 +1,9 @@
-import 'ser_action.dart';
+import 'widget_action.dart';
 
 /// A single playable video, fetched by id, for VIDEOLIST. Follows the same
 /// tap contract as IMAGE/SLIDER (§1.3 of the widget catalog doc).
-class SerVideoItem {
-  const SerVideoItem({
+class VideoItem {
+  const VideoItem({
     required this.video,
     required this.action,
     this.title,
@@ -13,24 +13,24 @@ class SerVideoItem {
   /// Direct, playable video URL.
   final String video;
 
-  final SerAction action;
+  final WidgetAction action;
   final String? title;
   final String? subtitle;
 
-  factory SerVideoItem.fromJson(Map<String, dynamic> json) {
-    return SerVideoItem(
+  factory VideoItem.fromJson(Map<String, dynamic> json) {
+    return VideoItem(
       video: (json['video'] as String?) ?? (json['url'] as String?) ?? '',
-      action: SerAction.fromParams(json),
+      action: WidgetAction.fromParams(json),
       title: json['title'] as String?,
       subtitle: json['subtitle'] as String?,
     );
   }
 
-  static List<SerVideoItem> listFromJson(dynamic json) {
+  static List<VideoItem> listFromJson(dynamic json) {
     final List<dynamic> raw = json is List ? json : const [];
     return raw
         .whereType<Map>()
-        .map((e) => SerVideoItem.fromJson(Map<String, dynamic>.from(e)))
+        .map((e) => VideoItem.fromJson(Map<String, dynamic>.from(e)))
         .toList();
   }
 }

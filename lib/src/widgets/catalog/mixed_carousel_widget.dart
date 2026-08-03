@@ -2,32 +2,32 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
-import '../../contracts/ser_action.dart';
+import '../../contracts/widget_action.dart';
 import 'mini_product_tile.dart';
-import 'ser_network_image.dart';
+import 'catalog_network_image.dart';
 
 /// MIXEDCAROUSEL: an auto-playing (until the user drags) carousel whose
 /// pages are either a 2x2 mini product grid (`item_type: "products"`) or a
 /// full-page image (`item_type: "image"`), each with its own background
 /// color/title/description.
-class SerMixedCarouselWidget extends StatefulWidget {
-  const SerMixedCarouselWidget({
+class MixedCarouselWidget extends StatefulWidget {
+  const MixedCarouselWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerMixedCarouselWidget> createState() => _SerMixedCarouselWidgetState();
+  State<MixedCarouselWidget> createState() => _SerMixedCarouselWidgetState();
 }
 
-class _SerMixedCarouselWidgetState extends State<SerMixedCarouselWidget> {
+class _SerMixedCarouselWidgetState extends State<MixedCarouselWidget> {
   final _pageController = PageController(viewportFraction: 0.8);
   Timer? _autoplay;
   bool _userInteracted = false;
@@ -112,12 +112,12 @@ class _SerMixedCarouselWidgetState extends State<SerMixedCarouselWidget> {
 
     if (itemType == 'image') {
       final url = item['url'] as String? ?? '';
-      final action = SerAction.fromParams(item);
+      final action = WidgetAction.fromParams(item);
       return GestureDetector(
         onTap: () => widget.callbacks.onAction(action),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Container(color: bgColor, child: SerNetworkImage(url: url)),
+          child: Container(color: bgColor, child: CatalogNetworkImage(url: url)),
         ),
       );
     }
@@ -161,7 +161,7 @@ class _MiniProductGrid extends StatefulWidget {
   const _MiniProductGrid({required this.params, required this.callbacks});
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   State<_MiniProductGrid> createState() => _MiniProductGridState();

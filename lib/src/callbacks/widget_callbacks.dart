@@ -2,16 +2,16 @@ import 'package:flutter/widgets.dart';
 
 import '../contracts/product_card_data.dart';
 import '../contracts/product_query.dart';
-import '../contracts/ser_action.dart';
-import '../contracts/ser_slide_item.dart';
-import '../contracts/ser_video_item.dart';
+import '../contracts/widget_action.dart';
+import '../contracts/slide_item.dart';
+import '../contracts/video_item.dart';
 
-/// Everything a host app must inject so the SerBuilder widget catalog can
-/// stay backend-agnostic: navigation, data fetching and auth/cart state all
-/// come from here instead of any global singleton (§4 of the widget catalog
+/// Everything a host app must inject so the widget catalog can stay
+/// backend-agnostic: navigation, data fetching and auth/cart state all come
+/// from here instead of any global singleton (§4 of the widget catalog
 /// doc).
-class SerBuilderCallbacks {
-  const SerBuilderCallbacks({
+class WidgetCallbacks {
+  const WidgetCallbacks({
     required this.onAction,
     required this.fetchProducts,
     this.fetchSlides,
@@ -28,7 +28,7 @@ class SerBuilderCallbacks {
 
   /// Resolves any tap/navigation target produced from a widget's `type` +
   /// `id`/`url` contract.
-  final void Function(SerAction action) onAction;
+  final void Function(WidgetAction action) onAction;
 
   /// Fetches the product list backing CAROUSEL/GRID/PRODUCTCARD/FLASHSALE/
   /// MIXEDCAROUSEL.
@@ -36,10 +36,10 @@ class SerBuilderCallbacks {
       fetchProducts;
 
   /// Fetches slide items by id for SLIDER/IMAGECAROUSEL.
-  final Future<List<SerSlideItem>> Function(dynamic id)? fetchSlides;
+  final Future<List<SlideItem>> Function(dynamic id)? fetchSlides;
 
   /// Fetches videos by id for VIDEOLIST.
-  final Future<List<SerVideoItem>> Function(dynamic id)? fetchVideos;
+  final Future<List<VideoItem>> Function(dynamic id)? fetchVideos;
 
   /// Fetches popup content for a `type: "modal"` tap target.
   final Future<String?> Function(dynamic id)? fetchModal;

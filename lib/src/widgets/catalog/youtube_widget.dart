@@ -3,16 +3,16 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// YOUTUBE: a single YouTube video embedded inline, auto-playing muted and
 /// looping.
-class SerYoutubeWidget extends StatefulWidget {
-  const SerYoutubeWidget({super.key, required this.params});
+class YoutubeWidget extends StatefulWidget {
+  const YoutubeWidget({super.key, required this.params});
 
   final Map<String, dynamic> params;
 
   @override
-  State<SerYoutubeWidget> createState() => _SerYoutubeWidgetState();
+  State<YoutubeWidget> createState() => _SerYoutubeWidgetState();
 }
 
-class _SerYoutubeWidgetState extends State<SerYoutubeWidget> {
+class _SerYoutubeWidgetState extends State<YoutubeWidget> {
   YoutubePlayerController? _controller;
 
   @override

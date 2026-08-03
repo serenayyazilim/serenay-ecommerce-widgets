@@ -13,6 +13,6 @@ price — no favorite heart or variant picker).
 ```
 
 `limit` caps how many products are shown (default `10`). The product list
-itself comes from `SerBuilderCallbacks.visitedProducts` — your app is
+itself comes from `WidgetCallbacks.visitedProducts` — your app is
 responsible for tracking which products a user has viewed and returning
 that list (most recent first). Renders nothing when that list is empty.

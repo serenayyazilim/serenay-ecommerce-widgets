@@ -21,4 +21,4 @@ the bottom and a separate "Search" button.
   the image (in the same units as `height_percent`'s base; halved
   internally to match the source layout — default effectively `5`).
 - Submitting (pressing "Search" or the keyboard's submit action) calls
-  `onAction` with `SerAction(type: SerActionType.search, searchText: <typed text>)`.
+  `onAction` with `WidgetAction(type: WidgetActionType.search, searchText: <typed text>)`.

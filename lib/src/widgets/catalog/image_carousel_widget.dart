@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
-import '../../contracts/ser_slide_item.dart';
-import 'ser_network_image.dart';
+import '../../callbacks/widget_callbacks.dart';
+import '../../contracts/slide_item.dart';
+import 'catalog_network_image.dart';
 
 /// IMAGECAROUSEL: like SLIDER but with an optional background image behind
 /// a flat horizontally-scrolling row of slides (one at a time, not paged in
 /// groups), each sized from `item_count`. No `zoom`/`modal` handling — every
 /// tap goes through the default action resolver.
-class SerImageCarouselWidget extends StatefulWidget {
-  const SerImageCarouselWidget({
+class ImageCarouselWidget extends StatefulWidget {
+  const ImageCarouselWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerImageCarouselWidget> createState() => _SerImageCarouselWidgetState();
+  State<ImageCarouselWidget> createState() => _SerImageCarouselWidgetState();
 }
 
-class _SerImageCarouselWidgetState extends State<SerImageCarouselWidget> {
+class _SerImageCarouselWidgetState extends State<ImageCarouselWidget> {
   static const double _marginHorizontal = 5.0;
 
-  late final Future<List<SerSlideItem>> _future = _load();
+  late final Future<List<SlideItem>> _future = _load();
 
-  Future<List<SerSlideItem>> _load() {
+  Future<List<SlideItem>> _load() {
     final id = widget.params['id'];
     final fetch = widget.callbacks.fetchSlides;
     if (id == null || fetch == null) return Future.value(const []);
@@ -40,7 +40,7 @@ class _SerImageCarouselWidgetState extends State<SerImageCarouselWidget> {
     final bgImage = widget.params['bg_image'] as String?;
     final itemCount = (widget.params['item_count'] as num?)?.toInt() ?? 2;
 
-    return FutureBuilder<List<SerSlideItem>>(
+    return FutureBuilder<List<SlideItem>>(
       future: _future,
       builder: (context, snapshot) {
         final slides = snapshot.data ?? const [];
@@ -68,7 +68,7 @@ class _SerImageCarouselWidgetState extends State<SerImageCarouselWidget> {
                   margin: const EdgeInsets.symmetric(horizontal: _marginHorizontal),
                   child: GestureDetector(
                     onTap: () => widget.callbacks.onAction(slides[index].action),
-                    child: SerNetworkImage(url: slides[index].image),
+                    child: CatalogNetworkImage(url: slides[index].image),
                   ),
                 ),
               ),

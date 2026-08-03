@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../callbacks/ser_builder_callbacks.dart';
+import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import 'rich_product_card.dart';
@@ -10,21 +10,21 @@ import 'rich_product_card.dart';
 /// FLASHSALE: an animated countdown bar that opens a bottom sheet of
 /// products (via the shared product-query contract) while the sale is
 /// active, and disappears entirely once `end_time` has passed.
-class SerFlashSaleWidget extends StatefulWidget {
-  const SerFlashSaleWidget({
+class FlashSaleWidget extends StatefulWidget {
+  const FlashSaleWidget({
     super.key,
     required this.params,
     required this.callbacks,
   });
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
-  State<SerFlashSaleWidget> createState() => _SerFlashSaleWidgetState();
+  State<FlashSaleWidget> createState() => _SerFlashSaleWidgetState();
 }
 
-class _SerFlashSaleWidgetState extends State<SerFlashSaleWidget>
+class _SerFlashSaleWidgetState extends State<FlashSaleWidget>
     with TickerProviderStateMixin {
   late final AnimationController _colorController = AnimationController(
     vsync: this,
@@ -242,7 +242,7 @@ class _FlashModal extends StatefulWidget {
   const _FlashModal({required this.params, required this.callbacks});
 
   final Map<String, dynamic> params;
-  final SerBuilderCallbacks callbacks;
+  final WidgetCallbacks callbacks;
 
   @override
   State<_FlashModal> createState() => _FlashModalState();

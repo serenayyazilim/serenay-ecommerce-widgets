@@ -26,8 +26,8 @@ tapping one opens a full-screen story viewer for that entry.
   screen to go back/forward.
 - `contain` — optional footer call-to-action text; when present, a button
   at the bottom of the story triggers `product_id_or_url`:
-  - `type: "product"` — resolves as `SerAction(type: product, id: product_id_or_url)`.
+  - `type: "product"` — resolves as `WidgetAction(type: product, id: product_id_or_url)`.
   - any other `type` — treated as an external URL and resolved as
-    `SerAction(type: link, goto: product_id_or_url)`.
+    `WidgetAction(type: link, goto: product_id_or_url)`.
 
 Renders nothing if `list` is empty.

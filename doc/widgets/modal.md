@@ -26,4 +26,4 @@ the next app launch. Occupies no layout space itself.
 
 This is the MODAL *widget* — distinct from the `type: "modal"` tap target
 used elsewhere (e.g. in SLIDER/IMAGE), which fetches popup content by `id`
-via `SerBuilderCallbacks.fetchModal` instead of embedding `url` directly.
+via `WidgetCallbacks.fetchModal` instead of embedding `url` directly.

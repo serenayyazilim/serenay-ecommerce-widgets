@@ -1,6 +1,6 @@
 # Product card data
 
-The shape every product returned from `SerBuilderCallbacks.fetchProducts`
+The shape every product returned from `WidgetCallbacks.fetchProducts`
 should have, used by CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and
 MIXEDCAROUSEL's product page. Only `id`, `image` and `title` are required —
 everything else is optional and the rich product card degrades gracefully
@@ -37,7 +37,7 @@ when a field is missing (hides it, or falls back to `priceText`).
 
 ## Behavior notes
 
-- **Price hiding**: when `SerBuilderCallbacks.isLoggedIn` returns `false`,
+- **Price hiding**: when `WidgetCallbacks.isLoggedIn` returns `false`,
   the rich product card shows a bordered "View Prices" button instead of the
   price, and taps it call `onRequireAuth` — common in B2B/reseller apps.
 - **Discount badge**: shown when `discount` is a non-empty, non-`"0"`

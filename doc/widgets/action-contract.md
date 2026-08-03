@@ -2,8 +2,8 @@
 
 Shared by IMAGE, SLIDER, IMAGECAROUSEL, MODAL, MIXEDCAROUSEL's image page,
 STORY's footer CTA, and SEARCH's submit. Any of these widgets' `params` (or a
-slide/story item) is parsed into a `SerAction` via `SerAction.fromParams`,
-then handed to `SerBuilderCallbacks.onAction` for the host app to resolve.
+slide/story item) is parsed into a `WidgetAction` via `WidgetAction.fromParams`,
+then handed to `WidgetCallbacks.onAction` for the host app to resolve.
 
 ```json
 {
@@ -38,6 +38,6 @@ then handed to `SerBuilderCallbacks.onAction` for the host app to resolve.
 | `link` | Open the external URL in `goto`. |
 | (empty/other) | Falls back to `category`. |
 
-`SerAction` is a plain data class (`type`, `id`, `url`, `filter`, `searchText`,
+`WidgetAction` is a plain data class (`type`, `id`, `url`, `filter`, `searchText`,
 `goto`, `title`, `name`) — resolving it into real navigation is entirely up
 to your `onAction` callback; the widget catalog never navigates on its own.

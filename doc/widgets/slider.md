@@ -1,8 +1,8 @@
 # SLIDER
 
 A swipeable image slider with a page-dot indicator. Slides themselves aren't
-in `params` — only the slider's `id`; `SerBuilderCallbacks.fetchSlides(id)`
-fetches the actual slide list (see [SerSlideItem](action-contract.md)).
+in `params` — only the slider's `id`; `WidgetCallbacks.fetchSlides(id)`
+fetches the actual slide list (see [SlideItem](action-contract.md)).
 
 ```json
 {
@@ -25,7 +25,7 @@ slider-only targets:
 
 - `zoom` — opens a full-screen, pinch-to-zoom gallery of every slide,
   starting at the tapped one.
-- `modal` — fetches popup content via `SerBuilderCallbacks.fetchModal` and
+- `modal` — fetches popup content via `WidgetCallbacks.fetchModal` and
   shows it in a bottom sheet.
 
 Renders nothing if `fetchSlides` isn't provided or returns an empty list.
