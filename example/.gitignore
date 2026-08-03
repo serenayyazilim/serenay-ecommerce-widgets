@@ -40,9 +40,6 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/example/android/app/debug
-/example/android/app/profile
-/example/android/app/release
-
-# pub.dev publish preview
-pubspec_overrides.yaml
+/android/app/debug
+/android/app/profile
+/android/app/release

@@ -3,14 +3,13 @@
 A dynamic widget system, **SerBuilder**, that renders e-commerce
 home/category screens from a backend-driven JSON payload. For the full
 widget catalog — one usage doc per widget type, with JSON schemas and
-examples — see [docs/widgets/](docs/widgets/README.md).
+examples — see [doc/widgets/](doc/widgets/README.md).
 
 ## Installation
 
 ```yaml
 dependencies:
-  mobile_ecommerce_widgets:
-    path: ../mobile_ecommerce_widgets # or a pub.dev version
+  mobile_ecommerce_widgets: ^1.0.0
 ```
 
 ## Quick start
@@ -41,8 +40,9 @@ callbacks for widget types you don't use (`fetchVideos`, `fetchModal`,
 `visitedProducts`, ...) can be left unset — the corresponding widget just
 hides itself when no data comes back, it never crashes.
 
-See `lib/main.dart` for a complete working example: a mock JSON payload and
-mock callbacks driving a demo screen with every catalog widget.
+See [`example/lib/main.dart`](example/lib/main.dart) for a complete working
+example: a mock JSON payload and mock callbacks driving a demo screen with
+every catalog widget.
 
 ## Supported widgets
 
@@ -52,4 +52,4 @@ PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL. An unrecognized `type` renders
 as an empty 1px box (forward compatibility).
 
 For the `params` schema each widget expects, see
-[docs/widgets/](docs/widgets/README.md) — one page per widget type.
+[doc/widgets/](doc/widgets/README.md) — one page per widget type.

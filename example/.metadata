@@ -43,3 +43,6 @@ migration:
   unmanaged_files:
     - 'lib/main.dart'
     - 'ios/Runner.xcodeproj/project.pbxproj'
+
+# Note: this is an example app, moved under example/ to keep the root of
+# the package clean for pub.dev publishing.

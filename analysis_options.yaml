@@ -9,13 +9,13 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
-# docs/widgets/ holds reference source files from the original app this
+# doc/widgets/ holds reference source files from the original app this
 # package's widget catalog is modeled on; they import packages this
 # standalone package intentionally doesn't depend on, so they're excluded
 # from analysis rather than fixed.
 analyzer:
   exclude:
-    - docs/widgets/**
+    - doc/widgets/**
 
 linter:
   # The lint rules applied to this project can be customized in the

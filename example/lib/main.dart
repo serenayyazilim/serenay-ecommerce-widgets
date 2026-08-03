@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'mobile_ecommerce_widgets.dart';
+import 'package:mobile_ecommerce_widgets/mobile_ecommerce_widgets.dart';
 
 void main() {
   runApp(const DemoApp());
