@@ -1,10 +1,10 @@
 name: serenay_ecommerce_widgets
 description: >-
-  A backend-driven dynamic widget system for e-commerce home/category
-  screens. Renders TEXT, IMAGE, CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and
-  more from a JSON payload, with navigation/data/cart injected by the host
-  app.
+  A backend-driven widget system for e-commerce screens. Renders TEXT, IMAGE,
+  CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and more from JSON, with
+  nav/data/cart injected by the host app.
 version: 1.0.0
+homepage: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 repository: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 topics:
   - widgets
