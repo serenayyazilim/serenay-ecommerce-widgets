@@ -20,10 +20,10 @@ class ProductCardWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<ProductCardWidget> createState() => _SerProductCardWidgetState();
+  State<ProductCardWidget> createState() => _ProductCardWidgetState();
 }
 
-class _SerProductCardWidgetState extends State<ProductCardWidget> {
+class _ProductCardWidgetState extends State<ProductCardWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
 

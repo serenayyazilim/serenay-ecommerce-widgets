@@ -14,10 +14,10 @@ class TimeImageWidget extends StatefulWidget {
   final Map<String, dynamic> params;
 
   @override
-  State<TimeImageWidget> createState() => _SerTimeImageWidgetState();
+  State<TimeImageWidget> createState() => _TimeImageWidgetState();
 }
 
-class _SerTimeImageWidgetState extends State<TimeImageWidget> {
+class _TimeImageWidgetState extends State<TimeImageWidget> {
   Timer? _ticker;
   DateTime? _target;
   bool _active = false;

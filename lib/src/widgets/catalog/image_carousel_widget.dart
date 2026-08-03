@@ -19,10 +19,10 @@ class ImageCarouselWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<ImageCarouselWidget> createState() => _SerImageCarouselWidgetState();
+  State<ImageCarouselWidget> createState() => _ImageCarouselWidgetState();
 }
 
-class _SerImageCarouselWidgetState extends State<ImageCarouselWidget> {
+class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   static const double _marginHorizontal = 5.0;
 
   late final Future<List<SlideItem>> _future = _load();

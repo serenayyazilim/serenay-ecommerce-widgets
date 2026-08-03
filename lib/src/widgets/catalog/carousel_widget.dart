@@ -19,10 +19,10 @@ class CarouselWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<CarouselWidget> createState() => _SerCarouselWidgetState();
+  State<CarouselWidget> createState() => _CarouselWidgetState();
 }
 
-class _SerCarouselWidgetState extends State<CarouselWidget> {
+class _CarouselWidgetState extends State<CarouselWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
 

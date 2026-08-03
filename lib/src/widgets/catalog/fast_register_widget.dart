@@ -12,10 +12,10 @@ class FastRegisterWidget extends StatefulWidget {
   final Map<String, dynamic> params;
 
   @override
-  State<FastRegisterWidget> createState() => _SerFastRegisterWidgetState();
+  State<FastRegisterWidget> createState() => _FastRegisterWidgetState();
 }
 
-class _SerFastRegisterWidgetState extends State<FastRegisterWidget> {
+class _FastRegisterWidgetState extends State<FastRegisterWidget> {
   static const _countryCodes = ['90', '1', '44', '49', '7'];
 
   String _countryCode = _countryCodes.first;

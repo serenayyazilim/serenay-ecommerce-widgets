@@ -21,10 +21,10 @@ class FlashSaleWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<FlashSaleWidget> createState() => _SerFlashSaleWidgetState();
+  State<FlashSaleWidget> createState() => _FlashSaleWidgetState();
 }
 
-class _SerFlashSaleWidgetState extends State<FlashSaleWidget>
+class _FlashSaleWidgetState extends State<FlashSaleWidget>
     with TickerProviderStateMixin {
   late final AnimationController _colorController = AnimationController(
     vsync: this,

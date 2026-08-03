@@ -19,10 +19,10 @@ class GridWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<GridWidget> createState() => _SerGridWidgetState();
+  State<GridWidget> createState() => _GridWidgetState();
 }
 
-class _SerGridWidgetState extends State<GridWidget> {
+class _GridWidgetState extends State<GridWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
 

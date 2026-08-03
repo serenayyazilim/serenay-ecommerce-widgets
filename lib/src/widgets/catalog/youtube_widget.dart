@@ -9,10 +9,10 @@ class YoutubeWidget extends StatefulWidget {
   final Map<String, dynamic> params;
 
   @override
-  State<YoutubeWidget> createState() => _SerYoutubeWidgetState();
+  State<YoutubeWidget> createState() => _YoutubeWidgetState();
 }
 
-class _SerYoutubeWidgetState extends State<YoutubeWidget> {
+class _YoutubeWidgetState extends State<YoutubeWidget> {
   YoutubePlayerController? _controller;
 
   @override

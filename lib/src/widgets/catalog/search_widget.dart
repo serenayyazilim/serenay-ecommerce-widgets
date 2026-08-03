@@ -19,10 +19,10 @@ class SearchWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<SearchWidget> createState() => _SerSearchWidgetState();
+  State<SearchWidget> createState() => _SearchWidgetState();
 }
 
-class _SerSearchWidgetState extends State<SearchWidget> {
+class _SearchWidgetState extends State<SearchWidget> {
   final _controller = TextEditingController();
 
   @override

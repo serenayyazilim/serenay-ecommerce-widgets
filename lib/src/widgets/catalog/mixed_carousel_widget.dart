@@ -24,10 +24,10 @@ class MixedCarouselWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<MixedCarouselWidget> createState() => _SerMixedCarouselWidgetState();
+  State<MixedCarouselWidget> createState() => _MixedCarouselWidgetState();
 }
 
-class _SerMixedCarouselWidgetState extends State<MixedCarouselWidget> {
+class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   final _pageController = PageController(viewportFraction: 0.8);
   Timer? _autoplay;
   bool _userInteracted = false;

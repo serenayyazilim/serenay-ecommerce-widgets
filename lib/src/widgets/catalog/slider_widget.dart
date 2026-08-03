@@ -20,10 +20,10 @@ class SliderWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<SliderWidget> createState() => _SerSliderWidgetState();
+  State<SliderWidget> createState() => _SliderWidgetState();
 }
 
-class _SerSliderWidgetState extends State<SliderWidget> {
+class _SliderWidgetState extends State<SliderWidget> {
   late final Future<List<SlideItem>> _future = _load();
   final _pageController = PageController();
   int _currentPage = 0;

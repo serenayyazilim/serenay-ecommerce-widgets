@@ -19,10 +19,10 @@ class ModalWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<ModalWidget> createState() => _SerModalWidgetState();
+  State<ModalWidget> createState() => _ModalWidgetState();
 }
 
-class _SerModalWidgetState extends State<ModalWidget> {
+class _ModalWidgetState extends State<ModalWidget> {
   static final Set<String> _shownKeys = {};
 
   @override

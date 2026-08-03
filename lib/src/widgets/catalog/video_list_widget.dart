@@ -19,10 +19,10 @@ class VideoListWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
 
   @override
-  State<VideoListWidget> createState() => _SerVideoListWidgetState();
+  State<VideoListWidget> createState() => _VideoListWidgetState();
 }
 
-class _SerVideoListWidgetState extends State<VideoListWidget> {
+class _VideoListWidgetState extends State<VideoListWidget> {
   late final Future<List<VideoItem>> _future = _load();
 
   Map<String, dynamic>? get _textParams {
