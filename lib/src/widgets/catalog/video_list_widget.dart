@@ -3,6 +3,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/video_item.dart';
+import '../../core/utils/param_parsing.dart';
 
 /// VIDEOLIST: one or more silent, looping, auto-playing videos fetched by
 /// [id]. A single video renders full-width with an optional `textparams`
@@ -37,7 +38,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
     return fetch(id);
   }
 
-  double _pd(String key, double fallback) => ((widget.params[key] as num?) ?? fallback).toDouble();
+  double _pd(String key, double fallback) => parseDouble(widget.params[key]) ?? fallback;
 
   Axis _scrollDirection() =>
       widget.params['scroll_direction'] == 'horizontal' ? Axis.horizontal : Axis.vertical;
@@ -120,7 +121,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                               style: TextStyle(
                                 height: 1.1,
                                 color: _parseColor(textParams['fontcolor_title'] as String?),
-                                fontSize: ((textParams['fontsize_title'] as num?) ?? 16).toDouble(),
+                                fontSize: parseDouble(textParams['fontsize_title']) ?? 16,
                                 fontWeight: _fontWeight(textParams['fontweight_title'] as String?),
                               ),
                             ),
@@ -129,7 +130,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                                 video.subtitle!,
                                 style: TextStyle(
                                   color: _parseColor(textParams['fontcolor_subtitle'] as String?),
-                                  fontSize: ((textParams['fontsize_subtitle'] as num?) ?? 13).toDouble(),
+                                  fontSize: parseDouble(textParams['fontsize_subtitle']) ?? 13,
                                   fontWeight: _fontWeight(textParams['fontweight_subtitle'] as String?),
                                 ),
                               ),

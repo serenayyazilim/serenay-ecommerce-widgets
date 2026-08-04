@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// SEARCH: a full-width background image with a floating, editable search
@@ -43,12 +44,12 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final url = (widget.params['url'] as String?) ?? '';
     final hintText = (widget.params['hint_text'] as String?) ?? 'Search products...';
-    final bottom = ((widget.params['bottom'] as num?) ?? 10) / 2;
+    final bottom = (parseNum(widget.params['bottom']) ?? 10) / 2;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final heightPercent = (widget.params['height_percent'] as num?)?.toDouble() ?? 0.5;
+        final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.5;
         return Stack(
           alignment: Alignment.center,
           children: [

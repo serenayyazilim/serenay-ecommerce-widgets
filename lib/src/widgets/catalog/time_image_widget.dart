@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// TIMEIMAGE: a banner image with an optional "countdown to date" overlay —
@@ -54,7 +55,7 @@ class _TimeImageWidgetState extends State<TimeImageWidget> {
 
   double? _pos(String key) {
     final v = widget.params['position_$key'] ?? (widget.params['position'] as Map?)?[key];
-    return v == null ? null : (v as num).toDouble();
+    return parseDouble(v);
   }
 
   Color _parseColor(dynamic raw) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../contracts/slide_item.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// SLIDER: a scrollable image slider whose slides are fetched by [id].
@@ -71,9 +72,9 @@ class _SliderWidgetState extends State<SliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final heightPercent = (widget.params['height_percent'] as num?)?.toDouble() ?? 0.3;
-    final paddingH = (widget.params['padding_horizontal'] as num?)?.toDouble() ?? 0.0;
-    final paddingV = (widget.params['padding_vertical'] as num?)?.toDouble() ?? 0.0;
+    final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
+    final paddingH = parseDouble(widget.params['padding_horizontal']) ?? 0.0;
+    final paddingV = parseDouble(widget.params['padding_vertical']) ?? 0.0;
 
     return FutureBuilder<List<SlideItem>>(
       future: _future,

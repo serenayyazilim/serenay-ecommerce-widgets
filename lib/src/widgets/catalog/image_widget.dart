@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// IMAGE: a tappable single banner image following the shared tap contract
@@ -27,9 +28,9 @@ class ImageWidget extends StatelessWidget {
     }
 
     final url = params['url'] as String? ?? '';
-    final heightPercent = (params['height_percent'] as num?)?.toDouble();
-    final radius = ((params['radius'] as num?) ?? 0).toDouble();
-    final padding = ((params['padding'] as num?) ?? 0).toDouble();
+    final heightPercent = parseDouble(params['height_percent']);
+    final radius = parseDouble(params['radius']) ?? 0;
+    final padding = parseDouble(params['padding']) ?? 0;
 
     return Padding(
       padding: EdgeInsets.all(padding),

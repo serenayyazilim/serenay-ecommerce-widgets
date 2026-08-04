@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/slide_item.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// IMAGECAROUSEL: like SLIDER but with an optional background image behind
@@ -36,9 +37,9 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final heightPercent = (widget.params['height_percent'] as num?)?.toDouble() ?? 0.3;
+    final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
     final bgImage = widget.params['bg_image'] as String?;
-    final itemCount = (widget.params['item_count'] as num?)?.toInt() ?? 2;
+    final itemCount = parseInt(widget.params['item_count']) ?? 2;
 
     return FutureBuilder<List<SlideItem>>(
       future: _future,

@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../../core/utils/param_parsing.dart';
+
 /// DIVIDER: pure vertical spacing between widgets.
 class DividerWidget extends StatelessWidget {
   const DividerWidget({super.key, required this.params});
@@ -8,7 +10,7 @@ class DividerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = ((params['height'] as num?) ?? 10).toDouble();
+    final double height = parseDouble(params['height']) ?? 10;
     return SizedBox(height: height);
   }
 }

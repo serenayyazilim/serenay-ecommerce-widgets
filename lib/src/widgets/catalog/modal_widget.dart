@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// MODAL: shows an announcement/campaign popup automatically once per app
@@ -38,7 +39,7 @@ class _ModalWidgetState extends State<ModalWidget> {
     if (!mounted) return;
     final params = widget.params;
     final url = params['url'] as String? ?? '';
-    final radius = ((params['radius'] as num?) ?? 16).toDouble();
+    final radius = parseDouble(params['radius']) ?? 16;
     final action = WidgetAction.fromParams(params);
 
     showDialog(

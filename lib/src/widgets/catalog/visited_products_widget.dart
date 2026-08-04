@@ -4,6 +4,7 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import '../badges/discount_badge.dart';
 import 'catalog_network_image.dart';
 
@@ -25,7 +26,7 @@ class VisitedProductsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final limit = (params['limit'] as num?)?.toInt() ?? 10;
+    final limit = parseInt(params['limit']) ?? 10;
     final products = (callbacks.visitedProducts?.call() ?? const []).take(limit).toList();
     if (products.isEmpty) return const SizedBox.shrink();
 

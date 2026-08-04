@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 
 /// TEXT: a simple or compound text block with three visual styles
 /// (`default`, `section`, `banner_text` — §2 of the widget catalog doc).
@@ -52,8 +53,8 @@ class TextWidget extends StatelessWidget {
     final style = (params['style'] as String?) ?? 'default';
     final align = _align(params['align'] as String?);
     final color = _color(params['color'] as String?) ?? theme.textPrimaryColor;
-    final paddingH = ((params['padding_horizontal'] as num?) ?? 16).toDouble();
-    final paddingV = ((params['padding_vertical'] as num?) ?? 12).toDouble();
+    final paddingH = parseDouble(params['padding_horizontal']) ?? 16;
+    final paddingV = parseDouble(params['padding_vertical']) ?? 12;
 
     if (text.isEmpty && (subtitle == null || subtitle.isEmpty)) {
       return const SizedBox.shrink();

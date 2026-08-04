@@ -1,3 +1,14 @@
+## 1.1.1
+
+- Fix: numeric `params` (`height`, `height_percent`, `radius`, `padding`,
+  `padding_horizontal`, `padding_vertical`, `bottom`, `limit`, `page`,
+  `item_count`, `fontsize_title`, `fontsize_subtitle`, plus `price`,
+  `price_old`, `package_qty`, `qty_in_package` on product data) crashed
+  with a `TypeCastException` when a backend sent them as numeric strings
+  (e.g. `"20"`) instead of JSON numbers. All catalog widgets and contracts
+  now parse these tolerantly, matching the numbers-or-numeric-strings
+  behavior most backends actually send.
+
 ## 1.1.0
 
 - Add `EcommerceWidgetTheme`: an optional `theme` parameter on

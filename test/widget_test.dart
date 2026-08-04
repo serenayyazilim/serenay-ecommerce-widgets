@@ -187,4 +187,34 @@ void main() {
     final priceText = tester.widget<Text>(find.text('10.00 ₺'));
     expect(priceText.style?.color, customColor);
   });
+
+  testWidgets('numeric params tolerate backend strings (e.g. "20" instead of 20)', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'DIVIDER',
+          'params': {'height': '20'},
+        },
+        {
+          'type': 'TEXT',
+          'params': {'text': 'Hi', 'padding_horizontal': '5', 'padding_vertical': '5'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Hi'), findsOneWidget);
+  });
 }

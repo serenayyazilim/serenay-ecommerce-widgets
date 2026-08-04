@@ -7,6 +7,7 @@ import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import 'mini_product_tile.dart';
 import 'catalog_network_image.dart';
 
@@ -75,7 +76,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     final items = _items;
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final heightPercent = (widget.params['height_percent'] as num?)?.toDouble() ?? 1.1;
+    final heightPercent = parseDouble(widget.params['height_percent']) ?? 1.1;
 
     return LayoutBuilder(
       builder: (context, constraints) {

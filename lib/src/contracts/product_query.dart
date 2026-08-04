@@ -1,3 +1,5 @@
+import '../core/utils/param_parsing.dart';
+
 /// The common "product filter" shape every product-list widget (CAROUSEL,
 /// GRID, PRODUCTCARD, FLASHSALE, MIXEDCAROUSEL products page) converts its
 /// `params` into before asking the host app to fetch products.
@@ -80,8 +82,8 @@ class ProductQuery {
       search: params['search'] as String?,
       searchFields: params['search_fields'] as String?,
       orderBy: params['order_by'] as String?,
-      limit: params['limit'] as int?,
-      page: params['page'] as int?,
+      limit: parseInt(params['limit']),
+      page: parseInt(params['page']),
       filterName: params['filter_name'] as String?,
       exceptProductIds: (params['except_product_ids'] as List?)?.toList(),
       filter: params['filter'] as String?,

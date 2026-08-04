@@ -1,3 +1,5 @@
+import '../core/utils/param_parsing.dart';
+
 /// A single product variant (e.g. a color), as returned inline with a
 /// product-list item.
 class ProductVariant {
@@ -26,7 +28,7 @@ class ProductPrice {
 
   factory ProductPrice.fromJson(Map<String, dynamic> json) {
     return ProductPrice(
-      price: (json['price'] as num?) ?? 0,
+      price: parseNum(json['price']) ?? 0,
       currency: (json['currency'] as String?) ?? 'tl',
     );
   }
@@ -124,8 +126,8 @@ class ProductCardData {
       title: (json['title'] as String?) ?? '',
       subtitle: json['subtitle'] as String?,
       subtitle2: json['subtitle2'] as String?,
-      price: json['price'] as num?,
-      priceOld: json['price_old'] as num?,
+      price: parseNum(json['price']),
+      priceOld: parseNum(json['price_old']),
       discount: json['discount']?.toString(),
       currency: (json['currency'] as String?) ?? 'tl',
       brandId: json['brand_id'],
@@ -134,8 +136,8 @@ class ProductCardData {
               .map((e) => ProductVariant.fromJson(Map<String, dynamic>.from(e)))
               .toList() ??
           const [],
-      packageQty: json['package_qty'] as int?,
-      qtyInPackage: json['qty_in_package'] as int?,
+      packageQty: parseInt(json['package_qty']),
+      qtyInPackage: parseInt(json['qty_in_package']),
       prices: (json['prices'] as List?)
               ?.whereType<Map>()
               .map((e) => ProductPrice.fromJson(Map<String, dynamic>.from(e)))
