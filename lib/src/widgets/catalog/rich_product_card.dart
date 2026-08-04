@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/widget_action.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import '../badges/discount_badge.dart';
 import '../buttons/add_to_cart_button.dart';
 import '../buttons/favorite_button.dart';
@@ -21,6 +21,7 @@ class RichProductCard extends StatefulWidget {
     required this.data,
     required this.callbacks,
     this.imageSize,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final ProductCardData data;
@@ -29,6 +30,10 @@ class RichProductCard extends StatefulWidget {
   /// Fixed image/card width. When null, the card fills its parent (e.g. a
   /// grid cell).
   final double? imageSize;
+
+  /// Colors, text styles and sizes used to render this card. Defaults to
+  /// the package's built-in look.
+  final EcommerceWidgetTheme theme;
 
   @override
   State<RichProductCard> createState() => _RichProductCardState();
@@ -64,7 +69,7 @@ class _RichProductCardState extends State<RichProductCard> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => _VariantSheet(data: _data, callbacks: widget.callbacks),
+      builder: (context) => _VariantSheet(data: _data, callbacks: widget.callbacks, theme: widget.theme),
     );
   }
 
@@ -91,6 +96,7 @@ class _RichProductCardState extends State<RichProductCard> {
   }
 
   Widget _buildImageArea(double size) {
+    final theme = widget.theme;
     final images = _data.variants.isNotEmpty
         ? _data.variants.map((v) => v.image ?? _data.image).toList()
         : [_data.image];
@@ -101,13 +107,13 @@ class _RichProductCardState extends State<RichProductCard> {
       height: size,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 0.5),
+          borderRadius: BorderRadius.circular(theme.radiusM),
+          border: Border.all(color: theme.borderColor, width: 0.5),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(11.5),
+          borderRadius: BorderRadius.circular(theme.radiusM - 0.5),
           child: Container(
-            color: const Color(0xFFF5F5F5),
+            color: theme.surfaceColor,
             child: Stack(
               clipBehavior: Clip.hardEdge,
               children: [
@@ -135,6 +141,9 @@ class _RichProductCardState extends State<RichProductCard> {
                     onChanged: (_) => _toggleFavorite(),
                     size: 32,
                     iconSize: 18,
+                    activeColor: theme.favoriteActiveColor,
+                    inactiveColor: theme.textSecondaryColor,
+                    backgroundColor: theme.surfaceColor,
                   ),
                 ),
                 if (_data.hasDiscount || (_data.discount != null && _data.discount != '0'))
@@ -143,6 +152,7 @@ class _RichProductCardState extends State<RichProductCard> {
                     left: 0,
                     child: DiscountBadge(
                       percentage: int.tryParse(_data.discount ?? '') ?? 0,
+                      backgroundColor: theme.discountColor,
                     ),
                   ),
                 if (_data.variants.length > 1)
@@ -154,7 +164,7 @@ class _RichProductCardState extends State<RichProductCard> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.surfaceColor,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4),
@@ -195,6 +205,7 @@ class _RichProductCardState extends State<RichProductCard> {
 
   Widget _buildContent() {
     final loggedIn = widget.callbacks.isLoggedIn?.call() ?? true;
+    final theme = widget.theme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,14 +214,14 @@ class _RichProductCardState extends State<RichProductCard> {
         if (_data.subtitle != null && _data.subtitle!.isNotEmpty)
           Text(
             _data.subtitle!,
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+            style: theme.captionStyle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         const SizedBox(height: 2),
         Text(
           _data.title,
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade800),
+          style: theme.productTitleStyle.copyWith(fontSize: 13),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -218,7 +229,7 @@ class _RichProductCardState extends State<RichProductCard> {
           const SizedBox(height: 2),
           Text(
             _data.subtitle2!,
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+            style: theme.captionStyle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -230,6 +241,7 @@ class _RichProductCardState extends State<RichProductCard> {
   }
 
   Widget _buildPriceRow(bool loggedIn) {
+    final theme = widget.theme;
     if (!loggedIn) {
       return SizedBox(
         height: 28,
@@ -239,15 +251,15 @@ class _RichProductCardState extends State<RichProductCard> {
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: EdgeInsets.zero,
-            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(theme.radiusS),
               side: const BorderSide(color: Colors.grey, width: 0.3),
             ),
           ),
-          child: const Text(
+          child: Text(
             'View Prices',
-            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 11),
+            style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w600, fontSize: 11),
           ),
         ),
       );
@@ -255,7 +267,7 @@ class _RichProductCardState extends State<RichProductCard> {
 
     if (_data.price == null || _data.price == 0) {
       if (_data.priceText != null && _data.priceText!.isNotEmpty) {
-        return Text(_data.priceText!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold));
+        return Text(_data.priceText!, style: theme.priceStyle.copyWith(fontSize: 13));
       }
       return const SizedBox.shrink();
     }
@@ -267,16 +279,15 @@ class _RichProductCardState extends State<RichProductCard> {
         if (_data.hasDiscount) ...[
           Text(
             '${_data.priceOld!.toStringAsFixed(2)} $symbol',
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade500, decoration: TextDecoration.lineThrough),
+            style: theme.originalPriceStyle.copyWith(fontSize: 11),
           ),
           const SizedBox(width: 5),
         ],
         Text(
           '${_data.price!.toStringAsFixed(2)} $symbol',
-          style: TextStyle(
+          style: theme.priceStyle.copyWith(
             fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: _data.hasDiscount ? Colors.red : Colors.black,
+            color: _data.hasDiscount ? theme.discountColor : theme.textPrimaryColor,
           ),
         ),
       ],
@@ -318,10 +329,11 @@ class _DotIndicator extends StatelessWidget {
 }
 
 class _VariantSheet extends StatefulWidget {
-  const _VariantSheet({required this.data, required this.callbacks});
+  const _VariantSheet({required this.data, required this.callbacks, required this.theme});
 
   final ProductCardData data;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<_VariantSheet> createState() => _VariantSheetState();
@@ -335,6 +347,7 @@ class _VariantSheetState extends State<_VariantSheet> {
   Widget build(BuildContext context) {
     final data = widget.data;
     final variants = data.variants;
+    final theme = widget.theme;
 
     return Container(
       height: 280,
@@ -394,7 +407,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border: _selectedVariant == index
-                                ? Border.all(color: AppColors.primary, width: 1.5)
+                                ? Border.all(color: theme.primaryColor, width: 1.5)
                                 : Border.all(color: Colors.grey.shade200),
                           ),
                           child: ClipRRect(
@@ -434,12 +447,16 @@ class _VariantSheetState extends State<_VariantSheet> {
                       quantity: _quantity,
                       onChanged: (value) => setState(() => _quantity = value),
                       buttonSize: 38,
+                      borderColor: theme.borderColor,
+                      iconColor: theme.textPrimaryColor,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: AddToCartButton(
                         label: 'Add to Cart',
                         icon: null,
+                        backgroundColor: theme.primaryColor,
+                        textStyle: theme.buttonLabelStyle,
                         onPressed: () {
                           widget.callbacks.onAddToCart?.call(
                             data,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_dimens.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 
 /// TEXT: a simple or compound text block with three visual styles
 /// (`default`, `section`, `banner_text` — §2 of the widget catalog doc).
 class TextWidget extends StatelessWidget {
-  const TextWidget({super.key, required this.params});
+  const TextWidget({super.key, required this.params, this.theme = const EcommerceWidgetTheme()});
 
   final Map<String, dynamic> params;
+  final EcommerceWidgetTheme theme;
 
   TextAlign _align(String? value) {
     switch (value) {
@@ -51,7 +51,7 @@ class TextWidget extends StatelessWidget {
     final subtitle = params['subtitle'] as String?;
     final style = (params['style'] as String?) ?? 'default';
     final align = _align(params['align'] as String?);
-    final color = _color(params['color'] as String?) ?? AppColors.textPrimary;
+    final color = _color(params['color'] as String?) ?? theme.textPrimaryColor;
     final paddingH = ((params['padding_horizontal'] as num?) ?? 16).toDouble();
     final paddingV = ((params['padding_vertical'] as num?) ?? 12).toDouble();
 
@@ -75,14 +75,11 @@ class TextWidget extends StatelessWidget {
               ),
             ),
             if (subtitle != null && subtitle.isNotEmpty) ...[
-              const SizedBox(height: AppDimens.spaceXs),
+              SizedBox(height: theme.spaceXs),
               Text(
                 subtitle,
                 textAlign: align,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
+                style: theme.captionStyle.copyWith(fontSize: 13),
               ),
             ],
           ],
@@ -91,10 +88,10 @@ class TextWidget extends StatelessWidget {
       case 'banner_text':
         content = Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(AppDimens.spaceM),
+          padding: EdgeInsets.all(theme.spaceM),
           decoration: BoxDecoration(
-            color: const Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.circular(AppDimens.radiusM),
+            color: theme.surfaceColor,
+            borderRadius: BorderRadius.circular(theme.radiusM),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,14 +106,11 @@ class TextWidget extends StatelessWidget {
                 ),
               ),
               if (subtitle != null && subtitle.isNotEmpty) ...[
-                const SizedBox(height: AppDimens.spaceXs),
+                SizedBox(height: theme.spaceXs),
                 Text(
                   subtitle,
                   textAlign: align,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: theme.captionStyle.copyWith(fontSize: 13),
                 ),
               ],
             ],

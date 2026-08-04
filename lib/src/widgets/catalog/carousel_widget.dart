@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
 /// CAROUSEL: a horizontally-scrolling row of the shared rich product card,
@@ -13,10 +14,12 @@ class CarouselWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<CarouselWidget> createState() => _CarouselWidgetState();
@@ -47,6 +50,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 data: products[index],
                 callbacks: widget.callbacks,
                 imageSize: 160,
+                theme: widget.theme,
               ),
             ),
           ),

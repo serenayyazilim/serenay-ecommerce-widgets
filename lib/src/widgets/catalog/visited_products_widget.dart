@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/widget_action.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import '../badges/discount_badge.dart';
 import 'catalog_network_image.dart';
 
@@ -16,10 +16,12 @@ class VisitedProductsWidget extends StatelessWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +38,11 @@ class VisitedProductsWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 10),
             child: Row(
               children: [
-                const Icon(Icons.history, size: 18, color: AppColors.primary),
+                Icon(Icons.history, size: 18, color: theme.primaryColor),
                 const SizedBox(width: 6),
                 Text(
                   'Recently Viewed',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
+                  style: theme.productTitleStyle.copyWith(fontSize: 15),
                 ),
               ],
             ),
@@ -53,7 +55,7 @@ class VisitedProductsWidget extends StatelessWidget {
               itemCount: products.length,
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: _VisitedProductCard(data: products[index], callbacks: callbacks),
+                child: _VisitedProductCard(data: products[index], callbacks: callbacks, theme: theme),
               ),
             ),
           ),
@@ -64,10 +66,11 @@ class VisitedProductsWidget extends StatelessWidget {
 }
 
 class _VisitedProductCard extends StatelessWidget {
-  const _VisitedProductCard({required this.data, required this.callbacks});
+  const _VisitedProductCard({required this.data, required this.callbacks, required this.theme});
 
   final ProductCardData data;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   static const double _cardWidth = 128;
   static const double _imageSize = 128;
@@ -109,13 +112,13 @@ class _VisitedProductCard extends StatelessWidget {
                     width: _imageSize,
                     height: _imageSize,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300, width: 0.5),
+                      borderRadius: BorderRadius.circular(theme.radiusM),
+                      border: Border.all(color: theme.borderColor, width: 0.5),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(11.5),
+                      borderRadius: BorderRadius.circular(theme.radiusM - 0.5),
                       child: Container(
-                        color: const Color(0xFFF5F5F5),
+                        color: theme.surfaceColor,
                         child: CatalogNetworkImage(url: data.image),
                       ),
                     ),
@@ -124,7 +127,10 @@ class _VisitedProductCard extends StatelessWidget {
                     Positioned(
                       top: 0,
                       left: 0,
-                      child: DiscountBadge(percentage: int.tryParse(data.discount ?? '') ?? 0),
+                      child: DiscountBadge(
+                        percentage: int.tryParse(data.discount ?? '') ?? 0,
+                        backgroundColor: theme.discountColor,
+                      ),
                     ),
                 ],
               ),
@@ -133,14 +139,14 @@ class _VisitedProductCard extends StatelessWidget {
             if (data.subtitle != null && data.subtitle!.isNotEmpty)
               Text(
                 data.subtitle!,
-                style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                style: theme.captionStyle.copyWith(fontSize: 10),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             const SizedBox(height: 2),
             Text(
               data.title,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade800),
+              style: theme.productTitleStyle.copyWith(fontSize: 12),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -151,17 +157,16 @@ class _VisitedProductCard extends StatelessWidget {
                   if (hasDiscount) ...[
                     Text(
                       '${oldPrice.toStringAsFixed(2)} $symbol',
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade500, decoration: TextDecoration.lineThrough),
+                      style: theme.originalPriceStyle.copyWith(fontSize: 10),
                     ),
                     const SizedBox(width: 4),
                   ],
                   Flexible(
                     child: Text(
                       '${price.toStringAsFixed(2)} $symbol',
-                      style: TextStyle(
+                      style: theme.priceStyle.copyWith(
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: hasDiscount ? Colors.red : AppColors.primary,
+                        color: hasDiscount ? theme.discountColor : theme.primaryColor,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -171,7 +176,7 @@ class _VisitedProductCard extends StatelessWidget {
             else if (data.priceText != null && data.priceText!.isNotEmpty)
               Text(
                 data.priceText!,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
+                style: theme.priceStyle.copyWith(fontSize: 12, color: theme.primaryColor),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -35,6 +35,14 @@ class _ScreenPageState extends State<ScreenPage> {
   final List<ProductCardData> _products = _mockProducts();
   final List<ProductCardData> _visited = _mockProducts().take(3).toList();
 
+  /// Example of a host app re-branding the catalog with its own colors
+  /// instead of the package defaults, via `WidgetCatalog.getScreen(theme:)`.
+  final _theme = const EcommerceWidgetTheme(
+    primaryColor: Color(0xFF7B2CBF),
+    secondaryColor: Color(0xFFFF9F1C),
+    discountColor: Color(0xFFE63946),
+  );
+
   late final _callbacks = WidgetCallbacks(
     onAction: (action) => ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Action: ${action.type.name} id=${action.id ?? action.goto ?? '-'}')),
@@ -83,7 +91,7 @@ class _ScreenPageState extends State<ScreenPage> {
   @override
   Widget build(BuildContext context) {
     final screenData = WidgetCatalog.fromJson(_mockScreenJson);
-    final widgets = WidgetCatalog.getScreen(data: screenData, callbacks: _callbacks);
+    final widgets = WidgetCatalog.getScreen(data: screenData, callbacks: _callbacks, theme: _theme);
 
     return Scaffold(
       body: ListView(children: widgets),

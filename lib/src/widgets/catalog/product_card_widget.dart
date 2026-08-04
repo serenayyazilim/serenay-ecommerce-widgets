@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
 /// PRODUCTCARD: a 2-column grid of the shared rich product card — the same
@@ -14,10 +15,12 @@ class ProductCardWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<ProductCardWidget> createState() => _ProductCardWidgetState();
@@ -49,6 +52,7 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
           itemBuilder: (context, index) => RichProductCard(
             data: products[index],
             callbacks: widget.callbacks,
+            theme: widget.theme,
           ),
         );
       },

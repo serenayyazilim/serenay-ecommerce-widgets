@@ -8,6 +8,15 @@ library;
 export 'src/core/constants/app_colors.dart';
 export 'src/core/constants/app_dimens.dart';
 export 'src/core/theme/app_text_styles.dart';
+export 'src/core/theme/ecommerce_widget_theme.dart';
+
+// Standalone, reusable building blocks — usable on their own or as the
+// pieces WidgetCatalog composes internally.
+export 'src/widgets/badges/discount_badge.dart';
+export 'src/widgets/buttons/add_to_cart_button.dart';
+export 'src/widgets/buttons/favorite_button.dart';
+export 'src/widgets/cart/quantity_picker.dart';
+export 'src/widgets/catalog/rich_product_card.dart';
 
 // Data contracts
 export 'src/contracts/product_card_data.dart';

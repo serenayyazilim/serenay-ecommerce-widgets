@@ -9,7 +9,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets: ^1.0.0
+  serenay_ecommerce_widgets: ^1.1.0
 ```
 
 ## Quick start
@@ -43,6 +43,33 @@ hides itself when no data comes back, it never crashes.
 See [`example/lib/main.dart`](example/lib/main.dart) for a complete working
 example: a mock JSON payload and mock callbacks driving a demo screen with
 every catalog widget.
+
+## Theming
+
+By default every widget uses the package's built-in colors and text styles.
+To re-brand the catalog for your app, pass an `EcommerceWidgetTheme` to
+`getScreen`:
+
+```dart
+final theme = EcommerceWidgetTheme(
+  primaryColor: const Color(0xFF7B2CBF),
+  secondaryColor: const Color(0xFFFF9F1C),
+  discountColor: const Color(0xFFE63946),
+  productTitleStyle: const TextStyle(fontWeight: FontWeight.w700),
+);
+
+WidgetCatalog.getScreen(data: data, callbacks: callbacks, theme: theme);
+```
+
+Any field you don't set falls back to the package default — see
+[`EcommerceWidgetTheme`](lib/src/core/theme/ecommerce_widget_theme.dart) for
+the full list of overridable colors, text styles and sizes.
+
+The standalone building blocks the catalog composes internally —
+`AddToCartButton`, `FavoriteButton`, `DiscountBadge`, `QuantityPicker`,
+`RichProductCard` — are also exported, so you can use them directly outside
+`WidgetCatalog` (e.g. in a custom product detail screen) with their own
+constructor overrides.
 
 ## Supported widgets
 

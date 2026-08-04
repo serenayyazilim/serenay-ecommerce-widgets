@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
 /// GRID: the same product-query contract as CAROUSEL, rendered as a
@@ -13,10 +14,12 @@ class GridWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<GridWidget> createState() => _GridWidgetState();
@@ -48,6 +51,7 @@ class _GridWidgetState extends State<GridWidget> {
           itemBuilder: (context, index) => RichProductCard(
             data: products[index],
             callbacks: widget.callbacks,
+            theme: widget.theme,
           ),
         );
       },

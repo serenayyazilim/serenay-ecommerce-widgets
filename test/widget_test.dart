@@ -154,4 +154,37 @@ void main() {
     expect(query?.categoryId, 7);
     expect(find.text('P1'), findsOneWidget);
   });
+
+  testWidgets('getScreen(theme:) overrides the price color rendered by CAROUSEL', (
+    tester,
+  ) async {
+    const customColor = Color(0xFF123456);
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'CAROUSEL', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+                ],
+              ),
+              theme: const EcommerceWidgetTheme(textPrimaryColor: customColor),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final priceText = tester.widget<Text>(find.text('10.00 ₺'));
+    expect(priceText.style?.color, customColor);
+  });
 }

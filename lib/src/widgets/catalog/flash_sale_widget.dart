@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
 /// FLASHSALE: an animated countdown bar that opens a bottom sheet of
@@ -15,10 +16,12 @@ class FlashSaleWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<FlashSaleWidget> createState() => _FlashSaleWidgetState();
@@ -31,12 +34,12 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     duration: const Duration(seconds: 2),
   )..repeat(reverse: true);
   late final Animation<Color?> _colorA = ColorTween(
-    begin: const Color(0xFFE53935),
-    end: const Color(0xFFFF6F00),
+    begin: widget.theme.discountColor,
+    end: widget.theme.secondaryColor,
   ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
   late final Animation<Color?> _colorB = ColorTween(
-    begin: const Color(0xFFFF6F00),
-    end: const Color(0xFFE53935),
+    begin: widget.theme.secondaryColor,
+    end: widget.theme.discountColor,
   ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
   late final AnimationController _borderController = AnimationController(
     vsync: this,
@@ -89,7 +92,7 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _FlashModal(params: widget.params, callbacks: widget.callbacks),
+      builder: (context) => _FlashModal(params: widget.params, callbacks: widget.callbacks, theme: widget.theme),
     );
   }
 
@@ -107,8 +110,8 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     final content = AnimatedBuilder(
       animation: _colorController,
       builder: (context, _) {
-        final c1 = _colorA.value ?? const Color(0xFFE53935);
-        final c2 = _colorB.value ?? const Color(0xFFFF6F00);
+        final c1 = _colorA.value ?? widget.theme.discountColor;
+        final c2 = _colorB.value ?? widget.theme.secondaryColor;
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [c1, c2], begin: Alignment.centerLeft, end: Alignment.centerRight),
@@ -239,10 +242,11 @@ class _ProgressBorderPainter extends CustomPainter {
 }
 
 class _FlashModal extends StatefulWidget {
-  const _FlashModal({required this.params, required this.callbacks});
+  const _FlashModal({required this.params, required this.callbacks, required this.theme});
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<_FlashModal> createState() => _FlashModalState();
@@ -332,7 +336,7 @@ class _FlashModalState extends State<_FlashModal> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFFE53935), Color(0xFFFF6F00)]),
+                  gradient: LinearGradient(colors: [widget.theme.discountColor, widget.theme.secondaryColor]),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -365,8 +369,11 @@ class _FlashModalState extends State<_FlashModal> {
                         childAspectRatio: 0.6,
                       ),
                       itemCount: products.length,
-                      itemBuilder: (context, index) =>
-                          RichProductCard(data: products[index], callbacks: widget.callbacks),
+                      itemBuilder: (context, index) => RichProductCard(
+                        data: products[index],
+                        callbacks: widget.callbacks,
+                        theme: widget.theme,
+                      ),
                     );
                   },
                 ),

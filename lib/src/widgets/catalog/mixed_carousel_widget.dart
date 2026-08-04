@@ -6,6 +6,7 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../contracts/widget_action.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'mini_product_tile.dart';
 import 'catalog_network_image.dart';
 
@@ -18,10 +19,12 @@ class MixedCarouselWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<MixedCarouselWidget> createState() => _MixedCarouselWidgetState();
@@ -150,7 +153,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
             ),
           ],
           if (title != null || description != null) const SizedBox(height: 10),
-          Expanded(child: _MiniProductGrid(params: item, callbacks: widget.callbacks)),
+          Expanded(child: _MiniProductGrid(params: item, callbacks: widget.callbacks, theme: widget.theme)),
         ],
       ),
     );
@@ -158,10 +161,11 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
 }
 
 class _MiniProductGrid extends StatefulWidget {
-  const _MiniProductGrid({required this.params, required this.callbacks});
+  const _MiniProductGrid({required this.params, required this.callbacks, required this.theme});
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<_MiniProductGrid> createState() => _MiniProductGridState();
@@ -191,6 +195,7 @@ class _MiniProductGridState extends State<_MiniProductGrid> {
           itemBuilder: (context, index) => MiniProductTile(
             data: products[index],
             callbacks: widget.callbacks,
+            theme: widget.theme,
           ),
         );
       },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'catalog_network_image.dart';
 
 /// SEARCH: a full-width background image with a floating, editable search
@@ -13,10 +13,12 @@ class SearchWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -83,19 +85,15 @@ class _SearchWidgetState extends State<SearchWidget> {
                         width: width * 0.25,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow.shade600,
+                            backgroundColor: widget.theme.secondaryColor,
                             elevation: 0,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
                           ),
                           onPressed: _submit,
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               'Search',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
+                              style: widget.theme.buttonLabelStyle.copyWith(fontSize: 14),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

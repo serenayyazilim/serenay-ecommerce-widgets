@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../callbacks/widget_callbacks.dart';
 import '../contracts/widget_entry.dart';
 import '../contracts/widget_type.dart';
+import '../core/theme/ecommerce_widget_theme.dart';
 import 'catalog/carousel_widget.dart';
 import 'catalog/divider_widget.dart';
 import 'catalog/fast_register_widget.dart';
@@ -33,18 +34,26 @@ class WidgetCatalog {
   static List<WidgetEntry> fromJson(dynamic json) => WidgetEntry.listFromJson(json);
 
   /// Maps parsed widget entries to their Flutter widgets, in order.
+  ///
+  /// [theme] lets the host app re-brand colors, text styles and sizes across
+  /// every rendered widget; omit it to use the package defaults.
   static List<Widget> getScreen({
     required List<WidgetEntry> data,
     required WidgetCallbacks callbacks,
+    EcommerceWidgetTheme theme = const EcommerceWidgetTheme(),
   }) {
-    return data.map((entry) => _build(entry, callbacks)).toList();
+    return data.map((entry) => _build(entry, callbacks, theme)).toList();
   }
 
-  static Widget _build(WidgetEntry entry, WidgetCallbacks callbacks) {
+  static Widget _build(
+    WidgetEntry entry,
+    WidgetCallbacks callbacks,
+    EcommerceWidgetTheme theme,
+  ) {
     final params = entry.params;
     switch (entry.type) {
       case WidgetType.text:
-        return TextWidget(params: params);
+        return TextWidget(params: params, theme: theme);
       case WidgetType.divider:
         return DividerWidget(params: params);
       case WidgetType.image:
@@ -56,16 +65,16 @@ class WidgetCatalog {
       case WidgetType.imageCarousel:
         return ImageCarouselWidget(params: params, callbacks: callbacks);
       case WidgetType.carousel:
-        return CarouselWidget(params: params, callbacks: callbacks);
+        return CarouselWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.grid:
-        return GridWidget(params: params, callbacks: callbacks);
+        return GridWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.productCard:
       case WidgetType.productImage:
-        return ProductCardWidget(params: params, callbacks: callbacks);
+        return ProductCardWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.flashSale:
-        return FlashSaleWidget(params: params, callbacks: callbacks);
+        return FlashSaleWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.mixedCarousel:
-        return MixedCarouselWidget(params: params, callbacks: callbacks);
+        return MixedCarouselWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.modal:
         return ModalWidget(params: params, callbacks: callbacks);
       case WidgetType.videoList:
@@ -73,13 +82,13 @@ class WidgetCatalog {
       case WidgetType.story:
         return StoryWidget(params: params, callbacks: callbacks);
       case WidgetType.visitedProducts:
-        return VisitedProductsWidget(params: params, callbacks: callbacks);
+        return VisitedProductsWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.timeImage:
         return TimeImageWidget(params: params);
       case WidgetType.youtube:
         return YoutubeWidget(params: params);
       case WidgetType.search:
-        return SearchWidget(params: params, callbacks: callbacks);
+        return SearchWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.fastRegister:
         return FastRegisterWidget(params: params);
       case WidgetType.unknown:

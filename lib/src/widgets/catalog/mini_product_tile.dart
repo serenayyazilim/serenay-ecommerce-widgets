@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/widget_action.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'catalog_network_image.dart';
 
 /// A plain image/title/price tile with no favorite heart or variant picker —
@@ -15,11 +15,13 @@ class MiniProductTile extends StatelessWidget {
     required this.data,
     required this.callbacks,
     this.imageSize,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final ProductCardData data;
   final WidgetCallbacks callbacks;
   final double? imageSize;
+  final EcommerceWidgetTheme theme;
 
   String _currencySymbol(String currency) {
     switch (currency.toLowerCase()) {
@@ -45,15 +47,15 @@ class MiniProductTile extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: EdgeInsets.zero,
-            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(theme.radiusS),
               side: const BorderSide(color: Colors.grey, width: 0.3),
             ),
           ),
-          child: const Text(
+          child: Text(
             'View Prices',
-            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 11),
+            style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w600, fontSize: 11),
           ),
         ),
       );
@@ -70,19 +72,22 @@ class MiniProductTile extends StatelessWidget {
           if (hasDiscount) ...[
             Text(
               '${oldPrice.toStringAsFixed(2)} $symbol',
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade500, decoration: TextDecoration.lineThrough),
+              style: theme.originalPriceStyle.copyWith(fontSize: 11),
             ),
             const SizedBox(width: 5),
           ],
           Text(
             '${price.toStringAsFixed(2)} $symbol',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: hasDiscount ? Colors.red : Colors.black),
+            style: theme.priceStyle.copyWith(
+              fontSize: 14,
+              color: hasDiscount ? theme.discountColor : theme.textPrimaryColor,
+            ),
           ),
         ],
       );
     }
     if (data.priceText != null && data.priceText!.isNotEmpty) {
-      return Text(data.priceText!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold));
+      return Text(data.priceText!, style: theme.priceStyle.copyWith(fontSize: 13));
     }
     return const SizedBox.shrink();
   }
@@ -96,7 +101,7 @@ class MiniProductTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(theme.radiusM),
             child: CatalogNetworkImage(url: data.image, width: imageSize, height: imageSize),
           ),
           const SizedBox(height: 6),
@@ -105,7 +110,7 @@ class MiniProductTile extends StatelessWidget {
               data.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade800),
+              style: theme.productTitleStyle.copyWith(fontSize: 13),
             ),
             const SizedBox(height: 4),
           ],
