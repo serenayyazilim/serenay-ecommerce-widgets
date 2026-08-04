@@ -54,7 +54,7 @@ class MiniProductTile extends StatelessWidget {
             ),
           ),
           child: Text(
-            'View Prices',
+            theme.viewPricesLabel,
             style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w600, fontSize: 11),
           ),
         ),
@@ -96,26 +96,33 @@ class MiniProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => callbacks.onAction(WidgetAction(type: WidgetActionType.product, id: data.id)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(theme.radiusM),
-            child: CatalogNetworkImage(url: data.image, width: imageSize, height: imageSize),
-          ),
-          const SizedBox(height: 6),
-          if (data.title.isNotEmpty) ...[
-            Text(
-              data.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.productTitleStyle.copyWith(fontSize: 13),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: theme.surfaceColor,
+          borderRadius: BorderRadius.circular(theme.radiusM),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(theme.radiusM),
+              child: CatalogNetworkImage(url: data.image, width: imageSize, height: imageSize),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
+            if (data.title.isNotEmpty) ...[
+              Text(
+                data.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.productTitleStyle.copyWith(fontSize: 13),
+              ),
+              const SizedBox(height: 4),
+            ],
+            _buildPrice(context),
           ],
-          _buildPrice(context),
-        ],
+        ),
       ),
     );
   }

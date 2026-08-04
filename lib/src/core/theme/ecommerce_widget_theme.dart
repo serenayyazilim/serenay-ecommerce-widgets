@@ -42,6 +42,7 @@ class EcommerceWidgetTheme {
     this.buttonHeight = AppDimens.buttonHeight,
     this.iconButtonSize = AppDimens.iconButtonSize,
     this.starSize = AppDimens.starSize,
+    this.viewPricesLabel = 'View Prices',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -128,6 +129,9 @@ class EcommerceWidgetTheme {
   /// Size for a single star in a rating widget.
   final double starSize;
 
+  /// Label shown instead of a hidden price when the viewer is logged out.
+  final String viewPricesLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -158,6 +162,7 @@ class EcommerceWidgetTheme {
     double? buttonHeight,
     double? iconButtonSize,
     double? starSize,
+    String? viewPricesLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -188,6 +193,7 @@ class EcommerceWidgetTheme {
       buttonHeight: buttonHeight ?? this.buttonHeight,
       iconButtonSize: iconButtonSize ?? this.iconButtonSize,
       starSize: starSize ?? this.starSize,
+      viewPricesLabel: viewPricesLabel ?? this.viewPricesLabel,
     );
   }
 }

@@ -9,7 +9,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets: ^1.1.1
+  serenay_ecommerce_widgets: ^1.1.2
 ```
 
 ## Quick start

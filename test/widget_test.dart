@@ -6,10 +6,12 @@ import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
 WidgetCallbacks _callbacks({
   void Function(WidgetAction action)? onAction,
   Future<List<ProductCardData>> Function(ProductQuery query)? fetchProducts,
+  bool Function()? isLoggedIn,
 }) {
   return WidgetCallbacks(
     onAction: onAction ?? (_) {},
     fetchProducts: fetchProducts ?? (_) async => const [],
+    isLoggedIn: isLoggedIn,
   );
 }
 
@@ -216,5 +218,46 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Hi'), findsOneWidget);
+  });
+
+  testWidgets('theme.viewPricesLabel overrides the logged-out price prompt', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 160,
+            child: RichProductCard(
+              data: const ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+              callbacks: _callbacks(isLoggedIn: () => false),
+              theme: const EcommerceWidgetTheme(viewPricesLabel: 'Show Prices'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Show Prices'), findsOneWidget);
+    expect(find.text('View Prices'), findsNothing);
+  });
+
+  testWidgets('MiniProductTile renders with a theme-colored card background', (tester) async {
+    const surfaceColor = Color(0xFFEFEFEF);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: MiniProductTile(
+            data: const ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+            callbacks: _callbacks(),
+            theme: const EcommerceWidgetTheme(surfaceColor: surfaceColor),
+          ),
+        ),
+      ),
+    );
+
+    final container = tester.widget<Container>(
+      find.ancestor(of: find.text('P1'), matching: find.byType(Container)).first,
+    );
+    expect((container.decoration as BoxDecoration?)?.color, surfaceColor);
   });
 }

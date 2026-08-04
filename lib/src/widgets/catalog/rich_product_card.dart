@@ -258,7 +258,7 @@ class _RichProductCardState extends State<RichProductCard> {
             ),
           ),
           child: Text(
-            'View Prices',
+            theme.viewPricesLabel,
             style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w600, fontSize: 11),
           ),
         ),

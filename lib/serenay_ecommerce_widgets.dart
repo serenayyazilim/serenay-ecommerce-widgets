@@ -16,6 +16,7 @@ export 'src/widgets/badges/discount_badge.dart';
 export 'src/widgets/buttons/add_to_cart_button.dart';
 export 'src/widgets/buttons/favorite_button.dart';
 export 'src/widgets/cart/quantity_picker.dart';
+export 'src/widgets/catalog/mini_product_tile.dart';
 export 'src/widgets/catalog/rich_product_card.dart';
 
 // Data contracts

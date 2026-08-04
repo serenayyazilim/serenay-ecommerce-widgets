@@ -1,3 +1,13 @@
+## 1.1.2
+
+- Add `EcommerceWidgetTheme.viewPricesLabel` so host apps can localize/
+  override the "View Prices" text shown instead of a hidden price when the
+  viewer is logged out (`RichProductCard`, `MiniProductTile`).
+- Fix: `MiniProductTile` (MIXEDCAROUSEL's mini 2x2 product grid) rendered
+  with no card background, unlike every other product card in the catalog.
+  It now wraps its content in a `theme.surfaceColor` card, matching
+  `RichProductCard`.
+
 ## 1.1.1
 
 - Fix: numeric `params` (`height`, `height_percent`, `radius`, `padding`,
