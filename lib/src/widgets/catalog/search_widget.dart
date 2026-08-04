@@ -43,7 +43,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     final url = (widget.params['url'] as String?) ?? '';
-    final hintText = (widget.params['hint_text'] as String?) ?? 'Search products...';
+    final hintText = (widget.params['hint_text'] as String?) ?? widget.theme.searchHintLabel;
     final bottom = (parseNum(widget.params['bottom']) ?? 10) / 2;
 
     return LayoutBuilder(
@@ -93,7 +93,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           onPressed: _submit,
                           child: Center(
                             child: Text(
-                              'Search',
+                              widget.theme.searchButtonLabel,
                               style: widget.theme.buttonLabelStyle.copyWith(fontSize: 14),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

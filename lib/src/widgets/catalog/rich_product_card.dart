@@ -376,7 +376,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                     child: Row(
                       children: [
                         Text(
-                          '${variants.length} Color',
+                          '${variants.length} ${theme.variantColorLabel}',
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade700),
                         ),
                       ],
@@ -434,7 +434,7 @@ class _VariantSheetState extends State<_VariantSheet> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
-                  data.saleDisabledReason ?? 'Not available for sale',
+                  data.saleDisabledReason ?? theme.notAvailableForSaleLabel,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                 ),
               )
@@ -453,7 +453,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: AddToCartButton(
-                        label: 'Add to Cart',
+                        label: theme.addToCartLabel,
                         icon: null,
                         backgroundColor: theme.primaryColor,
                         textStyle: theme.buttonLabelStyle,

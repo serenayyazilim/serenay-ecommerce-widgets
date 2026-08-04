@@ -1,3 +1,16 @@
+## 1.1.3
+
+- Add the remaining hardcoded, non-backend UI strings to
+  `EcommerceWidgetTheme` so host apps can localize/re-brand them, matching
+  `viewPricesLabel`: `notAvailableForSaleLabel`, `addToCartLabel`,
+  `variantColorLabel`, `recentlyViewedLabel`, `searchHintLabel`,
+  `searchButtonLabel`, `flashSaleTitleLabel`, `flashSaleTimeUpLabel`, and
+  the FASTREGISTER card's `fastRegisterHeaderLabel`,
+  `fastRegisterSendLabel`, `fastRegisterTitleLabel`,
+  `fastRegisterSubtitleLabel`, `fastRegisterStep1Label`,
+  `fastRegisterStep2Label`, `fastRegisterStep3Label` (FASTREGISTER now also
+  accepts `theme` via `WidgetCatalog.getScreen`).
+
 ## 1.1.2
 
 - Add `EcommerceWidgetTheme.viewPricesLabel` so host apps can localize/

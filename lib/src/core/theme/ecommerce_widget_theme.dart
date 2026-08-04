@@ -43,6 +43,21 @@ class EcommerceWidgetTheme {
     this.iconButtonSize = AppDimens.iconButtonSize,
     this.starSize = AppDimens.starSize,
     this.viewPricesLabel = 'View Prices',
+    this.notAvailableForSaleLabel = 'Not available for sale',
+    this.addToCartLabel = 'Add to Cart',
+    this.variantColorLabel = 'Color',
+    this.recentlyViewedLabel = 'Recently Viewed',
+    this.searchHintLabel = 'Search products...',
+    this.searchButtonLabel = 'Search',
+    this.flashSaleTitleLabel = 'Flash Sale',
+    this.flashSaleTimeUpLabel = "Time's up",
+    this.fastRegisterHeaderLabel = 'WHATSAPP',
+    this.fastRegisterSendLabel = 'Send',
+    this.fastRegisterTitleLabel = 'Quick Registration System',
+    this.fastRegisterSubtitleLabel = 'Register quickly via WhatsApp in 3 steps.',
+    this.fastRegisterStep1Label = 'Enter Your\nNumber',
+    this.fastRegisterStep2Label = 'Send the\nReceived Code',
+    this.fastRegisterStep3Label = 'Talk to a\nRepresentative',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -132,6 +147,53 @@ class EcommerceWidgetTheme {
   /// Label shown instead of a hidden price when the viewer is logged out.
   final String viewPricesLabel;
 
+  /// Fallback shown in the variant sheet when a product can't be sold and
+  /// the backend didn't send a specific reason.
+  final String notAvailableForSaleLabel;
+
+  /// Label for the "Add to Cart" button in the variant sheet.
+  final String addToCartLabel;
+
+  /// Word used after the variant count in the variant sheet header (e.g.
+  /// "3 Color").
+  final String variantColorLabel;
+
+  /// Header shown above the VISITEDPRODUCTS row.
+  final String recentlyViewedLabel;
+
+  /// Fallback SEARCH input hint when the backend doesn't send `hint_text`.
+  final String searchHintLabel;
+
+  /// Label for the SEARCH widget's submit button.
+  final String searchButtonLabel;
+
+  /// Fallback FLASHSALE title when the backend doesn't send `title`.
+  final String flashSaleTitleLabel;
+
+  /// Shown in the FLASHSALE modal once the countdown has expired.
+  final String flashSaleTimeUpLabel;
+
+  /// Header text on the FASTREGISTER card.
+  final String fastRegisterHeaderLabel;
+
+  /// Submit button label on the FASTREGISTER card.
+  final String fastRegisterSendLabel;
+
+  /// Title text on the FASTREGISTER card.
+  final String fastRegisterTitleLabel;
+
+  /// Subtitle text on the FASTREGISTER card.
+  final String fastRegisterSubtitleLabel;
+
+  /// First step label on the FASTREGISTER card.
+  final String fastRegisterStep1Label;
+
+  /// Second step label on the FASTREGISTER card.
+  final String fastRegisterStep2Label;
+
+  /// Third step label on the FASTREGISTER card.
+  final String fastRegisterStep3Label;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -163,6 +225,21 @@ class EcommerceWidgetTheme {
     double? iconButtonSize,
     double? starSize,
     String? viewPricesLabel,
+    String? notAvailableForSaleLabel,
+    String? addToCartLabel,
+    String? variantColorLabel,
+    String? recentlyViewedLabel,
+    String? searchHintLabel,
+    String? searchButtonLabel,
+    String? flashSaleTitleLabel,
+    String? flashSaleTimeUpLabel,
+    String? fastRegisterHeaderLabel,
+    String? fastRegisterSendLabel,
+    String? fastRegisterTitleLabel,
+    String? fastRegisterSubtitleLabel,
+    String? fastRegisterStep1Label,
+    String? fastRegisterStep2Label,
+    String? fastRegisterStep3Label,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -194,6 +271,21 @@ class EcommerceWidgetTheme {
       iconButtonSize: iconButtonSize ?? this.iconButtonSize,
       starSize: starSize ?? this.starSize,
       viewPricesLabel: viewPricesLabel ?? this.viewPricesLabel,
+      notAvailableForSaleLabel: notAvailableForSaleLabel ?? this.notAvailableForSaleLabel,
+      addToCartLabel: addToCartLabel ?? this.addToCartLabel,
+      variantColorLabel: variantColorLabel ?? this.variantColorLabel,
+      recentlyViewedLabel: recentlyViewedLabel ?? this.recentlyViewedLabel,
+      searchHintLabel: searchHintLabel ?? this.searchHintLabel,
+      searchButtonLabel: searchButtonLabel ?? this.searchButtonLabel,
+      flashSaleTitleLabel: flashSaleTitleLabel ?? this.flashSaleTitleLabel,
+      flashSaleTimeUpLabel: flashSaleTimeUpLabel ?? this.flashSaleTimeUpLabel,
+      fastRegisterHeaderLabel: fastRegisterHeaderLabel ?? this.fastRegisterHeaderLabel,
+      fastRegisterSendLabel: fastRegisterSendLabel ?? this.fastRegisterSendLabel,
+      fastRegisterTitleLabel: fastRegisterTitleLabel ?? this.fastRegisterTitleLabel,
+      fastRegisterSubtitleLabel: fastRegisterSubtitleLabel ?? this.fastRegisterSubtitleLabel,
+      fastRegisterStep1Label: fastRegisterStep1Label ?? this.fastRegisterStep1Label,
+      fastRegisterStep2Label: fastRegisterStep2Label ?? this.fastRegisterStep2Label,
+      fastRegisterStep3Label: fastRegisterStep3Label ?? this.fastRegisterStep3Label,
     );
   }
 }

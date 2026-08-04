@@ -260,4 +260,38 @@ void main() {
     );
     expect((container.decoration as BoxDecoration?)?.color, surfaceColor);
   });
+
+  testWidgets('getScreen(theme:) overrides FASTREGISTER and FLASHSALE labels', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'FASTREGISTER', 'params': {}},
+        {
+          'type': 'FLASHSALE',
+          'params': {},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(),
+              theme: const EcommerceWidgetTheme(
+                fastRegisterTitleLabel: 'Hızlı Kayıt',
+                flashSaleTitleLabel: 'Süper Fırsat',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Hızlı Kayıt'), findsOneWidget);
+    expect(find.text('Quick Registration System'), findsNothing);
+    expect(find.text('Süper Fırsat'), findsOneWidget);
+    expect(find.text('Flash Sale'), findsNothing);
+  });
 }

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/theme/ecommerce_widget_theme.dart';
+
 /// FASTREGISTER: a static WhatsApp quick-registration card — a 3-step
 /// explainer (enter number, send the code, talk to a rep) followed by a
 /// country code + phone field and a "Send" button that opens a WhatsApp
 /// chat. `params` is currently unused — reserved by the backend contract for
 /// future configuration.
 class FastRegisterWidget extends StatefulWidget {
-  const FastRegisterWidget({super.key, required this.params});
+  const FastRegisterWidget({
+    super.key,
+    required this.params,
+    this.theme = const EcommerceWidgetTheme(),
+  });
 
   final Map<String, dynamic> params;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<FastRegisterWidget> createState() => _FastRegisterWidgetState();
@@ -58,6 +65,7 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = widget.theme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
@@ -73,24 +81,24 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
                 color: Colors.green,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.chat, color: Colors.white, size: 20),
-                  SizedBox(width: 10),
-                  Text('WHATSAPP', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  const Icon(Icons.chat, color: Colors.white, size: 20),
+                  const SizedBox(width: 10),
+                  Text(theme.fastRegisterHeaderLabel, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
             const SizedBox(height: 5),
-            const Text(
-              'Quick Registration System',
-              style: TextStyle(color: Colors.green, fontWeight: FontWeight.w700, fontSize: 20),
+            Text(
+              theme.fastRegisterTitleLabel,
+              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w700, fontSize: 20),
             ),
             const SizedBox(height: 5),
-            const Text(
-              'Register quickly via WhatsApp in 3 steps.',
-              style: TextStyle(color: Colors.green, fontWeight: FontWeight.w300, fontSize: 16),
+            Text(
+              theme.fastRegisterSubtitleLabel,
+              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w300, fontSize: 16),
             ),
             const SizedBox(height: 20),
             Padding(
@@ -98,16 +106,16 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _step('1', 'Enter Your\nNumber'),
+                  _step('1', theme.fastRegisterStep1Label),
                   const SizedBox(width: 5),
-                  _step('2', 'Send the\nReceived Code'),
+                  _step('2', theme.fastRegisterStep2Label),
                   const SizedBox(width: 5),
-                  _step('3', 'Talk to a\nRepresentative'),
+                  _step('3', theme.fastRegisterStep3Label),
                 ],
               ),
             ),
             const SizedBox(height: 40),
-            _numberField(context),
+            _numberField(context, theme),
             const SizedBox(height: 10),
           ],
         ),
@@ -115,7 +123,7 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
     );
   }
 
-  Widget _numberField(BuildContext context) {
+  Widget _numberField(BuildContext context, EcommerceWidgetTheme theme) {
     return Column(
       children: [
         Container(
@@ -166,12 +174,12 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
               backgroundColor: const WidgetStatePropertyAll(Colors.green),
               shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.send, color: Colors.white),
-                SizedBox(width: 5),
-                Text('Send', style: TextStyle(color: Colors.white)),
+                const Icon(Icons.send, color: Colors.white),
+                const SizedBox(width: 5),
+                Text(theme.fastRegisterSendLabel, style: const TextStyle(color: Colors.white)),
               ],
             ),
           ),

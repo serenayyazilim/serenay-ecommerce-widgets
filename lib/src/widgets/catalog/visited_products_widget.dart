@@ -42,7 +42,7 @@ class VisitedProductsWidget extends StatelessWidget {
                 Icon(Icons.history, size: 18, color: theme.primaryColor),
                 const SizedBox(width: 6),
                 Text(
-                  'Recently Viewed',
+                  theme.recentlyViewedLabel,
                   style: theme.productTitleStyle.copyWith(fontSize: 15),
                 ),
               ],

@@ -90,7 +90,7 @@ class WidgetCatalog {
       case WidgetType.search:
         return SearchWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.fastRegister:
-        return FastRegisterWidget(params: params);
+        return FastRegisterWidget(params: params, theme: theme);
       case WidgetType.unknown:
         return const UnknownWidget();
     }

@@ -103,7 +103,7 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
       return const SizedBox.shrink();
     }
 
-    final title = (widget.params['title'] as String?) ?? 'Flash Sale';
+    final title = (widget.params['title'] as String?) ?? widget.theme.flashSaleTitleLabel;
     final subtitle = widget.params['subtitle'] as String?;
     final remaining = _endTime?.difference(now);
 
@@ -310,7 +310,7 @@ class _FlashModalState extends State<_FlashModal> {
 
   @override
   Widget build(BuildContext context) {
-    final title = (widget.params['title'] as String?) ?? 'Flash Sale';
+    final title = (widget.params['title'] as String?) ?? widget.theme.flashSaleTitleLabel;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -348,7 +348,7 @@ class _FlashModalState extends State<_FlashModal> {
                     ),
                     if (!_expired) _TimerChip(timerText: _timerText),
                     if (_expired)
-                      const Text("Time's up", style: TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(widget.theme.flashSaleTimeUpLabel, style: const TextStyle(color: Colors.white70, fontSize: 12)),
                   ],
                 ),
               ),
