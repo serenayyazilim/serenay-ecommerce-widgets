@@ -76,7 +76,7 @@ class WidgetCatalog {
       case WidgetType.mixedCarousel:
         return MixedCarouselWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.modal:
-        return ModalWidget(params: params, callbacks: callbacks);
+        return ModalWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.videoList:
         return VideoListWidget(params: params, callbacks: callbacks);
       case WidgetType.story:

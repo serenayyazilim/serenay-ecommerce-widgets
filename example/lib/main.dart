@@ -41,6 +41,9 @@ class _ScreenPageState extends State<ScreenPage> {
     primaryColor: Color(0xFF7B2CBF),
     secondaryColor: Color(0xFFFF9F1C),
     discountColor: Color(0xFFE63946),
+    // Also picked up by MODAL's close (X) button background/icon.
+    surfaceColor: Color(0xFFF5F0FF),
+    textPrimaryColor: Color(0xFF2B0A45),
   );
 
   late final _callbacks = WidgetCallbacks(

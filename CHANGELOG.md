@@ -3,6 +3,11 @@
 - Fix `ModalWidget`: it was missing the circular white "X" close button, the
   dimmed barrier and the max-height constraint that the original design
   used, so the popup image had no way to be dismissed without tapping it.
+  `ModalWidget` also never accepted an `EcommerceWidgetTheme`, unlike every
+  other catalog widget — it now takes `theme` (wired automatically through
+  `WidgetCatalog.getScreen(theme:)`) and the close button's background/icon
+  colors follow `theme.surfaceColor`/`theme.textPrimaryColor` instead of
+  being hardcoded white/black.
 - Fix `SliderWidget`: slides rendered full-bleed instead of the original
   carousel's "peek" effect (adjacent slides partially visible at the
   edges); `PageController(viewportFraction: 0.8)` restores it.

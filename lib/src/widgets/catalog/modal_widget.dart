@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
@@ -14,10 +15,12 @@ class ModalWidget extends StatefulWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<ModalWidget> createState() => _ModalWidgetState();
@@ -76,8 +79,8 @@ class _ModalWidgetState extends State<ModalWidget> {
                 child: Container(
                   width: 32,
                   height: 32,
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(Icons.close, size: 18, color: Colors.black87),
+                  decoration: BoxDecoration(color: widget.theme.surfaceColor, shape: BoxShape.circle),
+                  child: Icon(Icons.close, size: 18, color: widget.theme.textPrimaryColor),
                 ),
               ),
             ),
