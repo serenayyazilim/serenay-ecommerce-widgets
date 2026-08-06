@@ -198,16 +198,30 @@ class _StoryViewerState extends State<_StoryViewer> {
           ),
           if (footer != null && footer.isNotEmpty)
             Positioned(
-              left: AppDimens.spaceM,
-              right: AppDimens.spaceM,
-              bottom: AppDimens.spaceL,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white),
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: GestureDetector(
+                onTap: () => _handleCta(story),
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  color: Colors.black.withValues(alpha: 0.4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.keyboard_arrow_up_outlined, color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.all(3),
+                        child: Text(
+                          footer,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () => _handleCta(story),
-                child: Text(footer),
               ),
             ),
         ],

@@ -221,6 +221,8 @@ final _mockScreenJson = {
           {
             'item_type': 'image',
             'bg_color': '#222222',
+            'title': 'Lowest Price of the Year',
+            'title_color': '#FFFFFF',
             'url': 'https://picsum.photos/seed/mix1/800/800',
             'type': 'category',
             'id': 1,

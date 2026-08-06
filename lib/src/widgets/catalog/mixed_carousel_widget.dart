@@ -114,18 +114,6 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     final description = item['description'] as String?;
     final descriptionColor = _bgColor(item['description_color'] as String?);
 
-    if (itemType == 'image') {
-      final url = item['url'] as String? ?? '';
-      final action = WidgetAction.fromParams(item);
-      return GestureDetector(
-        onTap: () => widget.callbacks.onAction(action),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Container(color: bgColor, child: CatalogNetworkImage(url: url)),
-        ),
-      );
-    }
-
     return Container(
       decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(16)),
       padding: const EdgeInsets.all(14),
@@ -154,8 +142,24 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
             ),
           ],
           if (title != null || description != null) const SizedBox(height: 10),
-          Expanded(child: _MiniProductGrid(params: item, callbacks: widget.callbacks, theme: widget.theme)),
+          Expanded(
+            child: itemType == 'image'
+                ? _buildImagePage(item)
+                : _MiniProductGrid(params: item, callbacks: widget.callbacks, theme: widget.theme),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImagePage(Map<String, dynamic> item) {
+    final url = item['url'] as String? ?? '';
+    final action = WidgetAction.fromParams(item);
+    return GestureDetector(
+      onTap: () => widget.callbacks.onAction(action),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CatalogNetworkImage(url: url, width: double.infinity, height: double.infinity),
       ),
     );
   }
@@ -184,20 +188,30 @@ class _MiniProductGridState extends State<_MiniProductGrid> {
         final products = (snapshot.data ?? const []).take(4).toList();
         if (products.isEmpty) return const SizedBox.shrink();
 
-        return GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.62,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) => MiniProductTile(
-            data: products[index],
-            callbacks: widget.callbacks,
-            theme: widget.theme,
-          ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            const spacing = 8.0;
+            const cardPadding = 8.0;
+            final itemWidth = (constraints.maxWidth - spacing) / 2;
+            final imageSize = itemWidth - cardPadding * 2;
+
+            return GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: spacing,
+                crossAxisSpacing: spacing,
+                childAspectRatio: 0.62,
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) => MiniProductTile(
+                data: products[index],
+                callbacks: widget.callbacks,
+                theme: widget.theme,
+                imageSize: imageSize,
+              ),
+            );
+          },
         );
       },
     );

@@ -84,7 +84,7 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.chat, color: Colors.white, size: 20),
+                  const _WhatsAppGlyph(size: 20, color: Colors.white),
                   const SizedBox(width: 10),
                   Text(theme.fastRegisterHeaderLabel, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ],
@@ -187,4 +187,52 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
       ],
     );
   }
+}
+
+/// A dependency-free stand-in for the WhatsApp logo (a phone handset inside
+/// a rounded chat bubble) — closer to the original header icon than a
+/// generic chat glyph, without bundling a trademarked asset.
+class _WhatsAppGlyph extends StatelessWidget {
+  const _WhatsAppGlyph({required this.size, required this.color});
+
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(painter: _WhatsAppGlyphPainter(color)),
+    );
+  }
+}
+
+class _WhatsAppGlyphPainter extends CustomPainter {
+  _WhatsAppGlyphPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+
+    final bubble = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height * 0.8),
+        Radius.circular(size.width * 0.3),
+      ))
+      ..moveTo(size.width * 0.18, size.height * 0.72)
+      ..lineTo(size.width * 0.05, size.height)
+      ..lineTo(size.width * 0.38, size.height * 0.8)
+      ..close();
+    canvas.drawPath(bubble, paint);
+
+    final dotPaint = Paint()..color = color.computeLuminance() > 0.5 ? Colors.green : Colors.white;
+    final center = Offset(size.width / 2, size.height * 0.4);
+    canvas.drawCircle(center, size.width * 0.18, dotPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _WhatsAppGlyphPainter oldDelegate) => oldDelegate.color != color;
 }

@@ -1,3 +1,35 @@
+## 1.1.4
+
+- Fix `ModalWidget`: it was missing the circular white "X" close button, the
+  dimmed barrier and the max-height constraint that the original design
+  used, so the popup image had no way to be dismissed without tapping it.
+- Fix `SliderWidget`: slides rendered full-bleed instead of the original
+  carousel's "peek" effect (adjacent slides partially visible at the
+  edges); `PageController(viewportFraction: 0.8)` restores it.
+- Fix `StoryWidget`: the swipe-up CTA at the bottom of a story was a small
+  outlined button instead of the original full-width, translucent-black bar
+  with an up-chevron above the text.
+- Fix `FastRegisterWidget`: the WhatsApp header used a generic chat icon;
+  replaced with a dependency-free WhatsApp-style glyph.
+- Fix `MixedCarouselWidget`:
+  - `item_type: "image"` pages silently dropped `title`/`description` —
+    they now render inside the same colored card shell as `products` pages,
+    matching the original design.
+  - The mini product grid's photos weren't square (no `imageSize` was
+    passed to `MiniProductTile`), so thumbnails rendered at the source
+    image's aspect ratio instead of a uniform square like every other
+    product card.
+- Fix a crash ("Looking up a deactivated widget's ancestor is unsafe")
+  that could happen in `FlashSaleWidget` and `FavoriteButton`: both built
+  their `AnimationController`s via a lazy `late final` field initializer,
+  which — if `build()` never touched the field before the widget was
+  disposed (e.g. an already-expired flash sale short-circuits its own
+  `build()`) — ran the `vsync` lookup during `dispose()` against a
+  deactivated element. Controllers are now created eagerly in `initState()`.
+- Fix `SearchWidget`'s background image `BoxFit`: it used `cover` instead
+  of the original `fitWidth`, cropping the image differently than the
+  source design.
+
 ## 1.1.3
 
 - Add the remaining hardcoded, non-backend UI strings to

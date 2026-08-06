@@ -55,7 +55,12 @@ class _SearchWidgetState extends State<SearchWidget> {
           children: [
             SizedBox(
               width: width,
-              child: CatalogNetworkImage(url: url, height: width * heightPercent),
+              child: CatalogNetworkImage(
+                url: url,
+                height: width * heightPercent,
+                width: width,
+                fit: BoxFit.fitWidth,
+              ),
             ),
             Positioned(
               bottom: bottom.toDouble(),

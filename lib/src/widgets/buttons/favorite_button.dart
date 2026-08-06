@@ -48,22 +48,30 @@ class FavoriteButton extends StatefulWidget {
 
 class _FavoriteButtonState extends State<FavoriteButton>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 600),
-    vsync: this,
-  );
-  late final Animation<double> _scale = TweenSequence<double>([
-    TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.3), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: 1.3, end: 0.9), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: 0.9, end: 1.15), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: 1.15, end: 1.0), weight: 25),
-  ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  late final Animation<double> _rotation = TweenSequence<double>([
-    TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.17), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: -0.17, end: 0.17), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: 0.17, end: -0.09), weight: 25),
-    TweenSequenceItem(tween: Tween(begin: -0.09, end: 0.0), weight: 25),
-  ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  late final AnimationController _controller;
+  late final Animation<double> _scale;
+  late final Animation<double> _rotation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _scale = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.3), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 1.3, end: 0.9), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.9, end: 1.15), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 1.15, end: 1.0), weight: 25),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _rotation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.17), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -0.17, end: 0.17), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.17, end: -0.09), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -0.09, end: 0.0), weight: 25),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
 
   @override
   void dispose() {

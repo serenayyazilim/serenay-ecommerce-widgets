@@ -44,18 +44,44 @@ class _ModalWidgetState extends State<ModalWidget> {
 
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
-        insetPadding: const EdgeInsets.all(AppDimens.spaceL),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-            widget.callbacks.onAction(action);
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(radius),
-            child: CatalogNetworkImage(url: url),
-          ),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppDimens.spaceL, vertical: 40),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(radius),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(dialogContext).pop();
+                  widget.callbacks.onAction(action);
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: params['height_percent'] != null
+                        ? MediaQuery.of(context).size.width * (parseDouble(params['height_percent']) ?? 1.1)
+                        : MediaQuery.of(context).size.height * 0.7,
+                  ),
+                  child: CatalogNetworkImage(url: url, width: double.infinity),
+                ),
+              ),
+            ),
+            Positioned(
+              top: -14,
+              right: -14,
+              child: GestureDetector(
+                onTap: () => Navigator.of(dialogContext).pop(),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 18, color: Colors.black87),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

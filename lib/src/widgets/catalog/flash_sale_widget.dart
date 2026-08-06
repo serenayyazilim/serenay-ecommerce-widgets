@@ -29,22 +29,10 @@ class FlashSaleWidget extends StatefulWidget {
 
 class _FlashSaleWidgetState extends State<FlashSaleWidget>
     with TickerProviderStateMixin {
-  late final AnimationController _colorController = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 2),
-  )..repeat(reverse: true);
-  late final Animation<Color?> _colorA = ColorTween(
-    begin: widget.theme.discountColor,
-    end: widget.theme.secondaryColor,
-  ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
-  late final Animation<Color?> _colorB = ColorTween(
-    begin: widget.theme.secondaryColor,
-    end: widget.theme.discountColor,
-  ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
-  late final AnimationController _borderController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 5500),
-  )..repeat();
+  late final AnimationController _colorController;
+  late final Animation<Color?> _colorA;
+  late final Animation<Color?> _colorB;
+  late final AnimationController _borderController;
 
   Timer? _ticker;
   DateTime? _endTime;
@@ -52,6 +40,23 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
   @override
   void initState() {
     super.initState();
+    _colorController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _colorA = ColorTween(
+      begin: widget.theme.discountColor,
+      end: widget.theme.secondaryColor,
+    ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
+    _colorB = ColorTween(
+      begin: widget.theme.secondaryColor,
+      end: widget.theme.discountColor,
+    ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
+    _borderController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 5500),
+    )..repeat();
+
     _endTime = _parseDate(widget.params['end_time']);
     if (_endTime != null) {
       _ticker = Timer.periodic(const Duration(seconds: 1), (_) {

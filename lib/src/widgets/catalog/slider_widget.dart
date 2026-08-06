@@ -26,7 +26,7 @@ class SliderWidget extends StatefulWidget {
 
 class _SliderWidgetState extends State<SliderWidget> {
   late final Future<List<SlideItem>> _future = _load();
-  final _pageController = PageController();
+  final _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
 
   @override
@@ -98,9 +98,12 @@ class _SliderWidgetState extends State<SliderWidget> {
                       controller: _pageController,
                       onPageChanged: (index) => setState(() => _currentPage = index),
                       itemCount: slides.length,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () => _handleTap(slides, index),
-                        child: CatalogNetworkImage(url: slides[index].image),
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: GestureDetector(
+                          onTap: () => _handleTap(slides, index),
+                          child: CatalogNetworkImage(url: slides[index].image),
+                        ),
                       ),
                     ),
                   ),
