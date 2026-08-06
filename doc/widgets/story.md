@@ -27,7 +27,9 @@ tapping one opens a full-screen story viewer for that entry.
 - `contain` — optional footer call-to-action text; when present, a button
   at the bottom of the story triggers `product_id_or_url`:
   - `type: "product"` — resolves as `WidgetAction(type: product, id: product_id_or_url)`.
-  - any other `type` — treated as an external URL and resolved as
-    `WidgetAction(type: link, goto: product_id_or_url)`.
+  - any other `type`, with a string `product_id_or_url` — treated as an
+    external URL and resolved as `WidgetAction(type: link, goto:
+    product_id_or_url)`. A non-string `product_id_or_url` with a non-
+    `"product"` type does nothing on tap.
 
 Renders nothing if `list` is empty.

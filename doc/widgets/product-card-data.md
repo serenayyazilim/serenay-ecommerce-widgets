@@ -40,8 +40,11 @@ when a field is missing (hides it, or falls back to `priceText`).
 - **Price hiding**: when `WidgetCallbacks.isLoggedIn` returns `false`,
   the rich product card shows a bordered "View Prices" button instead of the
   price, and taps it call `onRequireAuth` — common in B2B/reseller apps.
-- **Discount badge**: shown when `discount` is a non-empty, non-`"0"`
-  string; rendered as `%{discount}` with a tag icon.
+- **Discount badge**: shown either when `price_old` is greater than `price`,
+  or when `discount` is a non-null string other than `"0"`; rendered as
+  `%{discount}` with a tag icon. Note: an empty string (`discount: ""`)
+  currently still satisfies the second condition and renders a `%0` badge —
+  omit the field (or send `null`) rather than `""` if no discount applies.
 - **Variants**: with more than one entry, the card's image area becomes a
   swipeable photo slider with a dot indicator, plus a variant-count chip
   that opens a bottom sheet (color thumbnails + a quantity stepper +

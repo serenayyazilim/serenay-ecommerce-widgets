@@ -16,5 +16,7 @@ equal share of the row's width.
 ```
 
 Each entry in `list` uses the same fields as [IMAGE](image.md) (`url`,
-`type`, `id`, `radius`, `padding`, ...), except `height_percent` is ignored —
-images size to a fixed row height instead.
+`type`, `id`, `radius`, `padding`, `height_percent`, ...) — each entry is an
+independent IMAGE, just laid out in an equal-width column instead of full
+row width. Entries with different `height_percent` values will end up
+different heights within the same row.

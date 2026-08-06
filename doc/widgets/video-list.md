@@ -33,7 +33,10 @@ One or more silent, looping, auto-playing videos fetched by `id` via
   style it.
 - More than one video scrolls in a row/column per `scroll_direction`
   (`"horizontal"` or `"vertical"`, default `"vertical"`), each sized by
-  `width_percent`/`height_percent` and separated by `horizontal_padding`/
-  `vertical_padding`. `textparams` only applies to the single-video layout.
+  `width_percent`/`height_percent` and separated by `horizontal_padding`
+  (default `3`)/`vertical_padding` (default `4`). The outer scrolling
+  container itself is sized by `container_height` — a fraction of screen
+  height, default `0.3` (ignored for a single video). `textparams` only
+  applies to the single-video layout.
 - Tapping a video resolves its `action` through the
   [action/tap contract](action-contract.md).
