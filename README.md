@@ -12,7 +12,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets: ^1.1.4
+  serenay_ecommerce_widgets: ^1.1.5
 ```
 
 ## Quick start
@@ -80,6 +80,10 @@ TEXT, IMAGE, SLIDER, DIVIDER, CAROUSEL, GRID, IMAGECAROUSEL, IMAGELIST,
 VIDEOLIST, FASTREGISTER, STORY, VISITEDPRODUCTS, TIMEIMAGE, YOUTUBE, SEARCH,
 PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL. An unrecognized `type` renders
 as an empty 1px box (forward compatibility).
+
+GRID has its own card design (taller image, inline video, a pre-order
+banner, a size/package picker); CAROUSEL, PRODUCTCARD and FLASHSALE share
+the same card.
 
 For the `params` schema each widget expects, see
 [doc/widgets/](doc/widgets/README.md) — one page per widget type.

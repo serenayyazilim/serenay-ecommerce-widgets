@@ -18,6 +18,29 @@ class ProductVariant {
   }
 }
 
+/// A pick-one purchase option shown in OldProductCard's measure/quantity
+/// sheet (e.g. a size or a package tier), distinct from [ProductVariant]
+/// (which represents a color/style choice with its own photo).
+class ProductMeasureOption {
+  const ProductMeasureOption({required this.id, required this.title, this.priceText});
+
+  final dynamic id;
+  final String title;
+
+  /// Pre-formatted price/info text for this option (e.g. "129.90 ₺"),
+  /// supplied by the backend so the widget never has to compute currency
+  /// formatting itself.
+  final String? priceText;
+
+  factory ProductMeasureOption.fromJson(Map<String, dynamic> json) {
+    return ProductMeasureOption(
+      id: json['id'],
+      title: (json['title'] as String?) ?? '',
+      priceText: json['price_text'] as String?,
+    );
+  }
+}
+
 /// A currency-specific price entry, used when a product is priced in more
 /// than one currency.
 class ProductPrice {
@@ -62,6 +85,7 @@ class ProductCardData {
     this.saleDisabledReason,
     this.unitPrice,
     this.unitPriceText,
+    this.preOrder = false,
   });
 
   final dynamic id;
@@ -80,7 +104,7 @@ class ProductCardData {
   final List<ProductPrice> prices;
   final bool isFavorited;
   final String? measureName;
-  final List<dynamic> measureOptions;
+  final List<ProductMeasureOption> measureOptions;
 
   /// Free-text price shown instead of [price] (e.g. "Call for price").
   final String? priceText;
@@ -89,6 +113,10 @@ class ProductCardData {
   final String? saleDisabledReason;
   final String? unitPrice;
   final String? unitPriceText;
+
+  /// Whether this product is sellable only as a pre-order (OldProductCard
+  /// shows a "Pre-order" banner instead of hiding the card).
+  final bool preOrder;
 
   bool get hasDiscount => priceOld != null && price != null && priceOld! > price!;
 
@@ -116,6 +144,7 @@ class ProductCardData {
       saleDisabledReason: saleDisabledReason,
       unitPrice: unitPrice,
       unitPriceText: unitPriceText,
+      preOrder: preOrder,
     );
   }
 
@@ -145,12 +174,20 @@ class ProductCardData {
           const [],
       isFavorited: (json['is_favorited'] as bool?) ?? false,
       measureName: json['measure_name'] as String?,
-      measureOptions: (json['measure_options'] as List?) ?? const [],
+      measureOptions: (json['measure_options'] as List?)
+              ?.map(
+                (e) => e is Map
+                    ? ProductMeasureOption.fromJson(Map<String, dynamic>.from(e))
+                    : ProductMeasureOption(id: e, title: e.toString()),
+              )
+              .toList() ??
+          const [],
       priceText: json['price_text'] as String?,
       saleDisabled: (json['sale_disabled'] as bool?) ?? false,
       saleDisabledReason: json['sale_disabled_reason'] as String?,
       unitPrice: json['unit_price']?.toString(),
       unitPriceText: json['unit_price_text'] as String?,
+      preOrder: (json['pre_order'] as bool?) ?? false,
     );
   }
 

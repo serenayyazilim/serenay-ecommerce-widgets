@@ -6,10 +6,10 @@ import '../../contracts/product_query.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
-/// PRODUCTCARD: a 2-column grid of the shared rich product card — the same
-/// component GRID and CAROUSEL use. In the source app this widget and GRID
-/// are visually identical; PRODUCTCARD is kept as its own catalog entry
-/// because the backend addresses them as distinct widget types.
+/// PRODUCTCARD: a 2-column grid of [RichProductCard] — the same component
+/// CAROUSEL uses. GRID renders its own card ([OldProductCard]); PRODUCTCARD
+/// is kept as its own catalog entry because the backend addresses them as
+/// distinct widget types.
 class ProductCardWidget extends StatefulWidget {
   const ProductCardWidget({
     super.key,
@@ -38,21 +38,30 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        return GridView.builder(
+        return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.6,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) => RichProductCard(
-            data: products[index],
-            callbacks: widget.callbacks,
-            theme: widget.theme,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              const spacing = 8.0;
+              final itemWidth = (constraints.maxWidth - spacing) / 2;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: [
+                  for (final product in products)
+                    SizedBox(
+                      width: itemWidth,
+                      child: RichProductCard(
+                        data: product,
+                        imageSize: itemWidth,
+                        callbacks: widget.callbacks,
+                        theme: widget.theme,
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         );
       },

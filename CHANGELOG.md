@@ -1,3 +1,37 @@
+## 1.1.5
+
+- Add `GridWidget` (GRID) its own card design, `OldProductCard` — ported
+  from the source app instead of sharing `RichProductCard` with CAROUSEL/
+  PRODUCTCARD/FLASHSALE: a taller image, inline `.mp4` variant video, a
+  left-edge discount ribbon, a pre-order banner (`ProductCardData.preOrder`),
+  and a size/package-tier picker (`ProductCardData.measureOptions`, now
+  typed as `ProductMeasureOption` instead of raw `dynamic`). Adds
+  `EcommerceWidgetTheme.preOrderLabel` and `.quickAddLabel`.
+- Fix `GridWidget` and `ProductCardWidget` (PRODUCTCARD): both used a
+  `GridView` with a fixed `childAspectRatio`, which didn't match their
+  card's real content height — GRID's cards overflowed at the bottom,
+  PRODUCTCARD's rows had extra dead space below each card. Both now lay
+  out with `Wrap`, sized to the actual card height.
+- Fix `MixedCarouselWidget` (MIXEDCAROUSEL): a page's mini 2x2 product grid
+  could need more vertical space than the page's height allowed (depending
+  on `height_percent` and the amount of title/description text), clipping
+  the bottom row of cards. The page height now grows to fit the grid
+  instead of cutting it off.
+- Fix `ModalWidget` and `SliderWidget`'s zoom-image dialog: `showDialog`
+  defaults to the app's root `Navigator`, so the popup/barrier always
+  covered the entire app regardless of where the widget was mounted. Both
+  now pass `useRootNavigator: false`, matching `showModalBottomSheet`'s
+  existing default, so the dialog is scoped to the nearest `Navigator`
+  instead — host apps with nested navigators (e.g. a per-tab `Navigator`)
+  will now see the dialog confined to that navigator's bounds rather than
+  covering the whole app.
+- Redesign `SearchWidget`'s floating search bar: a rounded, shadowed pill
+  bar with a leading search icon and a rounded, `theme.primaryColor`
+  button, replacing the flush white bar and square `secondaryColor`
+  button. The bar height, button height and shared corner radius are now
+  overridable per-instance via `params`: `bar_height`, `button_height`,
+  `radius`.
+
 ## 1.1.4
 
 - Fix `ModalWidget`: it was missing the circular white "X" close button, the

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -81,8 +82,11 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
+        final requiredHeight = items
+            .map((item) => _requiredPageHeight(item, width))
+            .fold(0.0, math.max);
         return SizedBox(
-          height: width * heightPercent,
+          height: math.max(width * heightPercent, requiredHeight),
           child: NotificationListener<ScrollNotification>(
             onNotification: (notification) {
               if (notification is ScrollStartNotification &&
@@ -104,6 +108,40 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
         );
       },
     );
+  }
+
+  /// The height a single carousel page needs to render [item] without its
+  /// content overflowing, given the widget's total [width]. Only
+  /// `item_type: "products"` pages have a real minimum (the 2x2 mini grid);
+  /// image pages just fill whatever space they're given.
+  double _requiredPageHeight(Map<String, dynamic> item, double width) {
+    const pageViewportFraction = 0.8;
+    const pagePadding = 6.0; // horizontal padding around each PageView page
+    const containerPadding = 14.0; // _buildPage's Container padding
+    const gridSpacing = 8.0;
+    const cardPadding = 8.0;
+    // Non-image chrome per mini tile: padding + spacing + title line + spacing + price line.
+    const tileChromeHeight = cardPadding * 2 + 6 + 18 + 4 + 20;
+
+    final hasTitle = (item['title'] as String?)?.isNotEmpty ?? false;
+    final hasDescription = (item['description'] as String?)?.isNotEmpty ?? false;
+    var headerHeight = 0.0;
+    if (hasTitle || hasDescription) {
+      headerHeight += hasTitle ? (hasDescription ? 22.0 : 44.0) : 0.0;
+      headerHeight += hasDescription ? 35.0 : 0.0;
+      headerHeight += 10.0;
+    }
+
+    var gridHeight = 0.0;
+    if (item['item_type'] != 'image') {
+      final pageWidth = width * pageViewportFraction - pagePadding * 2;
+      final gridWidth = pageWidth - containerPadding * 2;
+      final tileWidth = (gridWidth - gridSpacing) / 2;
+      final imageSize = tileWidth - cardPadding * 2;
+      gridHeight = 2 * (imageSize + tileChromeHeight) + gridSpacing;
+    }
+
+    return containerPadding * 2 + headerHeight + gridHeight;
   }
 
   Widget _buildPage(Map<String, dynamic> item) {
@@ -195,21 +233,21 @@ class _MiniProductGridState extends State<_MiniProductGrid> {
             final itemWidth = (constraints.maxWidth - spacing) / 2;
             final imageSize = itemWidth - cardPadding * 2;
 
-            return GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: spacing,
-                crossAxisSpacing: spacing,
-                childAspectRatio: 0.62,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) => MiniProductTile(
-                data: products[index],
-                callbacks: widget.callbacks,
-                theme: widget.theme,
-                imageSize: imageSize,
-              ),
+            return Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              children: [
+                for (final product in products)
+                  SizedBox(
+                    width: itemWidth,
+                    child: MiniProductTile(
+                      data: product,
+                      callbacks: widget.callbacks,
+                      theme: widget.theme,
+                      imageSize: imageSize,
+                    ),
+                  ),
+              ],
             );
           },
         );

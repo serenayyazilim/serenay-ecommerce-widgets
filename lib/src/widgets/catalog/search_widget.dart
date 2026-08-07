@@ -9,6 +9,10 @@ import 'catalog_network_image.dart';
 /// SEARCH: a full-width background image with a floating, editable search
 /// bar near the bottom and a separate "Search" button that navigates with
 /// whatever text was typed.
+///
+/// The bar's height, the button's height, and their shared corner radius all
+/// default to the package's built-in look but can be overridden per-instance
+/// via `params`: `bar_height`, `button_height`, `radius`.
 class SearchWidget extends StatefulWidget {
   const SearchWidget({
     super.key,
@@ -45,6 +49,9 @@ class _SearchWidgetState extends State<SearchWidget> {
     final url = (widget.params['url'] as String?) ?? '';
     final hintText = (widget.params['hint_text'] as String?) ?? widget.theme.searchHintLabel;
     final bottom = (parseNum(widget.params['bottom']) ?? 10) / 2;
+    final barHeight = parseDouble(widget.params['bar_height']) ?? 56.0;
+    final buttonHeight = parseDouble(widget.params['button_height']) ?? 40.0;
+    final radius = parseDouble(widget.params['radius']) ?? widget.theme.radiusL;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -64,46 +71,58 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
             Positioned(
               bottom: bottom.toDouble(),
-              left: 10,
-              right: 10,
+              left: 14,
+              right: 14,
               child: Container(
-                color: Colors.white.withValues(alpha: 0.95),
-                height: 65,
+                height: barHeight,
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(radius),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(width: 10),
+                    Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
                         controller: _controller,
-                        style: const TextStyle(fontSize: 17),
+                        style: const TextStyle(fontSize: 15),
                         onSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
                           hintText: hintText,
-                          hintStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                          hintStyle: TextStyle(fontSize: 15, color: Colors.grey.shade500),
                           border: InputBorder.none,
+                          isDense: true,
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: width * 0.25,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: widget.theme.secondaryColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    const SizedBox(width: 6),
+                    SizedBox(
+                      height: buttonHeight,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.theme.primaryColor,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(radius),
                           ),
-                          onPressed: _submit,
-                          child: Center(
-                            child: Text(
-                              widget.theme.searchButtonLabel,
-                              style: widget.theme.buttonLabelStyle.copyWith(fontSize: 14),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
+                        ),
+                        onPressed: _submit,
+                        child: Text(
+                          widget.theme.searchButtonLabel,
+                          style: widget.theme.buttonLabelStyle.copyWith(fontSize: 14, color: Colors.white),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),

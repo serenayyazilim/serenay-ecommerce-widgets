@@ -48,6 +48,7 @@ class _SliderWidgetState extends State<SliderWidget> {
       case WidgetActionType.zoom:
         showDialog(
           context: context,
+          useRootNavigator: false,
           builder: (context) => _ZoomGallery(
             images: slides.map((s) => s.image).toList(),
             initialIndex: index,

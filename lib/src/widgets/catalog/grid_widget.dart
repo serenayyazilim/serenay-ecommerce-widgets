@@ -4,11 +4,11 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
-import 'rich_product_card.dart';
+import 'old_product_card.dart';
 
 /// GRID: the same product-query contract as CAROUSEL, rendered as a
-/// 2-column grid of the shared rich product card instead of a horizontal
-/// row.
+/// 2-column grid of OldProductCard (GRID's own, taller card design)
+/// instead of a horizontal row.
 class GridWidget extends StatefulWidget {
   const GridWidget({
     super.key,
@@ -37,21 +37,30 @@ class _GridWidgetState extends State<GridWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        return GridView.builder(
+        return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.6,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) => RichProductCard(
-            data: products[index],
-            callbacks: widget.callbacks,
-            theme: widget.theme,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              const spacing = 8.0;
+              final itemWidth = (constraints.maxWidth - spacing) / 2;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: [
+                  for (final product in products)
+                    SizedBox(
+                      width: itemWidth,
+                      child: OldProductCard(
+                        data: product,
+                        imageSize: itemWidth,
+                        callbacks: widget.callbacks,
+                        theme: widget.theme,
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         );
       },

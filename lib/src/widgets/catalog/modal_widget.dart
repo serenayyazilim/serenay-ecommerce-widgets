@@ -47,6 +47,7 @@ class _ModalWidgetState extends State<ModalWidget> {
 
     showDialog(
       context: context,
+      useRootNavigator: false,
       barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (dialogContext) => Dialog(
         backgroundColor: Colors.transparent,

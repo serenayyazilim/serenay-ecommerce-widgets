@@ -58,6 +58,8 @@ class EcommerceWidgetTheme {
     this.fastRegisterStep1Label = 'Enter Your\nNumber',
     this.fastRegisterStep2Label = 'Send the\nReceived Code',
     this.fastRegisterStep3Label = 'Talk to a\nRepresentative',
+    this.preOrderLabel = 'Pre-order',
+    this.quickAddLabel = 'Add',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -194,6 +196,15 @@ class EcommerceWidgetTheme {
   /// Third step label on the FASTREGISTER card.
   final String fastRegisterStep3Label;
 
+  /// Banner shown on OldProductCard (GRID) when a product is
+  /// pre-order-only.
+  final String preOrderLabel;
+
+  /// Label for OldProductCard's compact "add one at the default measure"
+  /// pill, shown next to the measure-picker button when the product has
+  /// [ProductCardData.measureOptions].
+  final String quickAddLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -240,6 +251,8 @@ class EcommerceWidgetTheme {
     String? fastRegisterStep1Label,
     String? fastRegisterStep2Label,
     String? fastRegisterStep3Label,
+    String? preOrderLabel,
+    String? quickAddLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -286,6 +299,8 @@ class EcommerceWidgetTheme {
       fastRegisterStep1Label: fastRegisterStep1Label ?? this.fastRegisterStep1Label,
       fastRegisterStep2Label: fastRegisterStep2Label ?? this.fastRegisterStep2Label,
       fastRegisterStep3Label: fastRegisterStep3Label ?? this.fastRegisterStep3Label,
+      preOrderLabel: preOrderLabel ?? this.preOrderLabel,
+      quickAddLabel: quickAddLabel ?? this.quickAddLabel,
     );
   }
 }

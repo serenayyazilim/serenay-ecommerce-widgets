@@ -10,11 +10,12 @@ import '../buttons/favorite_button.dart';
 import '../cart/quantity_picker.dart';
 import 'catalog_network_image.dart';
 
-/// The rich, variant-capable product card shared by CAROUSEL, GRID,
-/// PRODUCTCARD and FLASHSALE's product grid: a bordered square image (with a
-/// variant photo slider + dot indicator when the product has more than one
-/// variant), an animated favorite heart, a discount badge, and a
-/// variant-count chip that opens a color/size + quantity bottom sheet.
+/// The rich, variant-capable product card shared by CAROUSEL, PRODUCTCARD
+/// and FLASHSALE's product grid (GRID uses its own fork, [OldProductCard]):
+/// a bordered square image (with a variant photo slider + dot indicator when
+/// the product has more than one variant), an animated favorite heart, a
+/// discount badge, and a variant-count chip that opens a color/size +
+/// quantity bottom sheet.
 class RichProductCard extends StatefulWidget {
   const RichProductCard({
     super.key,
