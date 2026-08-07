@@ -1,5 +1,8 @@
 # serenay_ecommerce_widgets
 
+**[🚀 Live demo](https://serenayyazilim.github.io/serenay-ecommerce-widgets/)** ·
+**[📖 Docs](https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/)**
+
 A dynamic widget system that renders e-commerce home/category screens from
 a backend-driven JSON payload. For the full widget catalog — one usage doc
 per widget type, with JSON schemas and examples — see

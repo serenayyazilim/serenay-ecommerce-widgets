@@ -99,6 +99,8 @@ class _ScreenPageState extends State<ScreenPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
         title: const Text('Widget Catalog Demo'),
         actions: [
           TextButton.icon(
