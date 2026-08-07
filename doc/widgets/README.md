@@ -1,5 +1,7 @@
 # Widget catalog
 
+[→ Live demo](../) — see every widget rendered in the browser.
+
 Usage docs for every widget type `WidgetCatalog.getScreen` can render. Each page
 covers the `params` a backend sends for that widget, an example JSON entry,
 and any widget-specific behavior. Three contracts are shared across most
@@ -38,4 +40,4 @@ widgets and documented once:
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),
-see the [root README](../README.md).
+see the [root README](https://github.com/serenayyazilim/serenay-ecommerce-widgets#readme).

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const DemoApp());
@@ -97,6 +98,19 @@ class _ScreenPageState extends State<ScreenPage> {
     final widgets = WidgetCatalog.getScreen(data: screenData, callbacks: _callbacks, theme: _theme);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Widget Catalog Demo'),
+        actions: [
+          TextButton.icon(
+            onPressed: () => launchUrl(
+              Uri.parse('https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/'),
+              webOnlyWindowName: '_blank',
+            ),
+            icon: const Icon(Icons.menu_book_outlined, color: Colors.white),
+            label: const Text('Docs', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
       body: ListView(children: widgets),
     );
   }

@@ -1,4 +1,4 @@
-name: Deploy web demo to GitHub Pages
+name: Deploy web demo + docs to GitHub Pages
 
 on:
   push:
@@ -25,17 +25,34 @@ jobs:
           channel: stable
           flutter-version: 3.38.4
 
-      - name: Install dependencies
+      - name: Install Flutter dependencies
         working-directory: example
         run: flutter pub get
 
-      - name: Build web
+      - name: Build web demo
         working-directory: example
         run: flutter build web --release --base-href /serenay-ecommerce-widgets/
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install mkdocs
+        run: pip install mkdocs mkdocs-material
+
+      - name: Build docs
+        run: mkdocs build --strict
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p public
+          cp -r example/build/web/. public/
+          mkdir -p public/docs
+          cp -r site/docs/. public/docs/
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: example/build/web
+          path: public
 
   deploy:
     needs: build

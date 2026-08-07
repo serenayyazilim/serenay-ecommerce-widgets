@@ -1,0 +1,57 @@
+site_name: Serenay E-commerce Widgets
+site_description: Docs for every widget WidgetCatalog.getScreen can render.
+site_url: https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/
+repo_url: https://github.com/serenayyazilim/serenay-ecommerce-widgets
+docs_dir: doc/widgets
+site_dir: site/docs
+use_directory_urls: false
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - admonition
+
+nav:
+  - Home: README.md
+  - Shared contracts:
+      - Action/tap contract: action-contract.md
+      - Product query contract: product-query.md
+      - Product card data: product-card-data.md
+  - Widgets:
+      - Text: text.md
+      - Divider: divider.md
+      - Image: image.md
+      - Image list: image-list.md
+      - Slider: slider.md
+      - Image carousel: image-carousel.md
+      - Carousel: carousel.md
+      - Grid: grid.md
+      - Product card: product-card.md
+      - Flash sale: flash-sale.md
+      - Modal: modal.md
+      - Mixed carousel: mixed-carousel.md
+      - Video list: video-list.md
+      - Story: story.md
+      - Visited products: visited-products.md
+      - Time image: time-image.md
+      - YouTube: youtube.md
+      - Search: search.md
+      - Fast register: fast-register.md
