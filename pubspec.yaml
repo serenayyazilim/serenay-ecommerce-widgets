@@ -20,17 +20,17 @@ dependencies:
     sdk: flutter
 
   # Cupertino-style icons used by the widget catalog.
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
 
   # Opens external links (LINK action, YOUTUBE tap-through, FASTREGISTER's
   # WhatsApp deep link).
-  url_launcher: ^6.3.1
+  url_launcher: ^6.3.2
 
   # Backs the autoplaying, looping, silent VIDEOLIST slider.
-  video_player: ^2.9.2
+  video_player: ^2.13.0
 
   # Backs the inline, autoplaying, muted, looping YOUTUBE embed.
-  youtube_player_flutter: ^9.1.1
+  youtube_player_flutter: ^10.0.1
 
 dev_dependencies:
   flutter_test:

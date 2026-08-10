@@ -854,6 +854,7 @@ class _Toolbar extends StatelessWidget {
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Wrap(
+        alignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 24,
         runSpacing: 12,

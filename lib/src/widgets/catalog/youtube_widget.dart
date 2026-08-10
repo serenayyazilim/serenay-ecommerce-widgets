@@ -19,19 +19,19 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
   void initState() {
     super.initState();
     final url = widget.params['url'] as String?;
-    final videoId = url == null ? null : YoutubePlayer.convertUrlToId(url);
+    final videoId = url == null ? null : YoutubePlayerController.convertUrlToId(url);
     if (videoId != null) {
-      _controller = YoutubePlayerController(
-        initialVideoId: videoId,
-        flags: const YoutubePlayerFlags(autoPlay: true, mute: true, loop: true),
+      _controller = YoutubePlayerController.fromVideoId(
+        videoId: videoId,
+        autoPlay: true,
+        params: const YoutubePlayerParams(mute: true, loop: true, showFullscreenButton: false),
       );
     }
   }
 
   @override
   void dispose() {
-    _controller?.pause();
-    _controller?.dispose();
+    _controller?.close();
     super.dispose();
   }
 
@@ -43,12 +43,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
     return Container(
       color: Colors.white,
       height: 300,
-      child: YoutubePlayer(
-        controller: controller,
-        showVideoProgressIndicator: false,
-        progressIndicatorColor: Colors.amber,
-        progressColors: const ProgressBarColors(playedColor: Colors.red, handleColor: Colors.redAccent),
-      ),
+      child: YoutubePlayer(controller: controller),
     );
   }
 }
