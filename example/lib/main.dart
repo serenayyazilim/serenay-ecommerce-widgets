@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -110,20 +113,22 @@ class _ScreenPageState extends State<ScreenPage> {
 
   _DeviceType _device = _DeviceType.mobile;
   int _paletteIndex = 0;
+  String? _expandedId;
 
-  final List<Map<String, dynamic>> _catalogData =
-      (_mockScreenJson['data'] as List).cast<Map<String, dynamic>>();
+  int _entryIdCounter = 0;
 
-  late final List<GlobalKey> _itemKeys = List.generate(
-    _catalogData.length,
-    (_) => GlobalKey(),
-  );
-
-  late final List<_CatalogEntry> _sidebarEntries = [
-    for (var i = 0; i < _catalogData.length; i++)
-      if (_catalogData[i]['type'] != 'DIVIDER')
-        _CatalogEntry(index: i, label: _labelFor(_catalogData[i])),
+  late final List<_EditableEntry> _entries = [
+    for (final e in WidgetEntry.listFromJson(_mockScreenJson))
+      _EditableEntry(
+        id: 'w${_entryIdCounter++}',
+        type: e.type,
+        params: e.params,
+      ),
   ];
+
+  final Map<String, GlobalKey> _itemKeys = {};
+
+  GlobalKey _keyFor(String id) => _itemKeys.putIfAbsent(id, GlobalKey.new);
 
   late final _callbacks = WidgetCallbacks(
     onAction: (action) => ScaffoldMessenger.of(context).showSnackBar(
@@ -176,8 +181,8 @@ class _ScreenPageState extends State<ScreenPage> {
     visitedProducts: () => _visited,
   );
 
-  void _scrollToIndex(int index) {
-    final ctx = _itemKeys[index].currentContext;
+  void _scrollToId(String id) {
+    final ctx = _itemKeys[id]?.currentContext;
     if (ctx == null) return;
     Scrollable.ensureVisible(
       ctx,
@@ -187,11 +192,35 @@ class _ScreenPageState extends State<ScreenPage> {
     );
   }
 
+  void _onRowTap(_EditableEntry entry) {
+    final hasFields = (_paramSchemas[entry.type] ?? const []).isNotEmpty;
+    if (hasFields) {
+      setState(
+        () => _expandedId = _expandedId == entry.id ? null : entry.id,
+      );
+    }
+    _scrollToId(entry.id);
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) newIndex -= 1;
+      final entry = _entries.removeAt(oldIndex);
+      _entries.insert(newIndex, entry);
+    });
+  }
+
+  void _onParamsChanged(_EditableEntry entry, Map<String, dynamic> next) {
+    setState(() => entry.params = next);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenData = WidgetCatalog.fromJson(_mockScreenJson);
+    final widgetEntries = [
+      for (final e in _entries) WidgetEntry(type: e.type, params: e.params),
+    ];
     final widgets = WidgetCatalog.getScreen(
-      data: screenData,
+      data: widgetEntries,
       callbacks: _callbacks,
       theme: _palettes[_paletteIndex].theme,
     );
@@ -215,32 +244,40 @@ class _ScreenPageState extends State<ScreenPage> {
           const SizedBox(width: 8),
         ],
       ),
-      body: Row(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Sidebar(entries: _sidebarEntries, onTap: _scrollToIndex),
-          const VerticalDivider(width: 1),
+          _Toolbar(
+            device: _device,
+            onDeviceChanged: (d) => setState(() => _device = d),
+            paletteIndex: _paletteIndex,
+            onPaletteChanged: (i) => setState(() => _paletteIndex = i),
+          ),
+          const Divider(height: 1),
           Expanded(
-            child: Column(
-              children: [
-                _Toolbar(
-                  device: _device,
-                  onDeviceChanged: (d) => setState(() => _device = d),
-                  paletteIndex: _paletteIndex,
-                  onPaletteChanged: (i) => setState(() => _paletteIndex = i),
-                ),
-                const Divider(height: 1),
-                Expanded(
-                  child: Container(
-                    color: const Color(0xFFEFF1F4),
+            child: Container(
+              color: const Color(0xFFEFF1F4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
                     child: _PreviewArea(
                       device: _device,
-                      itemKeys: _itemKeys,
+                      itemKeyOf: _keyFor,
+                      entries: _entries,
                       widgets: widgets,
                     ),
                   ),
-                ),
-              ],
+                  _Sidebar(
+                    entries: _entries,
+                    expandedId: _expandedId,
+                    paramSchemas: _paramSchemas,
+                    onTap: _onRowTap,
+                    onReorder: _onReorder,
+                    onParamsChanged: _onParamsChanged,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -249,92 +286,551 @@ class _ScreenPageState extends State<ScreenPage> {
   }
 }
 
-class _CatalogEntry {
-  const _CatalogEntry({required this.index, required this.label});
-  final int index;
-  final String label;
+/// A single widget instance in the mock screen, editable in-place: stable
+/// [id] (independent of list position) so drag-reorder and the "which row is
+/// expanded" state survive reordering, and mutable [params] so param edits
+/// can be applied with a plain field assignment inside `setState`.
+class _EditableEntry {
+  _EditableEntry({required this.id, required this.type, required this.params});
+  final String id;
+  final WidgetType type;
+  Map<String, dynamic> params;
 }
 
-const _catalogLabels = {
-  'TEXT': 'Text',
-  'SEARCH': 'Search',
-  'SLIDER': 'Slider',
-  'STORY': 'Story',
-  'CAROUSEL': 'Carousel',
-  'FLASHSALE': 'Flash sale',
-  'IMAGE': 'Image',
-  'IMAGELIST': 'Image list',
-  'IMAGECAROUSEL': 'Image carousel',
-  'GRID': 'Grid',
-  'PRODUCTCARD': 'Product card',
-  'MIXEDCAROUSEL': 'Mixed carousel',
-  'VISITEDPRODUCTS': 'Visited products',
-  'TIMEIMAGE': 'Time image',
-  'YOUTUBE': 'YouTube',
-  'VIDEOLIST': 'Video list',
-  'FASTREGISTER': 'Fast register',
-  'MODAL': 'Modal',
+const _wireNames = {
+  WidgetType.text: 'TEXT',
+  WidgetType.image: 'IMAGE',
+  WidgetType.slider: 'SLIDER',
+  WidgetType.divider: 'DIVIDER',
+  WidgetType.carousel: 'CAROUSEL',
+  WidgetType.grid: 'GRID',
+  WidgetType.imageCarousel: 'IMAGECAROUSEL',
+  WidgetType.imageList: 'IMAGELIST',
+  WidgetType.videoList: 'VIDEOLIST',
+  WidgetType.fastRegister: 'FASTREGISTER',
+  WidgetType.productImage: 'PRODUCTIMAGE',
+  WidgetType.story: 'STORY',
+  WidgetType.visitedProducts: 'VISITEDPRODUCTS',
+  WidgetType.timeImage: 'TIMEIMAGE',
+  WidgetType.youtube: 'YOUTUBE',
+  WidgetType.search: 'SEARCH',
+  WidgetType.productCard: 'PRODUCTCARD',
+  WidgetType.flashSale: 'FLASHSALE',
+  WidgetType.modal: 'MODAL',
+  WidgetType.mixedCarousel: 'MIXEDCAROUSEL',
+  WidgetType.unknown: 'UNKNOWN',
 };
 
-String _labelFor(Map<String, dynamic> item) {
-  final type = item['type'] as String;
-  if (type == 'TEXT') {
-    final params = (item['params'] as Map?) ?? {};
-    final text = params['text'];
-    if (text is String && text.isNotEmpty) return text;
-  }
-  return _catalogLabels[type] ?? type;
+String _labelFor(_EditableEntry entry) => _wireNames[entry.type] ?? 'UNKNOWN';
+
+enum _FieldKind { text, number, boolValue, color, enumSelect, json }
+
+class _ParamField {
+  const _ParamField(this.key, this.label, this.kind, {this.options});
+  final String key;
+  final String label;
+  final _FieldKind kind;
+  final List<String>? options;
 }
 
-/// Left rail listing every widget in the mock screen; tapping an entry
-/// scrolls the device-frame preview to that widget.
-class _Sidebar extends StatelessWidget {
-  const _Sidebar({required this.entries, required this.onTap});
+final Map<WidgetType, List<_ParamField>> _paramSchemas = {
+  WidgetType.text: const [
+    _ParamField('text', 'Text', _FieldKind.text),
+    _ParamField('subtitle', 'Subtitle', _FieldKind.text),
+    _ParamField(
+      'style',
+      'Style',
+      _FieldKind.enumSelect,
+      options: ['default', 'section', 'banner_text'],
+    ),
+    _ParamField(
+      'align',
+      'Align',
+      _FieldKind.enumSelect,
+      options: ['left', 'center', 'right', 'justify'],
+    ),
+    _ParamField(
+      'size',
+      'Size',
+      _FieldKind.enumSelect,
+      options: ['default', 'small', 'medium', 'large', 'title'],
+    ),
+    _ParamField('color', 'Text color', _FieldKind.color),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+  ],
+  WidgetType.search: const [
+    _ParamField('hint_text', 'Hint text', _FieldKind.text),
+    _ParamField('bar_height', 'Bar height', _FieldKind.number),
+    _ParamField('button_height', 'Button height', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+  ],
+  WidgetType.image: const [
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('padding', 'Padding', _FieldKind.number),
+  ],
+  WidgetType.slider: const [
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+  ],
+  WidgetType.imageCarousel: const [
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('item_count', 'Item count', _FieldKind.number),
+  ],
+  WidgetType.carousel: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.grid: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.productCard: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.flashSale: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField('subtitle', 'Subtitle', _FieldKind.text),
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.visitedProducts: const [
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.timeImage: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField(
+      'title_position',
+      'Title position',
+      _FieldKind.enumSelect,
+      options: ['left', 'bottom'],
+    ),
+    _ParamField('title_color', 'Title color', _FieldKind.color),
+  ],
+  WidgetType.youtube: const [_ParamField('url', 'URL', _FieldKind.text)],
+  WidgetType.videoList: const [
+    _ParamField(
+      'scroll_direction',
+      'Scroll direction',
+      _FieldKind.enumSelect,
+      options: ['horizontal', 'vertical'],
+    ),
+  ],
+  WidgetType.modal: const [
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+  ],
+  WidgetType.divider: const [
+    _ParamField('height', 'Height', _FieldKind.number),
+  ],
+  WidgetType.productImage: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+  ],
+  WidgetType.imageList: const [
+    _ParamField('list', 'Images (JSON)', _FieldKind.json),
+  ],
+  WidgetType.story: const [
+    _ParamField('list', 'Stories (JSON)', _FieldKind.json),
+  ],
+  WidgetType.mixedCarousel: const [
+    _ParamField('items', 'Items (JSON)', _FieldKind.json),
+  ],
+};
 
-  final List<_CatalogEntry> entries;
-  final ValueChanged<int> onTap;
+/// Right rail listing every widget in the mock screen. Drag the handle to
+/// reorder (which reorders the live preview); tap a row to expand an inline
+/// form that edits that widget's `params` live.
+class _Sidebar extends StatelessWidget {
+  const _Sidebar({
+    required this.entries,
+    required this.expandedId,
+    required this.paramSchemas,
+    required this.onTap,
+    required this.onReorder,
+    required this.onParamsChanged,
+  });
+
+  final List<_EditableEntry> entries;
+  final String? expandedId;
+  final Map<WidgetType, List<_ParamField>> paramSchemas;
+  final ValueChanged<_EditableEntry> onTap;
+  final void Function(int oldIndex, int newIndex) onReorder;
+  final void Function(_EditableEntry entry, Map<String, dynamic> next)
+  onParamsChanged;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 230,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text(
-              'Widgets',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+    return Container(
+      width: 332,
+      color: const Color(0xFFEFF1F4),
+      padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2E5EA)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.10),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(bottom: 16),
-              itemCount: entries.length,
-              itemBuilder: (context, i) {
-                final entry = entries[i];
-                return InkWell(
-                  onTap: () => onTap(entry.index),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      entry.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 13.5),
-                    ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF7F8FA),
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFFE2E5EA)),
                   ),
+                ),
+                child: Row(
+                  children: [
+                    const _WindowDot(color: Color(0xFFFF5F57)),
+                    const SizedBox(width: 6),
+                    const _WindowDot(color: Color(0xFFFEBC2E)),
+                    const SizedBox(width: 6),
+                    const _WindowDot(color: Color(0xFF28C840)),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Widgets',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEDEFF3),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${entries.length}',
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ReorderableListView.builder(
+                  buildDefaultDragHandles: false,
+                  padding: const EdgeInsets.only(bottom: 16, top: 4),
+                  itemCount: entries.length,
+                  onReorder: onReorder,
+                  itemBuilder: (context, i) {
+                final entry = entries[i];
+                final fields = paramSchemas[entry.type] ?? const [];
+                final expanded = expandedId == entry.id;
+                return Column(
+                  key: ValueKey(entry.id),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InkWell(
+                      onTap: () => onTap(entry),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
+                        child: Row(
+                          children: [
+                            ReorderableDragStartListener(
+                              index: i,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                child: Icon(
+                                  Icons.drag_indicator,
+                                  size: 18,
+                                  color: Color(0xFF9CA3AF),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                _labelFor(entry),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 13.5),
+                              ),
+                            ),
+                            if (fields.isNotEmpty)
+                              Icon(
+                                expanded
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                                size: 18,
+                                color: const Color(0xFF9CA3AF),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (expanded && fields.isNotEmpty)
+                      _ParamEditorForm(
+                        params: entry.params,
+                        fields: fields,
+                        onChanged: (next) => onParamsChanged(entry, next),
+                      ),
+                    if (i != entries.length - 1) const Divider(height: 1),
+                  ],
                 );
               },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+  }
+}
+
+/// A tiny colored dot used to mimic a window's traffic-light controls in
+/// the widgets panel's title bar.
+class _WindowDot extends StatelessWidget {
+  const _WindowDot({required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 11,
+      height: 11,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+}
+
+/// Generic param-editing form: one field widget per [_ParamField.kind],
+/// reading/writing straight into a copy of [params].
+class _ParamEditorForm extends StatefulWidget {
+  const _ParamEditorForm({
+    required this.params,
+    required this.fields,
+    required this.onChanged,
+  });
+
+  final Map<String, dynamic> params;
+  final List<_ParamField> fields;
+  final ValueChanged<Map<String, dynamic>> onChanged;
+
+  @override
+  State<_ParamEditorForm> createState() => _ParamEditorFormState();
+}
+
+/// Keeps one [TextEditingController] per text-like field for the lifetime of
+/// this row's expanded state (see [_Sidebar]: the row keeps its position/key
+/// across `setState` rebuilds, so this State survives every keystroke).
+/// Reusing the controller — instead of re-keying the field to the latest
+/// param value on every change, as an earlier version did — is what makes
+/// typing actually work: re-keying recreates the [TextFormField] element on
+/// every keystroke, which drops focus after each character.
+class _ParamEditorFormState extends State<_ParamEditorForm> {
+  final Map<String, TextEditingController> _controllers = {};
+
+  TextEditingController _controllerFor(String key, String initialText) {
+    return _controllers.putIfAbsent(
+      key,
+      () => TextEditingController(text: initialText),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  void _set(String key, dynamic value) {
+    widget.onChanged({...widget.params, key: value});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF9FAFB),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [for (final field in widget.fields) _buildField(field)],
+      ),
+    );
+  }
+
+  Widget _buildField(_ParamField field) {
+    final params = widget.params;
+    switch (field.kind) {
+      case _FieldKind.text:
+        final controller = _controllerFor(
+          field.key,
+          params[field.key]?.toString() ?? '',
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: field.label,
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 13),
+            onChanged: (v) => _set(field.key, v),
+          ),
+        );
+      case _FieldKind.number:
+        final controller = _controllerFor(
+          field.key,
+          params[field.key]?.toString() ?? '',
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+            ),
+            decoration: InputDecoration(
+              labelText: field.label,
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 13),
+            onChanged: (v) {
+              final parsed = num.tryParse(v);
+              if (parsed != null) _set(field.key, parsed);
+            },
+          ),
+        );
+      case _FieldKind.boolValue:
+        return SwitchListTile.adaptive(
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          title: Text(field.label, style: const TextStyle(fontSize: 13)),
+          value: params[field.key] == true,
+          onChanged: (v) => _set(field.key, v),
+        );
+      case _FieldKind.color:
+        final hex = (params[field.key] as String?)?.replaceFirst('#', '');
+        final parsed = hex != null
+            ? int.tryParse('FF$hex', radix: 16)
+            : null;
+        final controller = _controllerFor('${field.key}_hex', hex ?? '');
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            children: [
+              Container(
+                width: 22,
+                height: 22,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: parsed != null ? Color(parsed) : Colors.transparent,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFD1D5DB)),
+                ),
+              ),
+              Expanded(
+                child: TextFormField(
+                  controller: controller,
+                  maxLength: 6,
+                  decoration: InputDecoration(
+                    labelText: field.label,
+                    isDense: true,
+                    counterText: '',
+                    border: const OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(fontSize: 13),
+                  onChanged: (v) {
+                    if (RegExp(r'^[0-9a-fA-F]{6}$').hasMatch(v)) {
+                      _set(field.key, v);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      case _FieldKind.enumSelect:
+        final current = params[field.key] as String?;
+        final options = field.options ?? const [];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: DropdownButtonFormField<String>(
+            initialValue: options.contains(current) ? current : options.first,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: field.label,
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 13, color: Colors.black87),
+            items: [
+              for (final o in options)
+                DropdownMenuItem(value: o, child: Text(o)),
+            ],
+            onChanged: (v) {
+              if (v != null) _set(field.key, v);
+            },
+          ),
+        );
+      case _FieldKind.json:
+        final raw = params[field.key];
+        final initialText = raw == null
+            ? ''
+            : const JsonEncoder.withIndent('  ').convert(raw);
+        final controller = _controllerFor(field.key, initialText);
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: TextFormField(
+            controller: controller,
+            maxLines: 6,
+            minLines: 3,
+            decoration: InputDecoration(
+              labelText: field.label,
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+            onChanged: (v) {
+              try {
+                _set(field.key, jsonDecode(v));
+              } on FormatException {
+                // Keep typing; only commit once the JSON parses.
+              }
+            },
+          ),
+        );
+    }
   }
 }
 
@@ -501,16 +997,30 @@ class _PaletteSwitch extends StatelessWidget {
   }
 }
 
+/// Lets a mouse click-and-drag pan the device preview, on top of the normal
+/// mouse-wheel/trackpad scrolling every [ScrollBehavior] already supports.
+class _DeviceScrollBehavior extends MaterialScrollBehavior {
+  const _DeviceScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    PointerDeviceKind.mouse,
+  };
+}
+
 /// Renders [widgets] inside a device frame that matches [device].
 class _PreviewArea extends StatelessWidget {
   const _PreviewArea({
     required this.device,
-    required this.itemKeys,
+    required this.itemKeyOf,
+    required this.entries,
     required this.widgets,
   });
 
   final _DeviceType device;
-  final List<GlobalKey> itemKeys;
+  final GlobalKey Function(String id) itemKeyOf;
+  final List<_EditableEntry> entries;
   final List<Widget> widgets;
 
   // A plain (non-lazy) Column: the catalog is short enough (~20 items) that
@@ -519,13 +1029,51 @@ class _PreviewArea extends StatelessWidget {
   // a lazy ListView.builder would leave far-off items unbuilt (null
   // context) until scrolled near, breaking jump-to-item navigation.
   Widget _content(EdgeInsets padding) {
-    return SingleChildScrollView(
-      padding: padding,
-      child: Column(
-        children: [
-          for (var i = 0; i < widgets.length; i++)
-            KeyedSubtree(key: itemKeys[i], child: widgets[i]),
-        ],
+    // Wheel/trackpad scroll works out of the box; ScrollConfiguration adds
+    // the mouse to the drag-to-scroll device set so a click-and-hold drag
+    // pans the device preview too, like a real simulator.
+    return ScrollConfiguration(
+      behavior: const _DeviceScrollBehavior(),
+      child: SingleChildScrollView(
+        padding: padding,
+        child: Column(
+          children: [
+            for (var i = 0; i < widgets.length; i++)
+              KeyedSubtree(
+                key: itemKeyOf(entries[i].id),
+                child: widgets[i],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Scales the fixed-size bezel down (never up) to fit whatever vertical
+  // space the browser window actually gives us, so a short window shows the
+  // whole device instead of clipping it off-screen at the bottom.
+  Widget _fittedBezel({
+    required double width,
+    required double height,
+    required double radius,
+    required bool notch,
+    required Widget child,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: _Bezel(
+            width: width,
+            height: height,
+            radius: radius,
+            notch: notch,
+            child: child,
+          ),
+        ),
       ),
     );
   }
@@ -539,30 +1087,20 @@ class _PreviewArea extends StatelessWidget {
           child: _BrowserChrome(child: _content(EdgeInsets.zero)),
         );
       case _DeviceType.mobile:
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 24),
-          child: Center(
-            child: _Bezel(
-              width: 390,
-              height: 844,
-              radius: 44,
-              notch: true,
-              child: _content(const EdgeInsets.only(top: 34)),
-            ),
-          ),
+        return _fittedBezel(
+          width: 390,
+          height: 844,
+          radius: 44,
+          notch: true,
+          child: _content(const EdgeInsets.only(top: 34)),
         );
       case _DeviceType.tablet:
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 24),
-          child: Center(
-            child: _Bezel(
-              width: 820,
-              height: 1100,
-              radius: 28,
-              notch: false,
-              child: _content(const EdgeInsets.only(top: 16)),
-            ),
-          ),
+        return _fittedBezel(
+          width: 820,
+          height: 1100,
+          radius: 28,
+          notch: false,
+          child: _content(const EdgeInsets.only(top: 16)),
         );
     }
   }
@@ -581,10 +1119,16 @@ class _DeviceScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // `pages` (not `onGenerateRoute`) so the scoped Navigator re-reads
+    // [child] on every rebuild: `onGenerateRoute` only runs once, when the
+    // Navigator first mounts, and freezes whatever `child` was at that
+    // moment — later param/reorder edits from the demo's editor panel would
+    // silently stop reaching the device preview.
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(size: size),
       child: Navigator(
-        onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => child),
+        onDidRemovePage: (page) {},
+        pages: [MaterialPage(child: child)],
       ),
     );
   }
