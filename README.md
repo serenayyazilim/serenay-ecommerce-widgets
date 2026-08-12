@@ -8,6 +8,11 @@ a backend-driven JSON payload. For the full widget catalog — one usage doc
 per widget type, with JSON schemas and examples — see
 [doc/widgets/](doc/widgets/README.md).
 
+<p>
+  <img src="doc/widgets/Video-0.webp" width="280" alt="Widget catalog demo 1" />
+  <img src="doc/widgets/Video-2.webp" width="280" alt="Widget catalog demo 2" />
+</p>
+
 ## Installation
 
 ```yaml

@@ -2,6 +2,11 @@
 
 [→ Live demo](../) — see every widget rendered in the browser.
 
+<p>
+  <img src="Video-0.webp" width="280" alt="Widget catalog demo 1" />
+  <img src="Video-2.webp" width="280" alt="Widget catalog demo 2" />
+</p>
+
 Usage docs for every widget type `WidgetCatalog.getScreen` can render. Each page
 covers the `params` a backend sends for that widget, an example JSON entry,
 and any widget-specific behavior. Three contracts are shared across most
