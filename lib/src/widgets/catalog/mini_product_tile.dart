@@ -50,7 +50,7 @@ class MiniProductTile extends StatelessWidget {
             backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(theme.radiusS),
-              side: const BorderSide(color: Colors.grey, width: 0.3),
+              side: BorderSide(color: theme.borderColor, width: 0.3),
             ),
           ),
           child: Text(

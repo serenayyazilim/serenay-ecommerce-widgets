@@ -59,8 +59,9 @@ class _TimeImageWidgetState extends State<TimeImageWidget> {
   }
 
   Color _parseColor(dynamic raw) {
-    final hex = (raw?.toString() ?? 'FFFFFFFF').replaceAll('#', '').replaceAll(RegExp(r'^0[xX]'), '');
-    return Color(int.parse(hex.padLeft(8, 'F'), radix: 16));
+    final hex = (raw?.toString() ?? '').replaceAll('#', '').replaceAll(RegExp(r'^0[xX]'), '');
+    final value = int.tryParse(hex.padLeft(8, 'F'), radix: 16);
+    return value != null ? Color(value) : Colors.white;
   }
 
   String _pad(int n) => n.toString().padLeft(2, '0');

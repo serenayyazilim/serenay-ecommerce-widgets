@@ -255,7 +255,7 @@ class _RichProductCardState extends State<RichProductCard> {
             backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(theme.radiusS),
-              side: const BorderSide(color: Colors.grey, width: 0.3),
+              side: BorderSide(color: theme.borderColor, width: 0.3),
             ),
           ),
           child: Text(
@@ -352,9 +352,9 @@ class _VariantSheetState extends State<_VariantSheet> {
 
     return Container(
       height: 280,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: theme.surfaceColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -364,7 +364,8 @@ class _VariantSheetState extends State<_VariantSheet> {
               child: Container(
                 width: 40,
                 height: 5,
-                decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20)),
+                decoration:
+                    BoxDecoration(color: theme.textSecondaryColor, borderRadius: BorderRadius.circular(20)),
               ),
             ),
             Padding(
@@ -378,14 +379,14 @@ class _VariantSheetState extends State<_VariantSheet> {
                       children: [
                         Text(
                           '${variants.length} ${theme.variantColorLabel}',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+                          style: TextStyle(fontWeight: FontWeight.bold, color: theme.textSecondaryColor),
                         ),
                       ],
                     ),
                   ),
                   InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close, size: 23, color: Colors.grey),
+                    child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
                   ),
                 ],
               ),
@@ -409,7 +410,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                             borderRadius: BorderRadius.circular(15),
                             border: _selectedVariant == index
                                 ? Border.all(color: theme.primaryColor, width: 1.5)
-                                : Border.all(color: Colors.grey.shade200),
+                                : Border.all(color: theme.borderColor),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(14),
@@ -421,7 +422,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                           variants[index].name,
                           style: TextStyle(
                             fontSize: 11,
-                            color: _selectedVariant == index ? Colors.black : Colors.grey,
+                            color: _selectedVariant == index ? theme.textPrimaryColor : theme.textSecondaryColor,
                             fontWeight: _selectedVariant == index ? FontWeight.w500 : FontWeight.w300,
                           ),
                         ),
@@ -436,7 +437,7 @@ class _VariantSheetState extends State<_VariantSheet> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
                   data.saleDisabledReason ?? theme.notAvailableForSaleLabel,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  style: TextStyle(color: theme.textSecondaryColor, fontSize: 13),
                 ),
               )
             else

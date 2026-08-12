@@ -77,7 +77,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 height: barHeight,
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: widget.theme.surfaceColor,
                   borderRadius: BorderRadius.circular(radius),
                   boxShadow: [
                     BoxShadow(
@@ -89,16 +89,16 @@ class _SearchWidgetState extends State<SearchWidget> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                    Icon(Icons.search, color: widget.theme.textSecondaryColor, size: 22),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
                         controller: _controller,
-                        style: const TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 15, color: widget.theme.textPrimaryColor),
                         onSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
                           hintText: hintText,
-                          hintStyle: TextStyle(fontSize: 15, color: Colors.grey.shade500),
+                          hintStyle: TextStyle(fontSize: 15, color: widget.theme.textSecondaryColor),
                           border: InputBorder.none,
                           isDense: true,
                         ),
