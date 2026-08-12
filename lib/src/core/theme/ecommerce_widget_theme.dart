@@ -26,6 +26,7 @@ class EcommerceWidgetTheme {
     this.textPrimaryColor = AppColors.textPrimary,
     this.textSecondaryColor = AppColors.textSecondary,
     this.favoriteActiveColor = AppColors.favoriteActive,
+    this.fastRegisterAccentColor = AppColors.whatsappGreen,
     this.productTitleStyle = AppTextStyles.productTitle,
     this.priceStyle = AppTextStyles.price,
     this.originalPriceStyle = AppTextStyles.originalPrice,
@@ -58,6 +59,7 @@ class EcommerceWidgetTheme {
     this.fastRegisterStep1Label = 'Enter Your\nNumber',
     this.fastRegisterStep2Label = 'Send the\nReceived Code',
     this.fastRegisterStep3Label = 'Talk to a\nRepresentative',
+    this.fastRegisterLaunchFailedLabel = "Couldn't open WhatsApp",
     this.preOrderLabel = 'Pre-order',
     this.quickAddLabel = 'Add',
   });
@@ -97,6 +99,9 @@ class EcommerceWidgetTheme {
 
   /// Color used to indicate a favorite/wishlist active state.
   final Color favoriteActiveColor;
+
+  /// Border/text/header background color for the FASTREGISTER card.
+  final Color fastRegisterAccentColor;
 
   /// Text style used for product titles.
   final TextStyle productTitleStyle;
@@ -196,6 +201,10 @@ class EcommerceWidgetTheme {
   /// Third step label on the FASTREGISTER card.
   final String fastRegisterStep3Label;
 
+  /// Snackbar message shown when the FASTREGISTER card can't launch
+  /// WhatsApp (e.g. it isn't installed).
+  final String fastRegisterLaunchFailedLabel;
+
   /// Banner shown on OldProductCard (GRID) when a product is
   /// pre-order-only.
   final String preOrderLabel;
@@ -219,6 +228,7 @@ class EcommerceWidgetTheme {
     Color? textPrimaryColor,
     Color? textSecondaryColor,
     Color? favoriteActiveColor,
+    Color? fastRegisterAccentColor,
     TextStyle? productTitleStyle,
     TextStyle? priceStyle,
     TextStyle? originalPriceStyle,
@@ -251,6 +261,7 @@ class EcommerceWidgetTheme {
     String? fastRegisterStep1Label,
     String? fastRegisterStep2Label,
     String? fastRegisterStep3Label,
+    String? fastRegisterLaunchFailedLabel,
     String? preOrderLabel,
     String? quickAddLabel,
   }) {
@@ -267,6 +278,7 @@ class EcommerceWidgetTheme {
       textPrimaryColor: textPrimaryColor ?? this.textPrimaryColor,
       textSecondaryColor: textSecondaryColor ?? this.textSecondaryColor,
       favoriteActiveColor: favoriteActiveColor ?? this.favoriteActiveColor,
+      fastRegisterAccentColor: fastRegisterAccentColor ?? this.fastRegisterAccentColor,
       productTitleStyle: productTitleStyle ?? this.productTitleStyle,
       priceStyle: priceStyle ?? this.priceStyle,
       originalPriceStyle: originalPriceStyle ?? this.originalPriceStyle,
@@ -299,6 +311,7 @@ class EcommerceWidgetTheme {
       fastRegisterStep1Label: fastRegisterStep1Label ?? this.fastRegisterStep1Label,
       fastRegisterStep2Label: fastRegisterStep2Label ?? this.fastRegisterStep2Label,
       fastRegisterStep3Label: fastRegisterStep3Label ?? this.fastRegisterStep3Label,
+      fastRegisterLaunchFailedLabel: fastRegisterLaunchFailedLabel ?? this.fastRegisterLaunchFailedLabel,
       preOrderLabel: preOrderLabel ?? this.preOrderLabel,
       quickAddLabel: quickAddLabel ?? this.quickAddLabel,
     );

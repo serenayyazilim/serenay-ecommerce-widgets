@@ -384,9 +384,13 @@ class _VariantSheetState extends State<_VariantSheet> {
                       ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                  Semantics(
+                    button: true,
+                    label: 'Close',
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                    ),
                   ),
                 ],
               ),

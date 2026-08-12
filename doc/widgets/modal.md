@@ -27,3 +27,8 @@ the next app launch. Occupies no layout space itself.
 This is the MODAL *widget* — distinct from the `type: "modal"` tap target
 used elsewhere (e.g. in SLIDER/IMAGE), which fetches popup content by `id`
 via `WidgetCallbacks.fetchModal` instead of embedding `url` directly.
+
+The "already shown this session" record is process-wide (keyed by
+`url`+`type`+`id`, not per-screen), matching the "once per app session"
+contract above. Call `ModalWidget.resetShown()` to clear it — e.g. on
+logout, or between widget tests that assert modal behavior.

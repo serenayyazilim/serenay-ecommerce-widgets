@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/video_item.dart';
 import '../../core/utils/param_parsing.dart';
+import 'muted_loop_video.dart';
 
 /// VIDEOLIST: one or more silent, looping, auto-playing videos fetched by
 /// [id]. A single video renders full-width with an optional `textparams`
@@ -102,7 +102,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
         height: height,
         child: Stack(
           children: [
-            _MutedLoopVideo(url: video.video),
+            MutedLoopVideo(url: video.video),
             if (video.title != null)
               Container(
                 width: width,
@@ -168,7 +168,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * _pd('width_percent', 1.0),
               height: MediaQuery.of(context).size.height * _pd('height_percent', 0.3),
-              child: _MutedLoopVideo(url: videos[index].video),
+              child: MutedLoopVideo(url: videos[index].video),
             ),
           ),
         ),
@@ -177,52 +177,3 @@ class _VideoListWidgetState extends State<VideoListWidget> {
   }
 }
 
-class _MutedLoopVideo extends StatefulWidget {
-  const _MutedLoopVideo({required this.url});
-
-  final String url;
-
-  @override
-  State<_MutedLoopVideo> createState() => _MutedLoopVideoState();
-}
-
-class _MutedLoopVideoState extends State<_MutedLoopVideo> {
-  VideoPlayerController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = VideoPlayerController.networkUrl(Uri.parse(widget.url));
-    _controller = controller;
-    controller.initialize().then((_) {
-      if (!mounted) return;
-      controller
-        ..setLooping(true)
-        ..setVolume(0)
-        ..play();
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = _controller;
-    if (controller == null || !controller.value.isInitialized) {
-      return const ColoredBox(color: Colors.black12);
-    }
-    return FittedBox(
-      fit: BoxFit.cover,
-      child: SizedBox(
-        width: controller.value.size.width,
-        height: controller.value.size.height,
-        child: VideoPlayer(controller),
-      ),
-    );
-  }
-}

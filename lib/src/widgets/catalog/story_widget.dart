@@ -193,6 +193,7 @@ class _StoryViewerState extends State<_StoryViewer> {
             right: 16,
             child: IconButton(
               icon: const Icon(Icons.close, color: Colors.white),
+              tooltip: 'Close',
               onPressed: () => Navigator.of(context).maybePop(),
             ),
           ),

@@ -42,4 +42,7 @@ class AppColors {
 
   /// Color used to indicate a favorite/wishlist active state.
   static const Color favoriteActive = Color(0xFFE53935);
+
+  /// Accent color for the FASTREGISTER (WhatsApp quick-register) card.
+  static const Color whatsappGreen = Color(0xFF25D366);
 }

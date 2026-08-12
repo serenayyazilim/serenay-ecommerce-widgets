@@ -19,6 +19,7 @@ class FavoriteButton extends StatefulWidget {
     this.activeColor = AppColors.favoriteActive,
     this.inactiveColor = AppColors.textSecondary,
     this.backgroundColor = AppColors.surface,
+    this.semanticLabel = 'Favorite',
   });
 
   /// Whether the product is currently marked as a favorite.
@@ -41,6 +42,9 @@ class FavoriteButton extends StatefulWidget {
 
   /// Background color of the circular button surface.
   final Color backgroundColor;
+
+  /// Accessibility label announced by screen readers (e.g. "Favorite").
+  final String semanticLabel;
 
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();
@@ -81,33 +85,40 @@ class _FavoriteButtonState extends State<FavoriteButton>
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: widget.backgroundColor,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: () {
-          widget.onChanged(!widget.isFavorite);
-          _controller.forward(from: 0);
-        },
-        child: SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) => Transform.scale(
-              scale: _scale.value,
-              child: Transform.rotate(angle: _rotation.value, child: child),
-            ),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) =>
-                  ScaleTransition(scale: animation, child: child),
-              child: Icon(
-                widget.isFavorite ? Icons.favorite : Icons.favorite_border,
-                key: ValueKey<bool>(widget.isFavorite),
-                size: widget.iconSize,
-                color: widget.isFavorite ? widget.activeColor : widget.inactiveColor,
+    return Semantics(
+      button: true,
+      toggled: widget.isFavorite,
+      label: widget.semanticLabel,
+      child: Material(
+        color: widget.backgroundColor,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () {
+            widget.onChanged(!widget.isFavorite);
+            _controller.forward(from: 0);
+          },
+          child: SizedBox(
+            width: widget.size,
+            height: widget.size,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) => Transform.scale(
+                scale: _scale.value,
+                child: Transform.rotate(angle: _rotation.value, child: child),
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(scale: animation, child: child),
+                child: Icon(
+                  widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  key: ValueKey<bool>(widget.isFavorite),
+                  size: widget.iconSize,
+                  color: widget.isFavorite
+                      ? widget.activeColor
+                      : widget.inactiveColor,
+                ),
               ),
             ),
           ),

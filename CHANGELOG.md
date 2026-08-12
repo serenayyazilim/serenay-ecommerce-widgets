@@ -1,3 +1,41 @@
+## 1.1.6
+
+- Add widget catalog demo videos (converted to animated WebP, ~450KB/1.1MB)
+  to the root and `doc/widgets/` READMEs, so both GitHub and pub.dev show a
+  preview of the widgets in action.
+- Fix `TimeImageWidget` (TIMEIMAGE): `_parseColor` used `int.parse` instead
+  of `tryParse`, so a malformed backend `title_color` hex crashed the
+  widget — every sibling color parser already degrades gracefully instead.
+- Fix theme leaks in `RichProductCard`/`OldProductCard`'s variant/measure
+  bottom sheets, `SearchWidget`'s bar, and three "not logged in" price
+  buttons: they hardcoded `Colors.white`/`Colors.grey` instead of reading
+  `EcommerceWidgetTheme`, so a host app's rebrand left them visibly
+  off-theme.
+- Fix `FastRegisterWidget` (FASTREGISTER) ignoring the theme entirely
+  (hardcoded `Colors.green`): its border/header/text accent now reads from
+  the new `EcommerceWidgetTheme.fastRegisterAccentColor` (defaults to
+  WhatsApp green, so the default look is unchanged). Its WhatsApp
+  `launchUrl` call is now awaited and checked — a failure (e.g. WhatsApp
+  isn't installed) shows a snackbar via the new
+  `theme.fastRegisterLaunchFailedLabel` instead of silently doing nothing.
+- Deduplicate the inline muted/looping video player used by `OldProductCard`
+  (GRID) and `VideoListWidget` (VIDEOLIST) into a single shared
+  `MutedLoopVideo` widget, which now also falls back to a placeholder icon
+  instead of a permanent black box when the video URL fails to load —
+  matching `CatalogNetworkImage`'s existing graceful-degradation pattern.
+- Add `ModalWidget.resetShown()` (now exported) to clear the "already shown
+  this session" record for the `url`+`type`+`id` combo — useful on logout,
+  or between widget tests that assert modal behavior.
+- Add `Semantics`/`tooltip` labels to previously unlabeled icon-only
+  buttons (`FavoriteButton`, MODAL/variant-sheet/measure-sheet close
+  buttons, the STORY close button) so screen readers announce them.
+  `FavoriteButton` also gains a `semanticLabel` parameter (defaults to
+  `'Favorite'`).
+- Add widget tests for TIMEIMAGE's color-parse fix, the SEARCH/FASTREGISTER
+  theme fixes, `ModalWidget.resetShown()`, and smoke coverage for
+  MIXEDCAROUSEL, STORY, SLIDER, VISITEDPRODUCTS and GRID, which previously
+  had none.
+
 ## 1.1.5
 
 - Add `GridWidget` (GRID) its own card design, `OldProductCard` — ported

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
@@ -9,6 +8,7 @@ import '../buttons/add_to_cart_button.dart';
 import '../buttons/favorite_button.dart';
 import '../cart/quantity_picker.dart';
 import 'catalog_network_image.dart';
+import 'muted_loop_video.dart';
 
 /// GRID's product card. Forked from [RichProductCard] (used by CAROUSEL,
 /// PRODUCTCARD and FLASHSALE) and ported from the original app's full
@@ -158,11 +158,11 @@ class _OldProductCardState extends State<OldProductCard> {
                       itemCount: images.length,
                       onPageChanged: (index) => setState(() => _currentVariantPage = index),
                       itemBuilder: (context, index) => _isVideo(images[index])
-                          ? _MutedLoopVideo(url: images[index])
+                          ? MutedLoopVideo(url: images[index])
                           : CatalogNetworkImage(url: images[index]),
                     )
                   : (_isVideo(images.first)
-                      ? _MutedLoopVideo(url: images.first)
+                      ? MutedLoopVideo(url: images.first)
                       : CatalogNetworkImage(url: images.first)),
               if (hasMultiple)
                 Positioned(
@@ -485,57 +485,6 @@ class _DotIndicator extends StatelessWidget {
   }
 }
 
-/// A silent, looping, autoplaying inline video preview — used for variant
-/// image URLs that are actually `.mp4` clips.
-class _MutedLoopVideo extends StatefulWidget {
-  const _MutedLoopVideo({required this.url});
-
-  final String url;
-
-  @override
-  State<_MutedLoopVideo> createState() => _MutedLoopVideoState();
-}
-
-class _MutedLoopVideoState extends State<_MutedLoopVideo> {
-  VideoPlayerController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = VideoPlayerController.networkUrl(Uri.parse(widget.url));
-    _controller = controller;
-    controller.initialize().then((_) {
-      if (!mounted) return;
-      controller
-        ..setLooping(true)
-        ..setVolume(0)
-        ..play();
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = _controller;
-    if (controller == null || !controller.value.isInitialized) {
-      return const ColoredBox(color: Colors.black12);
-    }
-    return FittedBox(
-      fit: BoxFit.cover,
-      child: SizedBox(
-        width: controller.value.size.width,
-        height: controller.value.size.height,
-        child: VideoPlayer(controller),
-      ),
-    );
-  }
-}
 
 /// Color/style variant picker + quantity + add-to-cart, identical to the
 /// shared card's variant sheet.
@@ -594,9 +543,13 @@ class _VariantSheetState extends State<_VariantSheet> {
                       ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                  Semantics(
+                    button: true,
+                    label: 'Close',
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                    ),
                   ),
                 ],
               ),
@@ -743,9 +696,13 @@ class _MeasureSheetState extends State<_MeasureSheet> {
                     data.measureName ?? theme.quickAddLabel,
                     style: TextStyle(fontWeight: FontWeight.bold, color: theme.textSecondaryColor),
                   ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                  Semantics(
+                    button: true,
+                    label: 'Close',
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(Icons.close, size: 23, color: theme.textSecondaryColor),
+                    ),
                   ),
                 ],
               ),

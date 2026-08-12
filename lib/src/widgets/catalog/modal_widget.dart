@@ -22,19 +22,25 @@ class ModalWidget extends StatefulWidget {
   final WidgetCallbacks callbacks;
   final EcommerceWidgetTheme theme;
 
+  static final Set<String> _shownKeys = {};
+
+  /// Clears the "already shown this session" record, so the next
+  /// [ModalWidget] built with a given `url`/`type`/`id` shows again even
+  /// within the same app session — e.g. call this on logout, or between
+  /// widget tests that assert modal behavior.
+  static void resetShown() => _shownKeys.clear();
+
   @override
   State<ModalWidget> createState() => _ModalWidgetState();
 }
 
 class _ModalWidgetState extends State<ModalWidget> {
-  static final Set<String> _shownKeys = {};
-
   @override
   void initState() {
     super.initState();
     final key = '${widget.params['url']}|${widget.params['type']}|${widget.params['id']}';
-    if (_shownKeys.contains(key)) return;
-    _shownKeys.add(key);
+    if (ModalWidget._shownKeys.contains(key)) return;
+    ModalWidget._shownKeys.add(key);
     WidgetsBinding.instance.addPostFrameCallback((_) => _show());
   }
 
@@ -75,13 +81,17 @@ class _ModalWidgetState extends State<ModalWidget> {
             Positioned(
               top: -14,
               right: -14,
-              child: GestureDetector(
-                onTap: () => Navigator.of(dialogContext).pop(),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(color: widget.theme.surfaceColor, shape: BoxShape.circle),
-                  child: Icon(Icons.close, size: 18, color: widget.theme.textPrimaryColor),
+              child: Semantics(
+                button: true,
+                label: 'Close',
+                child: GestureDetector(
+                  onTap: () => Navigator.of(dialogContext).pop(),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(color: widget.theme.surfaceColor, shape: BoxShape.circle),
+                    child: Icon(Icons.close, size: 18, color: widget.theme.textPrimaryColor),
+                  ),
                 ),
               ),
             ),

@@ -34,16 +34,21 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final phone = _phoneController.text.replaceAll(RegExp(r'[^0-9]'), '');
     if (phone.isEmpty) return;
-    launchUrl(
-      Uri.parse('https://wa.me/$_countryCode$phone'),
-      mode: LaunchMode.externalApplication,
-    );
+    final uri = Uri.parse('https://wa.me/$_countryCode$phone');
+    final launched =
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(widget.theme.fastRegisterLaunchFailedLabel)),
+      );
+    }
   }
 
   Widget _step(String number, String title) {
+    final accent = widget.theme.fastRegisterAccentColor;
     return Column(
       children: [
         Container(
@@ -51,14 +56,14 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
           width: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(width: 3, color: Colors.green),
+            border: Border.all(width: 3, color: accent),
           ),
           child: Center(
-            child: Text(number, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+            child: Text(number, style: TextStyle(color: accent, fontWeight: FontWeight.bold)),
           ),
         ),
         const SizedBox(height: 10),
-        Text(title, style: const TextStyle(color: Colors.green), textAlign: TextAlign.center),
+        Text(title, style: TextStyle(color: accent), textAlign: TextAlign.center),
       ],
     );
   }
@@ -66,20 +71,21 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
+    final accent = theme.fastRegisterAccentColor;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(width: 1, color: Colors.green),
+          border: Border.all(width: 1, color: accent),
         ),
         child: Column(
           children: [
             Container(
               height: 40,
-              decoration: const BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              decoration: BoxDecoration(
+                color: accent,
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -93,12 +99,12 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
             const SizedBox(height: 5),
             Text(
               theme.fastRegisterTitleLabel,
-              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w700, fontSize: 20),
+              style: TextStyle(color: accent, fontWeight: FontWeight.w700, fontSize: 20),
             ),
             const SizedBox(height: 5),
             Text(
               theme.fastRegisterSubtitleLabel,
-              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w300, fontSize: 16),
+              style: TextStyle(color: accent, fontWeight: FontWeight.w300, fontSize: 16),
             ),
             const SizedBox(height: 20),
             Padding(
@@ -124,13 +130,14 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
   }
 
   Widget _numberField(BuildContext context, EcommerceWidgetTheme theme) {
+    final accent = theme.fastRegisterAccentColor;
     return Column(
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.65,
           height: 40,
           decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.green),
+            border: Border.all(width: 1, color: accent),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -150,12 +157,12 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
                 child: TextField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  style: const TextStyle(color: Colors.black, fontSize: 14.2, letterSpacing: 2),
+                  style: TextStyle(color: theme.textPrimaryColor, fontSize: 14.2, letterSpacing: 2),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.only(bottom: 9.5),
                     hintText: '(_ _ _) _ _ _ _ _ _ _',
-                    hintStyle: TextStyle(color: Colors.grey.shade400),
+                    hintStyle: TextStyle(color: theme.textSecondaryColor),
                   ),
                   onSubmitted: (_) => _submit(),
                 ),
@@ -170,8 +177,8 @@ class _FastRegisterWidgetState extends State<FastRegisterWidget> {
           child: OutlinedButton(
             onPressed: _submit,
             style: ButtonStyle(
-              side: const WidgetStatePropertyAll(BorderSide(color: Colors.green, width: 1)),
-              backgroundColor: const WidgetStatePropertyAll(Colors.green),
+              side: WidgetStatePropertyAll(BorderSide(color: accent, width: 1)),
+              backgroundColor: WidgetStatePropertyAll(accent),
               shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
             ),
             child: Row(

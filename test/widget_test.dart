@@ -7,11 +7,15 @@ WidgetCallbacks _callbacks({
   void Function(WidgetAction action)? onAction,
   Future<List<ProductCardData>> Function(ProductQuery query)? fetchProducts,
   bool Function()? isLoggedIn,
+  Future<List<SlideItem>> Function(dynamic id)? fetchSlides,
+  List<ProductCardData> Function()? visitedProducts,
 }) {
   return WidgetCallbacks(
     onAction: onAction ?? (_) {},
     fetchProducts: fetchProducts ?? (_) async => const [],
     isLoggedIn: isLoggedIn,
+    fetchSlides: fetchSlides,
+    visitedProducts: visitedProducts,
   );
 }
 
@@ -293,5 +297,286 @@ void main() {
     expect(find.text('Quick Registration System'), findsNothing);
     expect(find.text('Süper Fırsat'), findsOneWidget);
     expect(find.text('Flash Sale'), findsNothing);
+  });
+
+  testWidgets('TIMEIMAGE never crashes on a malformed backend title_color', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'TIMEIMAGE',
+          'params': {
+            'url': 'https://example.com/banner.png',
+            'date': DateTime.now().add(const Duration(days: 1)).toIso8601String(),
+            'title': 'Countdown',
+            'title_color': 'not-a-color',
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Countdown'), findsOneWidget);
+  });
+
+  testWidgets('SEARCH bar reads its background from the theme instead of hardcoded white', (
+    tester,
+  ) async {
+    const surfaceColor = Color(0xFF222222);
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'SEARCH', 'params': {'url': ''}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(),
+              theme: const EcommerceWidgetTheme(surfaceColor: surfaceColor),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final container = tester.widget<Container>(
+      find.ancestor(of: find.byType(TextField), matching: find.byType(Container)).first,
+    );
+    expect((container.decoration as BoxDecoration?)?.color, surfaceColor);
+  });
+
+  testWidgets('FASTREGISTER reads its accent color from the theme instead of hardcoded green', (
+    tester,
+  ) async {
+    const accent = Color(0xFF9C27B0);
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'FASTREGISTER', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(),
+              theme: const EcommerceWidgetTheme(fastRegisterAccentColor: accent),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final title = tester.widget<Text>(find.text('Quick Registration System'));
+    expect(title.style?.color, accent);
+  });
+
+  testWidgets('MODAL shows its dialog once per session, and ModalWidget.resetShown() clears that', (
+    tester,
+  ) async {
+    ModalWidget.resetShown();
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'MODAL',
+          'params': {'url': '', 'type': 'category', 'id': 'promo-1'},
+        },
+      ],
+    });
+
+    // pumpWidget alone reuses the same Element (didUpdateWidget) when the
+    // tree shape doesn't change, which wouldn't re-run initState. Pumping an
+    // empty tree in between forces a genuine unmount + remount, simulating
+    // a fresh screen instance.
+    Future<void> pumpOnce() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+            ),
+          ),
+        ),
+      );
+    }
+
+    await pumpOnce();
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsOneWidget);
+    Navigator.of(tester.element(find.byType(Dialog))).pop();
+    await tester.pumpAndSettle();
+
+    // Same key, freshly-mounted widget: should NOT show again this session.
+    await pumpOnce();
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsNothing);
+
+    // After resetShown(), the same key shows again.
+    ModalWidget.resetShown();
+    await pumpOnce();
+    await tester.pumpAndSettle();
+    expect(find.byType(Dialog), findsOneWidget);
+  });
+
+  testWidgets('MIXEDCAROUSEL renders an image page without crashing', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'MIXEDCAROUSEL',
+          'params': {
+            'items': [
+              {'item_type': 'image', 'url': '', 'title': 'Page 1'},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ListView(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Page 1'), findsOneWidget);
+  });
+
+  testWidgets('STORY renders its list without crashing', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'STORY',
+          'params': {
+            'list': [
+              {'image': '', 'title': 'Story 1'},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('SLIDER fetches slides by id and renders without crashing', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SLIDER',
+          'params': {'id': 5},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchSlides: (_) async => const [
+                  SlideItem(image: '', action: WidgetAction(type: WidgetActionType.category, id: 1)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('VISITEDPRODUCTS renders the host app-supplied history without crashing', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'VISITEDPRODUCTS', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                visitedProducts: () => const [
+                  ProductCardData(id: 1, image: '', title: 'Visited 1', price: 5),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Visited 1'), findsOneWidget);
+  });
+
+  testWidgets('GRID (OldProductCard) renders fetched products without crashing', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'GRID', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'Grid P1', price: 20),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Grid P1'), findsOneWidget);
   });
 }
