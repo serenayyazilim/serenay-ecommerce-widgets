@@ -318,6 +318,12 @@ const _wireNames = {
   WidgetType.flashSale: 'FLASHSALE',
   WidgetType.modal: 'MODAL',
   WidgetType.mixedCarousel: 'MIXEDCAROUSEL',
+  WidgetType.rating: 'RATING',
+  WidgetType.bundle: 'BUNDLE',
+  WidgetType.coupon: 'COUPON',
+  WidgetType.categoryMenu: 'CATEGORYMENU',
+  WidgetType.loyaltyProgress: 'LOYALTYPROGRESS',
+  WidgetType.comparison: 'COMPARISON',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -439,6 +445,32 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   ],
   WidgetType.mixedCarousel: const [
     _ParamField('items', 'Items (JSON)', _FieldKind.json),
+  ],
+  WidgetType.rating: const [
+    _ParamField('rating', 'Rating', _FieldKind.number),
+    _ParamField('max_rating', 'Max rating', _FieldKind.number),
+    _ParamField('review_count', 'Review count', _FieldKind.number),
+  ],
+  WidgetType.bundle: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('title', 'Title', _FieldKind.text),
+  ],
+  WidgetType.coupon: const [
+    _ParamField('code', 'Code', _FieldKind.text),
+    _ParamField('discount_text', 'Discount text', _FieldKind.text),
+    _ParamField('description', 'Description', _FieldKind.text),
+  ],
+  WidgetType.categoryMenu: const [
+    _ParamField('list', 'Categories (JSON)', _FieldKind.json),
+  ],
+  WidgetType.loyaltyProgress: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField('current', 'Current', _FieldKind.number),
+    _ParamField('target', 'Target', _FieldKind.number),
+    _ParamField('reward_text', 'Reward text', _FieldKind.text),
+  ],
+  WidgetType.comparison: const [
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
   ],
 };
 
@@ -1382,6 +1414,54 @@ final _mockScreenJson = {
       'type': 'CAROUSEL',
       'params': {'category_id': 1, 'limit': 10},
     },
+    {
+      'type': 'RATING',
+      'params': {'rating': 4.5, 'review_count': 328},
+    },
+    {
+      'type': 'CATEGORYMENU',
+      'params': {
+        'list': [
+          {
+            'title': 'Shoes',
+            'image': 'https://picsum.photos/seed/cat1/100/100',
+            'type': 'category',
+            'id': 1,
+          },
+          {
+            'title': 'Bags',
+            'image': 'https://picsum.photos/seed/cat2/100/100',
+            'type': 'category',
+            'id': 2,
+          },
+          {
+            'title': 'Watches',
+            'image': 'https://picsum.photos/seed/cat3/100/100',
+            'type': 'category',
+            'id': 3,
+          },
+          {
+            'title': 'Sale',
+            'image': 'https://picsum.photos/seed/cat4/100/100',
+            'type': 'filter',
+            'id': 'sale',
+          },
+        ],
+      },
+    },
+    {
+      'type': 'COUPON',
+      'params': {
+        'code': 'WELCOME20',
+        'discount_text': '20% OFF your first order',
+        'description': 'Applies at checkout',
+        'end_time': null,
+      },
+    },
+    {
+      'type': 'BUNDLE',
+      'params': {'category_id': 1, 'title': 'Frequently Bought Together'},
+    },
     {'type': 'DIVIDER', 'params': {}},
     {
       'type': 'FLASHSALE',
@@ -1448,7 +1528,20 @@ final _mockScreenJson = {
       'params': {'category_id': 1},
     },
     {'type': 'DIVIDER', 'params': {}},
-
+    {
+      'type': 'COMPARISON',
+      'params': {'category_id': 1},
+    },
+    {'type': 'DIVIDER', 'params': {}},
+    {
+      'type': 'LOYALTYPROGRESS',
+      'params': {
+        'title': 'Free Shipping Progress',
+        'current': 65,
+        'target': 100,
+        'reward_text': '35 ₺ more for free shipping',
+      },
+    },
     {'type': 'DIVIDER', 'params': {}},
     {
       'type': 'VISITEDPRODUCTS',

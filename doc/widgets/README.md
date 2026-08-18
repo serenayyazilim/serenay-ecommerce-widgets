@@ -42,6 +42,12 @@ widgets and documented once:
 | `YOUTUBE` | [youtube.md](youtube.md) |
 | `SEARCH` | [search.md](search.md) |
 | `FASTREGISTER` | [fast-register.md](fast-register.md) |
+| `RATING` | [rating.md](rating.md) |
+| `BUNDLE` | [bundle.md](bundle.md) |
+| `COUPON` | [coupon.md](coupon.md) |
+| `CATEGORYMENU` | [category-menu.md](category-menu.md) |
+| `LOYALTYPROGRESS` | [loyalty-progress.md](loyalty-progress.md) |
+| `COMPARISON` | [comparison.md](comparison.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

@@ -120,7 +120,10 @@ class _VisitedProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(theme.radiusM - 0.5),
                       child: Container(
                         color: theme.surfaceColor,
-                        child: CatalogNetworkImage(url: data.image),
+                        child: CatalogNetworkImage(
+                          url: data.image,
+                          errorBuilder: callbacks.imageErrorBuilder,
+                        ),
                       ),
                     ),
                   ),

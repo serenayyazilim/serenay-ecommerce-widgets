@@ -69,7 +69,10 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                   margin: const EdgeInsets.symmetric(horizontal: _marginHorizontal),
                   child: GestureDetector(
                     onTap: () => widget.callbacks.onAction(slides[index].action),
-                    child: CatalogNetworkImage(url: slides[index].image),
+                    child: CatalogNetworkImage(
+                      url: slides[index].image,
+                      errorBuilder: widget.callbacks.imageErrorBuilder,
+                    ),
                   ),
                 ),
               ),

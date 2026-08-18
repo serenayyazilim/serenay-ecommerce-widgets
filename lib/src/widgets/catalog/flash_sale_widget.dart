@@ -54,7 +54,7 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
     _borderController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 5500),
+      duration: widget.theme.flashSaleBorderDuration,
     )..repeat();
 
     _endTime = _parseDate(widget.params['end_time']);
@@ -374,11 +374,15 @@ class _FlashModalState extends State<_FlashModal> {
                         childAspectRatio: 0.6,
                       ),
                       itemCount: products.length,
-                      itemBuilder: (context, index) => RichProductCard(
-                        data: products[index],
-                        callbacks: widget.callbacks,
-                        theme: widget.theme,
-                      ),
+                      itemBuilder: (context, index) {
+                        final builder = widget.callbacks.productCardBuilder;
+                        if (builder != null) return builder(products[index]);
+                        return RichProductCard(
+                          data: products[index],
+                          callbacks: widget.callbacks,
+                          theme: widget.theme,
+                        );
+                      },
                     );
                   },
                 ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
+import '../../core/theme/ecommerce_widget_theme.dart';
 import 'catalog_network_image.dart';
 
 /// STORY: an Instagram-style story tray. Built from scratch (no third-party
@@ -15,10 +16,12 @@ class StoryWidget extends StatelessWidget {
     super.key,
     required this.params,
     required this.callbacks,
+    this.theme = const EcommerceWidgetTheme(),
   });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   List<Map<String, dynamic>> get _stories => ((params['list'] as List?) ?? const [])
       .whereType<Map>()
@@ -48,6 +51,7 @@ class StoryWidget extends StatelessWidget {
                   stories: stories,
                   initialIndex: index,
                   callbacks: callbacks,
+                  theme: theme,
                 ),
               ),
             ),
@@ -68,7 +72,10 @@ class StoryWidget extends StatelessWidget {
                       child: SizedBox(
                         width: 56,
                         height: 56,
-                        child: CatalogNetworkImage(url: thumbnail),
+                        child: CatalogNetworkImage(
+                          url: thumbnail,
+                          errorBuilder: callbacks.imageErrorBuilder,
+                        ),
                       ),
                     ),
                   ),
@@ -87,11 +94,13 @@ class _StoryViewer extends StatefulWidget {
     required this.stories,
     required this.initialIndex,
     required this.callbacks,
+    required this.theme,
   });
 
   final List<Map<String, dynamic>> stories;
   final int initialIndex;
   final WidgetCallbacks callbacks;
+  final EcommerceWidgetTheme theme;
 
   @override
   State<_StoryViewer> createState() => _StoryViewerState();
@@ -113,7 +122,7 @@ class _StoryViewerState extends State<_StoryViewer> {
 
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 3), _advance);
+    _timer = Timer(widget.theme.storyAutoAdvanceDuration, _advance);
   }
 
   void _advance() {
@@ -169,7 +178,11 @@ class _StoryViewerState extends State<_StoryViewer> {
                 _advance();
               }
             },
-            child: CatalogNetworkImage(url: image, fit: BoxFit.contain),
+            child: CatalogNetworkImage(
+              url: image,
+              fit: BoxFit.contain,
+              errorBuilder: widget.callbacks.imageErrorBuilder,
+            ),
           ),
           Positioned(
             top: 8,

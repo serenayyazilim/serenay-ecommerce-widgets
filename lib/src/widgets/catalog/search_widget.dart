@@ -67,6 +67,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 height: width * heightPercent,
                 width: width,
                 fit: BoxFit.fitWidth,
+                errorBuilder: widget.callbacks.imageErrorBuilder,
               ),
             ),
             Positioned(

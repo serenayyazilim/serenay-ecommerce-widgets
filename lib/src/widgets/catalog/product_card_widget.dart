@@ -38,13 +38,18 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
+        final columns =
+            (widget.params['columns'] as num?)?.toInt() ?? widget.theme.gridColumns;
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: LayoutBuilder(
             builder: (context, constraints) {
               const spacing = 8.0;
-              final itemWidth = (constraints.maxWidth - spacing) / 2;
+              final itemWidth =
+                  (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
+              final builder = widget.callbacks.productCardBuilder;
               return Wrap(
                 spacing: spacing,
                 runSpacing: spacing,
@@ -52,12 +57,14 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                   for (final product in products)
                     SizedBox(
                       width: itemWidth,
-                      child: RichProductCard(
-                        data: product,
-                        imageSize: itemWidth,
-                        callbacks: widget.callbacks,
-                        theme: widget.theme,
-                      ),
+                      child: builder != null
+                          ? builder(product)
+                          : RichProductCard(
+                              data: product,
+                              imageSize: itemWidth,
+                              callbacks: widget.callbacks,
+                              theme: widget.theme,
+                            ),
                     ),
                 ],
               );

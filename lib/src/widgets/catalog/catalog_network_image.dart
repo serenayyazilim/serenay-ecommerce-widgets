@@ -14,6 +14,7 @@ class CatalogNetworkImage extends StatelessWidget {
     this.width,
     this.fit = BoxFit.cover,
     this.borderRadius,
+    this.errorBuilder,
   });
 
   final String url;
@@ -21,6 +22,10 @@ class CatalogNetworkImage extends StatelessWidget {
   final double? width;
   final BoxFit fit;
   final BorderRadiusGeometry? borderRadius;
+
+  /// Host-app override for the placeholder shown when [url] fails to load,
+  /// normally wired to [WidgetCallbacks.imageErrorBuilder].
+  final Widget Function()? errorBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,7 @@ class CatalogNetworkImage extends StatelessWidget {
   }
 
   Widget _placeholder() {
+    if (errorBuilder != null) return errorBuilder!();
     return Container(
       height: height,
       width: width,

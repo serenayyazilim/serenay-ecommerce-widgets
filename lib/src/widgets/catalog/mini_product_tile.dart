@@ -36,6 +36,12 @@ class MiniProductTile extends StatelessWidget {
     }
   }
 
+  String _formatPrice(num amount, String currency) {
+    final formatPrice = callbacks.formatPrice;
+    if (formatPrice != null) return formatPrice(amount, currency);
+    return '${amount.toStringAsFixed(2)} ${_currencySymbol(currency)}';
+  }
+
   Widget _buildPrice(BuildContext context) {
     final loggedIn = callbacks.isLoggedIn?.call() ?? true;
     if (!loggedIn) {
@@ -63,7 +69,6 @@ class MiniProductTile extends StatelessWidget {
 
     final price = data.price ?? 0;
     final oldPrice = data.priceOld ?? 0;
-    final symbol = _currencySymbol(data.currency);
     final hasDiscount = oldPrice > 0 && oldPrice != price;
 
     if (price > 0) {
@@ -71,13 +76,13 @@ class MiniProductTile extends StatelessWidget {
         children: [
           if (hasDiscount) ...[
             Text(
-              '${oldPrice.toStringAsFixed(2)} $symbol',
+              _formatPrice(oldPrice, data.currency),
               style: theme.originalPriceStyle.copyWith(fontSize: 11),
             ),
             const SizedBox(width: 5),
           ],
           Text(
-            '${price.toStringAsFixed(2)} $symbol',
+            _formatPrice(price, data.currency),
             style: theme.priceStyle.copyWith(
               fontSize: 14,
               color: hasDiscount ? theme.discountColor : theme.textPrimaryColor,
@@ -108,7 +113,12 @@ class MiniProductTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(theme.radiusM),
-              child: CatalogNetworkImage(url: data.image, width: imageSize, height: imageSize),
+              child: CatalogNetworkImage(
+                url: data.image,
+                width: imageSize,
+                height: imageSize,
+                errorBuilder: callbacks.imageErrorBuilder,
+              ),
             ),
             const SizedBox(height: 6),
             if (data.title.isNotEmpty) ...[

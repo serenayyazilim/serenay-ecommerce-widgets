@@ -4,7 +4,11 @@ import '../callbacks/widget_callbacks.dart';
 import '../contracts/widget_entry.dart';
 import '../contracts/widget_type.dart';
 import '../core/theme/ecommerce_widget_theme.dart';
+import 'catalog/bundle_widget.dart';
 import 'catalog/carousel_widget.dart';
+import 'catalog/category_menu_widget.dart';
+import 'catalog/comparison_widget.dart';
+import 'catalog/coupon_widget.dart';
 import 'catalog/divider_widget.dart';
 import 'catalog/fast_register_widget.dart';
 import 'catalog/flash_sale_widget.dart';
@@ -12,9 +16,11 @@ import 'catalog/grid_widget.dart';
 import 'catalog/image_carousel_widget.dart';
 import 'catalog/image_list_widget.dart';
 import 'catalog/image_widget.dart';
+import 'catalog/loyalty_progress_widget.dart';
 import 'catalog/mixed_carousel_widget.dart';
 import 'catalog/modal_widget.dart';
 import 'catalog/product_card_widget.dart';
+import 'catalog/rating_widget.dart';
 import 'catalog/search_widget.dart';
 import 'catalog/slider_widget.dart';
 import 'catalog/story_widget.dart';
@@ -27,8 +33,30 @@ import 'catalog/youtube_widget.dart';
 
 /// Entry point of the widget system: turns a backend JSON response into a
 /// rendered, vertically-stacked screen (§1.1 of the widget catalog doc).
+typedef CustomWidgetBuilder = Widget Function(
+  WidgetEntry entry,
+  WidgetCallbacks callbacks,
+  EcommerceWidgetTheme theme,
+);
+
 class WidgetCatalog {
   const WidgetCatalog._();
+
+  static final Map<String, CustomWidgetBuilder> _customBuilders = {};
+
+  /// Registers a builder for a backend `type` string this package version
+  /// doesn't ship a widget for, so a host app can render it without waiting
+  /// for a package update. Checked whenever an entry's `type` doesn't match
+  /// any built-in [WidgetType]; call with the same [wireType] again to
+  /// replace a previous registration.
+  static void registerBuilder(String wireType, CustomWidgetBuilder builder) {
+    _customBuilders[wireType] = builder;
+  }
+
+  /// Removes a builder registered via [registerBuilder].
+  static void unregisterBuilder(String wireType) {
+    _customBuilders.remove(wireType);
+  }
 
   /// Parses `{ "data": [ ... ] }` (or a bare list) into widget entries.
   static List<WidgetEntry> fromJson(dynamic json) => WidgetEntry.listFromJson(json);
@@ -80,7 +108,7 @@ class WidgetCatalog {
       case WidgetType.videoList:
         return VideoListWidget(params: params, callbacks: callbacks);
       case WidgetType.story:
-        return StoryWidget(params: params, callbacks: callbacks);
+        return StoryWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.visitedProducts:
         return VisitedProductsWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.timeImage:
@@ -91,7 +119,21 @@ class WidgetCatalog {
         return SearchWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.fastRegister:
         return FastRegisterWidget(params: params, theme: theme);
+      case WidgetType.rating:
+        return RatingWidget(params: params, theme: theme);
+      case WidgetType.bundle:
+        return BundleWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.coupon:
+        return CouponWidget(params: params, theme: theme);
+      case WidgetType.categoryMenu:
+        return CategoryMenuWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.loyaltyProgress:
+        return LoyaltyProgressWidget(params: params, theme: theme);
+      case WidgetType.comparison:
+        return ComparisonWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.unknown:
+        final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
+        if (custom != null) return custom(entry, callbacks, theme);
         return const UnknownWidget();
     }
   }

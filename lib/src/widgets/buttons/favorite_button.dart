@@ -20,6 +20,7 @@ class FavoriteButton extends StatefulWidget {
     this.inactiveColor = AppColors.textSecondary,
     this.backgroundColor = AppColors.surface,
     this.semanticLabel = 'Favorite',
+    this.animationDuration = const Duration(milliseconds: 600),
   });
 
   /// Whether the product is currently marked as a favorite.
@@ -46,6 +47,9 @@ class FavoriteButton extends StatefulWidget {
   /// Accessibility label announced by screen readers (e.g. "Favorite").
   final String semanticLabel;
 
+  /// Duration of the bounce+rotate "pop" animation played on toggle.
+  final Duration animationDuration;
+
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();
 }
@@ -60,7 +64,7 @@ class _FavoriteButtonState extends State<FavoriteButton>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: widget.animationDuration,
       vsync: this,
     );
     _scale = TweenSequence<double>([

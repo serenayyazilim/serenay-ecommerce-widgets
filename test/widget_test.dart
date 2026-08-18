@@ -9,6 +9,11 @@ WidgetCallbacks _callbacks({
   bool Function()? isLoggedIn,
   Future<List<SlideItem>> Function(dynamic id)? fetchSlides,
   List<ProductCardData> Function()? visitedProducts,
+  Future<void> Function(ProductCardData product, ProductVariant? variant, int quantity)?
+  onAddToCart,
+  String Function(num amount, String currency)? formatPrice,
+  Widget Function(ProductCardData data)? productCardBuilder,
+  Widget Function()? imageErrorBuilder,
 }) {
   return WidgetCallbacks(
     onAction: onAction ?? (_) {},
@@ -16,6 +21,10 @@ WidgetCallbacks _callbacks({
     isLoggedIn: isLoggedIn,
     fetchSlides: fetchSlides,
     visitedProducts: visitedProducts,
+    onAddToCart: onAddToCart,
+    formatPrice: formatPrice,
+    productCardBuilder: productCardBuilder,
+    imageErrorBuilder: imageErrorBuilder,
   );
 }
 
@@ -551,6 +560,219 @@ void main() {
     expect(find.text('Visited 1'), findsOneWidget);
   });
 
+  testWidgets('RATING renders its stars and review count without crashing', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'RATING',
+          'params': {'rating': 3.5, 'review_count': 128},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('3.5'), findsOneWidget);
+    expect(find.text('(128)'), findsOneWidget);
+  });
+
+  testWidgets('BUNDLE fetches products and renders an Add All to Cart button', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'BUNDLE',
+          'params': {'is_bundle_product': true},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'B1', price: 10),
+                  ProductCardData(id: 2, image: '', title: 'B2', price: 20),
+                ],
+                onAddToCart: (product, variant, quantity) async {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('B1'), findsOneWidget);
+    expect(find.text('B2'), findsOneWidget);
+    expect(find.text('Add All to Cart'), findsOneWidget);
+  });
+
+  testWidgets('COUPON shows the code and hides itself once end_time has passed', (tester) async {
+    final active = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'COUPON',
+          'params': {'code': 'SAVE20', 'discount_text': '20% OFF'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: active, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('SAVE20'), findsOneWidget);
+
+    final expired = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'COUPON',
+          'params': {
+            'code': 'OLD10',
+            'end_time': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+          },
+        },
+      ],
+    });
+
+    // Pump an empty tree first so the next pumpWidget is a genuine
+    // unmount + remount (a same-shape rebuild would reuse the State via
+    // didUpdateWidget instead of re-reading params through initState).
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: expired, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('OLD10'), findsNothing);
+  });
+
+  testWidgets('CATEGORYMENU renders category items and resolves taps through onAction', (
+    tester,
+  ) async {
+    WidgetAction? tapped;
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'CATEGORYMENU',
+          'params': {
+            'list': [
+              {'title': 'Shoes', 'image': '', 'type': 'category', 'id': 9},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(onAction: (action) => tapped = action),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Shoes'), findsOneWidget);
+    await tester.tap(find.text('Shoes'));
+    await tester.pump();
+
+    expect(tapped?.type, WidgetActionType.category);
+    expect(tapped?.id, 9);
+  });
+
+  testWidgets('LOYALTYPROGRESS renders its title and reward text without crashing', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'LOYALTYPROGRESS',
+          'params': {
+            'current': 2,
+            'target': 5,
+            'title': 'Free Shipping Progress',
+            'reward_text': '3 more orders to go',
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Free Shipping Progress'), findsOneWidget);
+    expect(find.text('3 more orders to go'), findsOneWidget);
+  });
+
+  testWidgets('COMPARISON renders at least two fetched products side by side', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'COMPARISON', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'C1', price: 10),
+                  ProductCardData(id: 2, image: '', title: 'C2', price: 20),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('C1'), findsOneWidget);
+    expect(find.text('C2'), findsOneWidget);
+  });
+
   testWidgets('GRID (OldProductCard) renders fetched products without crashing', (tester) async {
     final data = WidgetCatalog.fromJson({
       'data': [
@@ -578,5 +800,166 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Grid P1'), findsOneWidget);
+  });
+
+  testWidgets('formatPrice callback overrides the default "<amount> <symbol>" text', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'CAROUSEL', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'P1', price: 10, currency: 'usd'),
+                ],
+                formatPrice: (amount, currency) => '£${amount.toInt()}',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('£10'), findsOneWidget);
+  });
+
+  testWidgets('productCardBuilder overrides CAROUSEL\'s default RichProductCard', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'CAROUSEL', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+                ],
+                productCardBuilder: (data) => Text('Custom card: ${data.title}'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Custom card: P1'), findsOneWidget);
+    expect(find.text('P1'), findsNothing);
+  });
+
+  testWidgets('GRID reads its column count from params over the theme default', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'GRID',
+          'params': {'columns': 3},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'Grid P1', price: 20),
+                  ProductCardData(id: 2, image: '', title: 'Grid P2', price: 20),
+                  ProductCardData(id: 3, image: '', title: 'Grid P3', price: 20),
+                ],
+              ),
+              theme: const EcommerceWidgetTheme(gridColumns: 2),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Grid P3'), findsOneWidget);
+  });
+
+  testWidgets('WidgetCatalog.registerBuilder renders a custom widget for an unknown type', (
+    tester,
+  ) async {
+    WidgetCatalog.registerBuilder(
+      'CUSTOM_BANNER',
+      (entry, callbacks, theme) => Text(entry.params['text'] as String? ?? ''),
+    );
+    addTearDown(() => WidgetCatalog.unregisterBuilder('CUSTOM_BANNER'));
+
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'CUSTOM_BANNER',
+          'params': {'text': 'Hello from host app'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Hello from host app'), findsOneWidget);
+  });
+
+  testWidgets('imageErrorBuilder overrides the default broken-image placeholder', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'IMAGE',
+          'params': {'url': 'https://example.invalid/broken.png'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                imageErrorBuilder: () => const Text('custom error placeholder'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('custom error placeholder'), findsOneWidget);
   });
 }

@@ -197,7 +197,12 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
       onTap: () => widget.callbacks.onAction(action),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: CatalogNetworkImage(url: url, width: double.infinity, height: double.infinity),
+        child: CatalogNetworkImage(
+          url: url,
+          width: double.infinity,
+          height: double.infinity,
+          errorBuilder: widget.callbacks.imageErrorBuilder,
+        ),
       ),
     );
   }

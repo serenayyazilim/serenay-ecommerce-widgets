@@ -44,15 +44,20 @@ class _CarouselWidgetState extends State<CarouselWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: products.length,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
-            itemBuilder: (context, index) => SizedBox(
-              width: 160,
-              child: RichProductCard(
-                data: products[index],
-                callbacks: widget.callbacks,
-                imageSize: 160,
-                theme: widget.theme,
-              ),
-            ),
+            itemBuilder: (context, index) {
+              final builder = widget.callbacks.productCardBuilder;
+              return SizedBox(
+                width: 160,
+                child: builder != null
+                    ? builder(products[index])
+                    : RichProductCard(
+                        data: products[index],
+                        callbacks: widget.callbacks,
+                        imageSize: 160,
+                        theme: widget.theme,
+                      ),
+              );
+            },
           ),
         );
       },

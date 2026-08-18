@@ -57,6 +57,12 @@ class _RichProductCardState extends State<RichProductCard> {
     }
   }
 
+  String _formatPrice(num amount, String currency) {
+    final formatPrice = widget.callbacks.formatPrice;
+    if (formatPrice != null) return formatPrice(amount, currency);
+    return '${amount.toStringAsFixed(2)} ${_currencySymbol(currency)}';
+  }
+
   Future<void> _toggleFavorite() async {
     final toggle = widget.callbacks.onToggleFavorite;
     if (toggle == null) return;
@@ -123,10 +129,15 @@ class _RichProductCardState extends State<RichProductCard> {
                         itemCount: images.length,
                         onPageChanged: (index) =>
                             setState(() => _currentVariantPage = index),
-                        itemBuilder: (context, index) =>
-                            CatalogNetworkImage(url: images[index]),
+                        itemBuilder: (context, index) => CatalogNetworkImage(
+                          url: images[index],
+                          errorBuilder: widget.callbacks.imageErrorBuilder,
+                        ),
                       )
-                    : CatalogNetworkImage(url: images.first),
+                    : CatalogNetworkImage(
+                        url: images.first,
+                        errorBuilder: widget.callbacks.imageErrorBuilder,
+                      ),
                 if (hasMultiple)
                   Positioned(
                     bottom: 8,
@@ -145,6 +156,7 @@ class _RichProductCardState extends State<RichProductCard> {
                     activeColor: theme.favoriteActiveColor,
                     inactiveColor: theme.textSecondaryColor,
                     backgroundColor: theme.surfaceColor,
+                    animationDuration: theme.favoriteAnimationDuration,
                   ),
                 ),
                 if (_data.hasDiscount || (_data.discount != null && _data.discount != '0'))
@@ -273,19 +285,18 @@ class _RichProductCardState extends State<RichProductCard> {
       return const SizedBox.shrink();
     }
 
-    final symbol = _currencySymbol(_data.currency);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (_data.hasDiscount) ...[
           Text(
-            '${_data.priceOld!.toStringAsFixed(2)} $symbol',
+            _formatPrice(_data.priceOld!, _data.currency),
             style: theme.originalPriceStyle.copyWith(fontSize: 11),
           ),
           const SizedBox(width: 5),
         ],
         Text(
-          '${_data.price!.toStringAsFixed(2)} $symbol',
+          _formatPrice(_data.price!, _data.currency),
           style: theme.priceStyle.copyWith(
             fontSize: 14,
             color: _data.hasDiscount ? theme.discountColor : theme.textPrimaryColor,
@@ -418,7 +429,10 @@ class _VariantSheetState extends State<_VariantSheet> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(14),
-                            child: CatalogNetworkImage(url: variants[index].image ?? data.image),
+                            child: CatalogNetworkImage(
+                              url: variants[index].image ?? data.image,
+                              errorBuilder: widget.callbacks.imageErrorBuilder,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 6),

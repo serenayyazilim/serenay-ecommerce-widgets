@@ -17,7 +17,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets: ^1.1.5
+  serenay_ecommerce_widgets: ^1.2.0
 ```
 
 ## Quick start
@@ -79,12 +79,39 @@ The standalone building blocks the catalog composes internally —
 `WidgetCatalog` (e.g. in a custom product detail screen) with their own
 constructor overrides.
 
+## Further customization
+
+Beyond `EcommerceWidgetTheme`, `WidgetCallbacks` has a few more override
+points for cases the theme alone can't cover:
+
+- `formatPrice: (amount, currency) => ...` — replace the built-in
+  `"<amount> <symbol>"` price text with your own locale/currency formatting.
+- `productCardBuilder: (data) => ...` — replace the card CAROUSEL,
+  PRODUCTCARD and FLASHSALE render for each product entirely (GRID keeps its
+  own `OldProductCard` design regardless).
+- `imageErrorBuilder: () => ...` — replace the broken-image placeholder
+  shown across every widget when a network image fails to load.
+
+`GridWidget`/`ProductCardWidget` also read a `"columns"` value from a
+widget's `params` (falling back to `theme.gridColumns`, default `2`) if a
+backend wants a 3- or 4-column grid on a given screen.
+
+If your backend sends a `type` this package doesn't ship a widget for yet,
+register a builder for it instead of waiting for a package update:
+
+```dart
+WidgetCatalog.registerBuilder('CUSTOM_BANNER', (entry, callbacks, theme) {
+  return MyCustomBanner(params: entry.params);
+});
+```
+
 ## Supported widgets
 
 TEXT, IMAGE, SLIDER, DIVIDER, CAROUSEL, GRID, IMAGECAROUSEL, IMAGELIST,
 VIDEOLIST, FASTREGISTER, STORY, VISITEDPRODUCTS, TIMEIMAGE, YOUTUBE, SEARCH,
-PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL. An unrecognized `type` renders
-as an empty 1px box (forward compatibility).
+PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL, RATING, BUNDLE, COUPON,
+CATEGORYMENU, LOYALTYPROGRESS, COMPARISON. An unrecognized `type` renders as
+an empty 1px box (forward compatibility).
 
 GRID has its own card design (taller image, inline video, a pre-order
 banner, a size/package picker); CAROUSEL, PRODUCTCARD and FLASHSALE share

@@ -44,6 +44,7 @@ class ImageWidget extends StatelessWidget {
               width: width,
               height: heightPercent != null ? width * heightPercent : null,
               borderRadius: radius > 0 ? BorderRadius.circular(radius) : null,
+              errorBuilder: callbacks.imageErrorBuilder,
             );
           },
         ),

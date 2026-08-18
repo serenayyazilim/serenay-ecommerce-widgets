@@ -21,7 +21,13 @@ enum WidgetType {
   productCard,
   flashSale,
   modal,
-  mixedCarousel;
+  mixedCarousel,
+  rating,
+  bundle,
+  coupon,
+  categoryMenu,
+  loyaltyProgress,
+  comparison;
 
   static const Map<String, WidgetType> _byWireName = {
     'TEXT': WidgetType.text,
@@ -44,6 +50,12 @@ enum WidgetType {
     'FLASHSALE': WidgetType.flashSale,
     'MODAL': WidgetType.modal,
     'MIXEDCAROUSEL': WidgetType.mixedCarousel,
+    'RATING': WidgetType.rating,
+    'BUNDLE': WidgetType.bundle,
+    'COUPON': WidgetType.coupon,
+    'CATEGORYMENU': WidgetType.categoryMenu,
+    'LOYALTYPROGRESS': WidgetType.loyaltyProgress,
+    'COMPARISON': WidgetType.comparison,
   };
 
   /// Parses the backend wire value (exact-match, case-sensitive). Any

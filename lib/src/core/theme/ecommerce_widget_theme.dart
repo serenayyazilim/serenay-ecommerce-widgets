@@ -43,6 +43,10 @@ class EcommerceWidgetTheme {
     this.buttonHeight = AppDimens.buttonHeight,
     this.iconButtonSize = AppDimens.iconButtonSize,
     this.starSize = AppDimens.starSize,
+    this.gridColumns = 2,
+    this.favoriteAnimationDuration = const Duration(milliseconds: 600),
+    this.flashSaleBorderDuration = const Duration(milliseconds: 5500),
+    this.storyAutoAdvanceDuration = const Duration(seconds: 3),
     this.viewPricesLabel = 'View Prices',
     this.notAvailableForSaleLabel = 'Not available for sale',
     this.addToCartLabel = 'Add to Cart',
@@ -62,6 +66,10 @@ class EcommerceWidgetTheme {
     this.fastRegisterLaunchFailedLabel = "Couldn't open WhatsApp",
     this.preOrderLabel = 'Pre-order',
     this.quickAddLabel = 'Add',
+    this.bundleTitleLabel = 'Frequently Bought Together',
+    this.addAllToCartLabel = 'Add All to Cart',
+    this.couponCopyLabel = 'Copy',
+    this.couponCopiedLabel = 'Copied!',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -151,6 +159,19 @@ class EcommerceWidgetTheme {
   /// Size for a single star in a rating widget.
   final double starSize;
 
+  /// Number of columns for GRID/PRODUCTCARD's product grid. Overridden per
+  /// entry by a `"columns"` params value when the backend sends one.
+  final int gridColumns;
+
+  /// Duration of the favorite-button "pop" animation.
+  final Duration favoriteAnimationDuration;
+
+  /// Duration of one loop of the FLASHSALE countdown border animation.
+  final Duration flashSaleBorderDuration;
+
+  /// How long a STORY page shows before auto-advancing to the next one.
+  final Duration storyAutoAdvanceDuration;
+
   /// Label shown instead of a hidden price when the viewer is logged out.
   final String viewPricesLabel;
 
@@ -214,6 +235,18 @@ class EcommerceWidgetTheme {
   /// [ProductCardData.measureOptions].
   final String quickAddLabel;
 
+  /// Header shown above the BUNDLE widget's product row.
+  final String bundleTitleLabel;
+
+  /// Label for the BUNDLE widget's "add every item at once" button.
+  final String addAllToCartLabel;
+
+  /// Label for the COUPON widget's copy-code button/icon before it's tapped.
+  final String couponCopyLabel;
+
+  /// Label shown briefly on the COUPON widget after its code is copied.
+  final String couponCopiedLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -245,6 +278,10 @@ class EcommerceWidgetTheme {
     double? buttonHeight,
     double? iconButtonSize,
     double? starSize,
+    int? gridColumns,
+    Duration? favoriteAnimationDuration,
+    Duration? flashSaleBorderDuration,
+    Duration? storyAutoAdvanceDuration,
     String? viewPricesLabel,
     String? notAvailableForSaleLabel,
     String? addToCartLabel,
@@ -264,6 +301,10 @@ class EcommerceWidgetTheme {
     String? fastRegisterLaunchFailedLabel,
     String? preOrderLabel,
     String? quickAddLabel,
+    String? bundleTitleLabel,
+    String? addAllToCartLabel,
+    String? couponCopyLabel,
+    String? couponCopiedLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -295,6 +336,10 @@ class EcommerceWidgetTheme {
       buttonHeight: buttonHeight ?? this.buttonHeight,
       iconButtonSize: iconButtonSize ?? this.iconButtonSize,
       starSize: starSize ?? this.starSize,
+      gridColumns: gridColumns ?? this.gridColumns,
+      favoriteAnimationDuration: favoriteAnimationDuration ?? this.favoriteAnimationDuration,
+      flashSaleBorderDuration: flashSaleBorderDuration ?? this.flashSaleBorderDuration,
+      storyAutoAdvanceDuration: storyAutoAdvanceDuration ?? this.storyAutoAdvanceDuration,
       viewPricesLabel: viewPricesLabel ?? this.viewPricesLabel,
       notAvailableForSaleLabel: notAvailableForSaleLabel ?? this.notAvailableForSaleLabel,
       addToCartLabel: addToCartLabel ?? this.addToCartLabel,
@@ -314,6 +359,10 @@ class EcommerceWidgetTheme {
       fastRegisterLaunchFailedLabel: fastRegisterLaunchFailedLabel ?? this.fastRegisterLaunchFailedLabel,
       preOrderLabel: preOrderLabel ?? this.preOrderLabel,
       quickAddLabel: quickAddLabel ?? this.quickAddLabel,
+      bundleTitleLabel: bundleTitleLabel ?? this.bundleTitleLabel,
+      addAllToCartLabel: addAllToCartLabel ?? this.addAllToCartLabel,
+      couponCopyLabel: couponCopyLabel ?? this.couponCopyLabel,
+      couponCopiedLabel: couponCopiedLabel ?? this.couponCopiedLabel,
     );
   }
 }

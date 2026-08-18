@@ -52,6 +52,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           builder: (context) => _ZoomGallery(
             images: slides.map((s) => s.image).toList(),
             initialIndex: index,
+            errorBuilder: widget.callbacks.imageErrorBuilder,
           ),
         );
         break;
@@ -62,7 +63,10 @@ class _SliderWidgetState extends State<SliderWidget> {
           if (!mounted || image == null) return;
           showModalBottomSheet(
             context: context,
-            builder: (context) => CatalogNetworkImage(url: image),
+            builder: (context) => CatalogNetworkImage(
+              url: image,
+              errorBuilder: widget.callbacks.imageErrorBuilder,
+            ),
           );
         });
         break;
@@ -103,7 +107,10 @@ class _SliderWidgetState extends State<SliderWidget> {
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: GestureDetector(
                           onTap: () => _handleTap(slides, index),
-                          child: CatalogNetworkImage(url: slides[index].image),
+                          child: CatalogNetworkImage(
+                            url: slides[index].image,
+                            errorBuilder: widget.callbacks.imageErrorBuilder,
+                          ),
                         ),
                       ),
                     ),
@@ -137,10 +144,15 @@ class _SliderWidgetState extends State<SliderWidget> {
 }
 
 class _ZoomGallery extends StatelessWidget {
-  const _ZoomGallery({required this.images, required this.initialIndex});
+  const _ZoomGallery({
+    required this.images,
+    required this.initialIndex,
+    this.errorBuilder,
+  });
 
   final List<String> images;
   final int initialIndex;
+  final Widget Function()? errorBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +163,11 @@ class _ZoomGallery extends StatelessWidget {
         controller: PageController(initialPage: initialIndex),
         itemCount: images.length,
         itemBuilder: (context, index) => InteractiveViewer(
-          child: CatalogNetworkImage(url: images[index], fit: BoxFit.contain),
+          child: CatalogNetworkImage(
+            url: images[index],
+            fit: BoxFit.contain,
+            errorBuilder: errorBuilder,
+          ),
         ),
       ),
     );

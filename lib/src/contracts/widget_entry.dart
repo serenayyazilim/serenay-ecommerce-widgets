@@ -5,17 +5,24 @@ import 'widget_type.dart';
 /// One entry of a backend-driven screen: a widget [type] plus its [params].
 /// Screens render a list of these, in order.
 class WidgetEntry {
-  const WidgetEntry({required this.type, required this.params});
+  const WidgetEntry({required this.type, required this.params, this.rawType});
 
   final WidgetType type;
   final Map<String, dynamic> params;
 
+  /// The backend's original `type` string, kept around so a host app can
+  /// register a builder for a wire type this package version doesn't know
+  /// about yet (see `WidgetCatalog.registerBuilder`).
+  final String? rawType;
+
   /// Parses a single `{ "type": ..., "params": ... }` entry. `params` may
   /// arrive as a `Map` or as a JSON-encoded `String`; both are accepted.
   factory WidgetEntry.fromJson(Map<String, dynamic> json) {
+    final rawType = json['type'] as String?;
     return WidgetEntry(
-      type: WidgetType.fromWire(json['type'] as String?),
+      type: WidgetType.fromWire(rawType),
       params: _decodeParams(json['params']),
+      rawType: rawType,
     );
   }
 

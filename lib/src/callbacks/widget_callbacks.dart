@@ -24,6 +24,8 @@ class WidgetCallbacks {
     this.onAddToCart,
     this.visitedProducts,
     this.imageErrorBuilder,
+    this.formatPrice,
+    this.productCardBuilder,
   });
 
   /// Resolves any tap/navigation target produced from a widget's `type` +
@@ -74,4 +76,16 @@ class WidgetCallbacks {
   /// Optional override for the placeholder shown when a network image fails
   /// to load.
   final Widget Function()? imageErrorBuilder;
+
+  /// Optional override for rendering a price as text (e.g. locale-aware
+  /// thousands separators, or a currency other than the package's built-in
+  /// USD/EUR/RUB/TRY symbols). Falls back to each card's default
+  /// `"<amount> <symbol>"` formatting when unset.
+  final String Function(num amount, String currency)? formatPrice;
+
+  /// Optional full override for a product card's UI: when set, CAROUSEL,
+  /// PRODUCTCARD and FLASHSALE render this instead of [RichProductCard] (GRID
+  /// keeps its own [OldProductCard] design either way). Lets a host app
+  /// replace the card entirely without forking the package.
+  final Widget Function(ProductCardData data)? productCardBuilder;
 }

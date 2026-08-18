@@ -1,3 +1,43 @@
+## 1.2.0
+
+- Add six new catalog widgets: `RATING` (star rating + review count, the
+  first consumer of the previously-unused `EcommerceWidgetTheme.
+  ratingFilledColor`/`ratingEmptyColor`/`starSize`), `BUNDLE` ("frequently
+  bought together" product row backed by `ProductQuery.isBundleProduct`),
+  `COUPON` (copyable code with an expiry countdown), `CATEGORYMENU`
+  (circular icon + label grid), `LOYALTYPROGRESS` (reward progress bar) and
+  `COMPARISON` (side-by-side product spec table). Each ships with a
+  `doc/widgets/` usage page, a widget test, and a demo entry in
+  `example/lib/main.dart`. Adds `EcommerceWidgetTheme.bundleTitleLabel`,
+  `.addAllToCartLabel`, `.couponCopyLabel` and `.couponCopiedLabel`.
+- Fix `WidgetCallbacks.imageErrorBuilder` being defined but never wired up:
+  `CatalogNetworkImage` now actually uses it (across every widget that
+  loads a network image) instead of always falling back to its own fixed
+  placeholder icon.
+- Add `WidgetCallbacks.formatPrice` to let a host app replace the built-in
+  `"<amount> <symbol>"` price text with its own locale/currency formatting;
+  `RichProductCard`, `OldProductCard` and `MiniProductTile` now call it when
+  set and fall back to the previous hardcoded formatting otherwise.
+- Add `WidgetCallbacks.productCardBuilder` to let a host app replace the
+  product card CAROUSEL, PRODUCTCARD and FLASHSALE render entirely, without
+  forking the package (GRID keeps its own `OldProductCard` design).
+- Add `WidgetCatalog.registerBuilder`/`.unregisterBuilder` so a host app can
+  render a widget for a backend `type` this package doesn't ship yet,
+  instead of it silently falling back to `UnknownWidget`'s empty 1px box.
+  `WidgetEntry` now keeps the raw wire-format `type` string (`rawType`) so
+  registered builders can key off it.
+- Add a `"columns"` `params` field (falling back to the new
+  `EcommerceWidgetTheme.gridColumns`, default `2`) to `GridWidget` and
+  `ProductCardWidget`, so a backend can request a 3- or 4-column grid on a
+  given screen without a package update.
+- Add `EcommerceWidgetTheme.favoriteAnimationDuration`,
+  `.flashSaleBorderDuration` and `.storyAutoAdvanceDuration` so a host app
+  can tune (or shorten, for reduced-motion) the favorite "pop", the flash
+  sale countdown border loop and the story auto-advance timer, which were
+  previously hardcoded. `StoryWidget` now also accepts an optional `theme`.
+- All additions are backward compatible: every new parameter and callback
+  is optional and defaults to the previous behavior.
+
 ## 1.1.6
 
 - Add widget catalog demo videos (converted to animated WebP, ~450KB/1.1MB)

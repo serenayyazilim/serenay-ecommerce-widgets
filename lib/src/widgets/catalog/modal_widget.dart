@@ -74,7 +74,11 @@ class _ModalWidgetState extends State<ModalWidget> {
                         ? MediaQuery.of(context).size.width * (parseDouble(params['height_percent']) ?? 1.1)
                         : MediaQuery.of(context).size.height * 0.7,
                   ),
-                  child: CatalogNetworkImage(url: url, width: double.infinity),
+                  child: CatalogNetworkImage(
+                    url: url,
+                    width: double.infinity,
+                    errorBuilder: widget.callbacks.imageErrorBuilder,
+                  ),
                 ),
               ),
             ),
