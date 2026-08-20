@@ -1,5 +1,11 @@
 # serenay_ecommerce_widgets
 
+[![pub package](https://img.shields.io/pub/v/serenay_ecommerce_widgets.svg)](https://pub.dev/packages/serenay_ecommerce_widgets)
+[![pub points](https://img.shields.io/pub/points/serenay_ecommerce_widgets)](https://pub.dev/packages/serenay_ecommerce_widgets/score)
+[![CI](https://github.com/serenayyazilim/serenay-ecommerce-widgets/actions/workflows/ci.yml/badge.svg)](https://github.com/serenayyazilim/serenay-ecommerce-widgets/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/serenayyazilim/serenay-ecommerce-widgets)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)](https://pub.dev/packages/serenay_ecommerce_widgets)
+
 **[🚀 Live demo](https://serenayyazilim.github.io/serenay-ecommerce-widgets/)** ·
 **[📖 Docs](https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/)**
 
@@ -119,3 +125,8 @@ the same card.
 
 For the `params` schema each widget expects, see
 [doc/widgets/](doc/widgets/README.md) — one page per widget type.
+
+## Contributing
+
+Bug reports and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
+for setup, the widget-authoring checklist, and issue templates.

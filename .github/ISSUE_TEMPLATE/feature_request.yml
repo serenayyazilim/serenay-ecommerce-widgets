@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest a new widget type, callback, or theme option
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What are you trying to build that the current catalog can't do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: Sketch of the widget `type`/`params`, callback signature, or theme field, if you have one in mind.
+      render: dart
+    validations:
+      required: false
