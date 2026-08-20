@@ -168,8 +168,9 @@ class _ScreenPageState extends State<ScreenPage> {
       final updated = !product.isFavorited;
       setState(() {
         final index = _products.indexWhere((p) => p.id == product.id);
-        if (index != -1)
+        if (index != -1) {
           _products[index] = product.copyWith(isFavorited: updated);
+        }
       });
       return updated;
     },
@@ -204,7 +205,6 @@ class _ScreenPageState extends State<ScreenPage> {
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
-      if (oldIndex < newIndex) newIndex -= 1;
       final entry = _entries.removeAt(oldIndex);
       _entries.insert(newIndex, entry);
     });
@@ -491,7 +491,7 @@ class _Sidebar extends StatelessWidget {
   final String? expandedId;
   final Map<WidgetType, List<_ParamField>> paramSchemas;
   final ValueChanged<_EditableEntry> onTap;
-  final void Function(int oldIndex, int newIndex) onReorder;
+  final ReorderCallback onReorder;
   final void Function(_EditableEntry entry, Map<String, dynamic> next)
   onParamsChanged;
 
@@ -575,7 +575,7 @@ class _Sidebar extends StatelessWidget {
                   buildDefaultDragHandles: false,
                   padding: const EdgeInsets.only(bottom: 16, top: 4),
                   itemCount: entries.length,
-                  onReorder: onReorder,
+                  onReorderItem: onReorder,
                   itemBuilder: (context, i) {
                 final entry = entries[i];
                 final fields = paramSchemas[entry.type] ?? const [];
