@@ -192,6 +192,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
 
   Widget _buildImagePage(Map<String, dynamic> item) {
     final url = item['url'] as String? ?? '';
+    final fit = parseBoxFit(item['fit']);
     final action = WidgetAction.fromParams(item);
     return GestureDetector(
       onTap: () => widget.callbacks.onAction(action),
@@ -201,6 +202,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
           url: url,
           width: double.infinity,
           height: double.infinity,
+          fit: fit,
           errorBuilder: widget.callbacks.imageErrorBuilder,
         ),
       ),

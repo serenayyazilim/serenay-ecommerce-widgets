@@ -1,3 +1,5 @@
+import 'package:flutter/painting.dart';
+
 /// Parses a widget/JSON param that may arrive as a [num] or as a numeric
 /// [String] — backends aren't always consistent about sending numbers as
 /// JSON numbers vs. strings. Returns `null` for anything else, including
@@ -14,3 +16,28 @@ int? parseInt(dynamic value) => parseNum(value)?.toInt();
 
 /// Like [parseNum], converted to a [double].
 double? parseDouble(dynamic value) => parseNum(value)?.toDouble();
+
+/// Parses a widget/JSON `fit` param (e.g. `"contain"`, `"cover"`, `"fill"`,
+/// `"fit_width"`, `"fit_height"`, `"scale_down"`, `"none"`) into a [BoxFit].
+/// Falls back to [fallback] for anything unrecognized or null, instead of
+/// throwing.
+BoxFit parseBoxFit(dynamic value, {BoxFit fallback = BoxFit.cover}) {
+  switch (value) {
+    case 'contain':
+      return BoxFit.contain;
+    case 'cover':
+      return BoxFit.cover;
+    case 'fill':
+      return BoxFit.fill;
+    case 'fit_width':
+      return BoxFit.fitWidth;
+    case 'fit_height':
+      return BoxFit.fitHeight;
+    case 'scale_down':
+      return BoxFit.scaleDown;
+    case 'none':
+      return BoxFit.none;
+    default:
+      return fallback;
+  }
+}

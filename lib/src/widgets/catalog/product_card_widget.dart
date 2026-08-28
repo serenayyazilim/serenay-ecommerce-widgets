@@ -4,6 +4,7 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import 'rich_product_card.dart';
 
 /// PRODUCTCARD: a 2-column grid of [RichProductCard] — the same component
@@ -38,8 +39,7 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        final columns =
-            (widget.params['columns'] as num?)?.toInt() ?? widget.theme.gridColumns;
+        final columns = parseInt(widget.params['columns']) ?? widget.theme.gridColumns;
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

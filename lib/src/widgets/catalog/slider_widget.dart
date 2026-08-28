@@ -80,6 +80,7 @@ class _SliderWidgetState extends State<SliderWidget> {
     final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
     final paddingH = parseDouble(widget.params['padding_horizontal']) ?? 0.0;
     final paddingV = parseDouble(widget.params['padding_vertical']) ?? 0.0;
+    final fit = parseBoxFit(widget.params['fit']);
 
     return FutureBuilder<List<SlideItem>>(
       future: _future,
@@ -109,6 +110,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                           onTap: () => _handleTap(slides, index),
                           child: CatalogNetworkImage(
                             url: slides[index].image,
+                            fit: fit,
                             errorBuilder: widget.callbacks.imageErrorBuilder,
                           ),
                         ),

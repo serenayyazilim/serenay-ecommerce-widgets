@@ -52,6 +52,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     final barHeight = parseDouble(widget.params['bar_height']) ?? 56.0;
     final buttonHeight = parseDouble(widget.params['button_height']) ?? 40.0;
     final radius = parseDouble(widget.params['radius']) ?? widget.theme.radiusL;
+    final fit = parseBoxFit(widget.params['fit'], fallback: BoxFit.fitWidth);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -66,7 +67,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 url: url,
                 height: width * heightPercent,
                 width: width,
-                fit: BoxFit.fitWidth,
+                fit: fit,
                 errorBuilder: widget.callbacks.imageErrorBuilder,
               ),
             ),

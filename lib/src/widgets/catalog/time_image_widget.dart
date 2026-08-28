@@ -71,12 +71,15 @@ class _TimeImageWidgetState extends State<TimeImageWidget> {
     final url = (widget.params['url'] as String?) ?? '';
     if (url.isEmpty) return const SizedBox.shrink();
 
+    final aspectRatio = parseDouble(widget.params['aspect_ratio']) ?? 16 / 9;
+    final fit = parseBoxFit(widget.params['fit']);
+
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: aspectRatio,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          CatalogNetworkImage(url: url),
+          CatalogNetworkImage(url: url, fit: fit),
           if (_active) _buildOverlay(),
         ],
       ),

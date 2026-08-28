@@ -40,6 +40,8 @@ class _VideoListWidgetState extends State<VideoListWidget> {
 
   double _pd(String key, double fallback) => parseDouble(widget.params[key]) ?? fallback;
 
+  BoxFit get _fit => parseBoxFit(widget.params['fit']);
+
   Axis _scrollDirection() =>
       widget.params['scroll_direction'] == 'horizontal' ? Axis.horizontal : Axis.vertical;
 
@@ -102,7 +104,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
         height: height,
         child: Stack(
           children: [
-            MutedLoopVideo(url: video.video),
+            MutedLoopVideo(url: video.video, fit: _fit),
             if (video.title != null)
               Container(
                 width: width,
@@ -168,7 +170,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * _pd('width_percent', 1.0),
               height: MediaQuery.of(context).size.height * _pd('height_percent', 0.3),
-              child: MutedLoopVideo(url: videos[index].video),
+              child: MutedLoopVideo(url: videos[index].video, fit: _fit),
             ),
           ),
         ),

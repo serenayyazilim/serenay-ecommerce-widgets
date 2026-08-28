@@ -40,6 +40,8 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
     final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
     final bgImage = widget.params['bg_image'] as String?;
     final itemCount = parseInt(widget.params['item_count']) ?? 2;
+    final fit = parseBoxFit(widget.params['fit']);
+    final bgFit = parseBoxFit(widget.params['bg_fit']);
 
     return FutureBuilder<List<SlideItem>>(
       future: _future,
@@ -58,7 +60,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
               decoration: (bgImage == null || bgImage.isEmpty)
                   ? null
                   : BoxDecoration(
-                      image: DecorationImage(image: NetworkImage(bgImage), fit: BoxFit.cover),
+                      image: DecorationImage(image: NetworkImage(bgImage), fit: bgFit),
                     ),
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
@@ -71,6 +73,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                     onTap: () => widget.callbacks.onAction(slides[index].action),
                     child: CatalogNetworkImage(
                       url: slides[index].image,
+                      fit: fit,
                       errorBuilder: widget.callbacks.imageErrorBuilder,
                     ),
                   ),

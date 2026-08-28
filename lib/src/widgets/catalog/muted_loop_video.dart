@@ -10,9 +10,10 @@ import '../../core/constants/app_colors.dart';
 /// [CatalogNetworkImage]) instead of a permanent black box when the URL
 /// fails to load.
 class MutedLoopVideo extends StatefulWidget {
-  const MutedLoopVideo({super.key, required this.url});
+  const MutedLoopVideo({super.key, required this.url, this.fit = BoxFit.cover});
 
   final String url;
+  final BoxFit fit;
 
   @override
   State<MutedLoopVideo> createState() => _MutedLoopVideoState();
@@ -55,7 +56,7 @@ class _MutedLoopVideoState extends State<MutedLoopVideo> {
       return const ColoredBox(color: Colors.black12);
     }
     return FittedBox(
-      fit: BoxFit.cover,
+      fit: widget.fit,
       child: SizedBox(
         width: controller.value.size.width,
         height: controller.value.size.height,

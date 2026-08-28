@@ -31,6 +31,7 @@ class ImageWidget extends StatelessWidget {
     final heightPercent = parseDouble(params['height_percent']);
     final radius = parseDouble(params['radius']) ?? 0;
     final padding = parseDouble(params['padding']) ?? 0;
+    final fit = parseBoxFit(params['fit']);
 
     return Padding(
       padding: EdgeInsets.all(padding),
@@ -43,6 +44,7 @@ class ImageWidget extends StatelessWidget {
               url: url,
               width: width,
               height: heightPercent != null ? width * heightPercent : null,
+              fit: fit,
               borderRadius: radius > 0 ? BorderRadius.circular(radius) : null,
               errorBuilder: callbacks.imageErrorBuilder,
             );

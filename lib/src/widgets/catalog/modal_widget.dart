@@ -49,6 +49,7 @@ class _ModalWidgetState extends State<ModalWidget> {
     final params = widget.params;
     final url = params['url'] as String? ?? '';
     final radius = parseDouble(params['radius']) ?? 16;
+    final fit = parseBoxFit(params['fit']);
     final action = WidgetAction.fromParams(params);
 
     showDialog(
@@ -77,6 +78,7 @@ class _ModalWidgetState extends State<ModalWidget> {
                   child: CatalogNetworkImage(
                     url: url,
                     width: double.infinity,
+                    fit: fit,
                     errorBuilder: widget.callbacks.imageErrorBuilder,
                   ),
                 ),
