@@ -530,6 +530,45 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('SLIDER reads viewport_fraction and item_padding_horizontal from params', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SLIDER',
+          'params': {'id': 5, 'viewport_fraction': 1.0, 'item_padding_horizontal': 0},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchSlides: (_) async => const [
+                  SlideItem(image: '', action: WidgetAction(type: WidgetActionType.category, id: 1)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final pageView = tester.widget<PageView>(find.byType(PageView));
+    expect(pageView.controller?.viewportFraction, 1.0);
+
+    final padding = tester.widget<Padding>(
+      find.ancestor(of: find.byType(GestureDetector), matching: find.byType(Padding)).first,
+    );
+    expect(padding.padding, EdgeInsets.zero);
+
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('VISITEDPRODUCTS renders the host app-supplied history without crashing', (
     tester,
   ) async {

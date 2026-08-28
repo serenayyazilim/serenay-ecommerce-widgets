@@ -1,3 +1,13 @@
+## 1.3.1
+
+- `SLIDER` gains two `params` fields to control per-page layout instead of
+  hardcoding it: `"viewport_fraction"` (default `0.8`, passed to the
+  `PageController`) and `"item_padding_horizontal"` (default `5`, the
+  horizontal padding around each slide). Set `viewport_fraction: 1.0` and
+  `item_padding_horizontal: 0` for a full-bleed, edge-to-edge slide.
+- Backward compatible: both fields are optional and default to the previous
+  hardcoded values.
+
 ## 1.3.0
 
 - Add a `"fit"` `params` field (values `"cover"`, `"contain"`, `"fill"`,
