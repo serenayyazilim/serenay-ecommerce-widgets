@@ -12,6 +12,7 @@ One or more silent, looping, auto-playing videos fetched by `id` via
     "width_percent": 1.0,
     "height_percent": 0.3,
     "scroll_direction": "vertical",
+    "fit": "cover",
     "textparams": {
       "horizontal": "left",
       "vertical": "bottom",
@@ -31,6 +32,8 @@ One or more silent, looping, auto-playing videos fetched by `id` via
   overlay — `horizontal`/`vertical` control the overlay's alignment,
   `fontcolor_*`/`fontsize_*`/`fontweight_*` (`regular`/`normal`/`bold`)
   style it.
+- `fit` — how each video fills its frame (default `"cover"`); same values
+  as [IMAGE](image.md)'s `fit`.
 - More than one video scrolls in a row/column per `scroll_direction`
   (`"horizontal"` or `"vertical"`, default `"vertical"`), each sized by
   `width_percent`/`height_percent` and separated by `horizontal_padding`

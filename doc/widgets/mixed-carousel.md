@@ -17,7 +17,8 @@ color, title and description.
         "title_color": "#FFFFFF",
         "url": "https://.../banner.jpg",
         "type": "category",
-        "id": 1
+        "id": 1,
+        "fit": "cover"
       },
       {
         "item_type": "products",
@@ -36,7 +37,8 @@ color, title and description.
 - `height_percent` — page height as a fraction of width (default `1.1`).
 - Each entry in `items` is one page:
   - `item_type: "image"` — uses the same fields as [IMAGE](image.md)
-    (`url`, `type`, `id`, ...) via the [action contract](action-contract.md).
+    (`url`, `type`, `id`, `fit`, ...) via the
+    [action contract](action-contract.md).
   - `item_type: "products"` — the rest of the entry is a
     [product query](product-query.md); the first 4 results render as a 2x2
     mini grid (plain image/title/price cards, no favorite heart or variant

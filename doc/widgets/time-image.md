@@ -13,11 +13,17 @@ boxed day/hour/minute/second fields.
     "title_color": "#FFFFFF",
     "title_position": "left",
     "position_top": 16,
-    "position_left": 16
+    "position_left": 16,
+    "aspect_ratio": 1.78,
+    "fit": "cover"
   }
 }
 ```
 
+- `aspect_ratio` — width/height ratio of the banner (default `16/9` ≈
+  `1.78`).
+- `fit` — how the banner image fills its frame (default `"cover"`); same
+  values as [IMAGE](image.md)'s `fit`.
 - `date` — an ISO-8601 string or Unix timestamp (seconds). The countdown
   overlay only shows while this is in the future; once it passes, the
   overlay disappears (the image stays).

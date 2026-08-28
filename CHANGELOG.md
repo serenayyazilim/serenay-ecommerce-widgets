@@ -1,3 +1,20 @@
+## 1.3.0
+
+- Add a `"fit"` `params` field (values `"cover"`, `"contain"`, `"fill"`,
+  `"fit_width"`, `"fit_height"`, `"scale_down"`, `"none"`, backed by a new
+  `parseBoxFit` helper) so a backend can control how each image/video
+  scales, instead of every widget hardcoding `BoxFit.cover`/`contain`. Wired
+  into `SLIDER`, `IMAGE` (and `IMAGELIST` through it), `IMAGECAROUSEL` (plus
+  a separate `bg_fit` for its background image), `SEARCH`, `MODAL`,
+  `TIMEIMAGE`, `MIXEDCAROUSEL`'s `"image"` pages, and `VIDEOLIST`.
+- Add a `"aspect_ratio"` `params` field to `TIMEIMAGE` (default `16/9`,
+  previously hardcoded).
+- Fix `GRID` and `PRODUCTCARD` silently ignoring a `"columns"` param sent as
+  a numeric string (e.g. `"3"`) instead of a JSON number — both now parse it
+  the same way every other numeric param does.
+- All additions are backward compatible: `fit`/`aspect_ratio` are optional
+  and default to the previous hardcoded behavior.
+
 ## 1.2.0
 
 - Add six new catalog widgets: `RATING` (star rating + review count, the

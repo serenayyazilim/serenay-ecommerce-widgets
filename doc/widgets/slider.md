@@ -11,7 +11,8 @@ fetches the actual slide list (see [SlideItem](action-contract.md)).
     "id": 1,
     "height_percent": 0.3,
     "padding_horizontal": 0.1,
-    "padding_vertical": 0.1
+    "padding_vertical": 0.1,
+    "fit": "cover"
   }
 }
 ```
@@ -19,6 +20,9 @@ fetches the actual slide list (see [SlideItem](action-contract.md)).
 - `height_percent` — slider height as a fraction of width (default `0.3`).
 - `padding_horizontal` / `padding_vertical` — outer padding, also as a
   fraction of width (default `0`).
+- `fit` — how each slide image fills its frame: `"cover"` (default),
+  `"contain"`, `"fill"`, `"fit_width"`, `"fit_height"`, `"scale_down"` or
+  `"none"`. Unrecognized values fall back to `"cover"`.
 
 Slides follow the [action/tap contract](action-contract.md), plus two
 slider-only targets:

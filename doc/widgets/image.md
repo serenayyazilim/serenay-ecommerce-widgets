@@ -12,7 +12,8 @@ A single tappable banner image, using the shared
     "id": 42,
     "height_percent": 0.3,
     "radius": 12,
-    "padding": 16
+    "padding": 16,
+    "fit": "cover"
   }
 }
 ```
@@ -21,6 +22,10 @@ A single tappable banner image, using the shared
   a natural/unconstrained height.
 - `radius` — corner radius; `0` (default) means square corners.
 - `padding` — outer padding on all sides; `0` (default) means none.
+- `fit` — how the image fills its frame: `"cover"` (default), `"contain"`,
+  `"fill"`, `"fit_width"`, `"fit_height"`, `"scale_down"` or `"none"`.
+  Unrecognized values fall back to `"cover"`. Also used by
+  [IMAGELIST](image-list.md), which renders each item through IMAGE.
 - A failed image load falls back to a placeholder icon instead of erroring.
 - When `type` is `login` or `register` and `WidgetCallbacks.isLoggedIn`
   returns `true`, the widget hides itself entirely (no point telling an

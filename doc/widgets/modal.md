@@ -12,7 +12,8 @@ the next app launch. Occupies no layout space itself.
     "type": "category",
     "id": 1,
     "radius": 16,
-    "height_percent": 0.5
+    "height_percent": 0.5,
+    "fit": "cover"
   }
 }
 ```
@@ -20,6 +21,8 @@ the next app launch. Occupies no layout space itself.
 - `radius` — corner radius of the popup image (default `16`).
 - `height_percent` — max popup height as a fraction of width; when omitted,
   the popup is capped at 70% of screen height instead.
+- `fit` — how the popup image fills its frame (default `"cover"`); same
+  values as [IMAGE](image.md)'s `fit`.
 - Tapping the popup image resolves `type`/`id`/... through the shared
   [action/tap contract](action-contract.md) and dismisses the popup.
 - A small close (×) button floats over the top-right corner.
