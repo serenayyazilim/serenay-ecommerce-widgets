@@ -8,9 +8,14 @@ import '../../contracts/product_query.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
 import 'rich_product_card.dart';
 
-/// FLASHSALE: an animated countdown bar that opens a bottom sheet of
-/// products (via the shared product-query contract) while the sale is
-/// active, and disappears entirely once `end_time` has passed.
+/// FLASHSALE: an animated countdown bar while the sale is active, and
+/// disappears entirely once `end_time` has passed.
+///
+/// Supports two display modes via the `display_mode` param:
+///  - `"modal"` (default): tapping the bar opens a bottom sheet grid of
+///    products (via the shared product-query contract).
+///  - `"inline"`: products are fetched eagerly and rendered as a
+///    horizontally-scrolling row directly beneath the bar, carousel-style.
 class FlashSaleWidget extends StatefulWidget {
   const FlashSaleWidget({
     super.key,
@@ -36,10 +41,16 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
 
   Timer? _ticker;
   DateTime? _endTime;
+  bool _inlineMode = false;
+  Future<List<ProductCardData>>? _inlineFuture;
 
   @override
   void initState() {
     super.initState();
+    _inlineMode = widget.params['display_mode'] == 'inline';
+    if (_inlineMode) {
+      _inlineFuture = widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
+    }
     _colorController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -140,26 +151,68 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
                 ),
               ),
               if (remaining != null) _TimerChip(timerText: _timerText(remaining)),
-              const SizedBox(width: 8),
-              const Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 20),
+              if (!_inlineMode) ...[
+                const SizedBox(width: 8),
+                const Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 20),
+              ],
             ],
           ),
         );
       },
     );
 
+    final borderedContent = AnimatedBuilder(
+      animation: _borderController,
+      builder: (context, child) => CustomPaint(
+        painter: _ProgressBorderPainter(progress: _borderController.value, radius: 14),
+        child: Padding(padding: const EdgeInsets.all(2.5), child: child),
+      ),
+      child: content,
+    );
+
+    final header = _inlineMode ? borderedContent : GestureDetector(onTap: _openModal, child: borderedContent);
+
+    if (!_inlineMode) {
+      return Padding(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), child: header);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: GestureDetector(
-        onTap: _openModal,
-        child: AnimatedBuilder(
-          animation: _borderController,
-          builder: (context, child) => CustomPaint(
-            painter: _ProgressBorderPainter(progress: _borderController.value, radius: 14),
-            child: Padding(padding: const EdgeInsets.all(2.5), child: child),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          header,
+          const SizedBox(height: 12),
+          FutureBuilder<List<ProductCardData>>(
+            future: _inlineFuture,
+            builder: (context, snapshot) {
+              final products = snapshot.data ?? const [];
+              if (products.isEmpty) return const SizedBox.shrink();
+              return SizedBox(
+                height: 260,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: products.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final builder = widget.callbacks.productCardBuilder;
+                    return SizedBox(
+                      width: 160,
+                      child: builder != null
+                          ? builder(products[index])
+                          : RichProductCard(
+                              data: products[index],
+                              callbacks: widget.callbacks,
+                              imageSize: 160,
+                              theme: widget.theme,
+                            ),
+                    );
+                  },
+                ),
+              );
+            },
           ),
-          child: content,
-        ),
+        ],
       ),
     );
   }

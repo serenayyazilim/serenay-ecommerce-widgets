@@ -308,6 +308,82 @@ void main() {
     expect(find.text('Flash Sale'), findsNothing);
   });
 
+  testWidgets('FLASHSALE display_mode "inline" renders products in a horizontal list without a tap',
+      (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'FLASHSALE',
+          'params': {'title': 'Flash', 'display_mode': 'inline'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'F1', price: 10),
+                  ProductCardData(id: 2, image: '', title: 'F2', price: 20),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.text('F1'), findsOneWidget);
+    expect(find.text('F2'), findsOneWidget);
+    expect(find.byType(ListView), findsOneWidget);
+
+    // Tapping the bar should not open the bottom-sheet modal in inline mode.
+    await tester.tap(find.text('Flash'));
+    await tester.pump();
+    expect(find.byType(DraggableScrollableSheet), findsNothing);
+  });
+
+  testWidgets('FLASHSALE defaults to modal mode: products are not fetched until tapped', (tester) async {
+    var fetchCount = 0;
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'FLASHSALE',
+          'params': {'title': 'Flash'},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async {
+                  fetchCount++;
+                  return const [ProductCardData(id: 1, image: '', title: 'M1', price: 10)];
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(fetchCount, 0);
+    expect(find.byType(ListView), findsNothing);
+  });
+
   testWidgets('TIMEIMAGE never crashes on a malformed backend title_color', (tester) async {
     final data = WidgetCatalog.fromJson({
       'data': [

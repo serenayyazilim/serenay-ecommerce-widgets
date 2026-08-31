@@ -72,15 +72,18 @@ class MiniProductTile extends StatelessWidget {
     final hasDiscount = oldPrice > 0 && oldPrice != price;
 
     if (price > 0) {
-      return Row(
+      // A Wrap (not a Row) so a narrow host — e.g. BUNDLE's multi-item
+      // strip — drops the old-price text to its own line instead of
+      // overflowing when both prices don't fit on one.
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 5,
         children: [
-          if (hasDiscount) ...[
+          if (hasDiscount)
             Text(
               _formatPrice(oldPrice, data.currency),
               style: theme.originalPriceStyle.copyWith(fontSize: 11),
             ),
-            const SizedBox(width: 5),
-          ],
           Text(
             _formatPrice(price, data.currency),
             style: theme.priceStyle.copyWith(

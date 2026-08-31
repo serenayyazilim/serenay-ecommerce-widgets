@@ -1,3 +1,19 @@
+## 1.3.2
+
+- `FLASHSALE` gains a `"display_mode"` `params` field: `"modal"` (default,
+  previous behavior — tapping the bar opens a bottom sheet grid) or
+  `"inline"` (products are fetched eagerly and rendered as a
+  horizontally-scrolling row directly beneath the bar, carousel-style; the
+  bar is no longer tappable in this mode).
+- Backward compatible: `display_mode` is optional and defaults to the
+  previous `"modal"` behavior.
+- Fix `BUNDLE`: its product row divided available width evenly across every
+  item (`Row` + `Expanded`), so a handful of products — or a long/discounted
+  price — could squeeze a tile narrow enough to overflow (`MiniProductTile`'s
+  price row). It's now a horizontally-scrolling strip of fixed-width tiles,
+  matching `CAROUSEL`'s pattern, and `MiniProductTile`'s price line wraps
+  instead of overflowing when a host reuses it in a narrow space.
+
 ## 1.3.1
 
 - `SLIDER` gains two `params` fields to control per-page layout instead of

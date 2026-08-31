@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
@@ -7,6 +8,68 @@ import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const DemoApp());
+}
+
+/// Demo mock data prefers picsum.photos (real stock photos) but that
+/// service is unreliable (frequent Cloudflare 522/503 outages), which made
+/// the demo look broken even though the widgets themselves render fine. So
+/// [_picsumProbeFuture] does a one-shot reachability check at startup —
+/// [DemoApp] waits on it before building the screen — and every mock image
+/// call falls back to placehold.co (a color from [_placeholderPalette],
+/// picked by [seed], with [label] as the overlay text) whenever picsum
+/// didn't respond in time.
+bool _usePicsum = false;
+
+Future<bool> _probePicsumImage() {
+  final completer = Completer<bool>();
+  final provider = const NetworkImage('https://picsum.photos/seed/probe/40/40');
+  final stream = provider.resolve(const ImageConfiguration());
+  late final ImageStreamListener listener;
+  void finish(bool reachable) {
+    if (completer.isCompleted) return;
+    completer.complete(reachable);
+    stream.removeListener(listener);
+  }
+
+  final timer = Timer(const Duration(seconds: 3), () => finish(false));
+  listener = ImageStreamListener(
+    (image, sync) {
+      timer.cancel();
+      finish(true);
+    },
+    onError: (error, stack) {
+      timer.cancel();
+      finish(false);
+    },
+  );
+  stream.addListener(listener);
+  return completer.future;
+}
+
+final Future<bool> _picsumProbeFuture = _probePicsumImage();
+
+const List<String> _placeholderPalette = [
+  'FF6B6B',
+  'FFA94D',
+  'FFD43B',
+  '69DB7C',
+  '38D9A9',
+  '4DABF7',
+  '748FFC',
+  'B197FC',
+  'F783AC',
+];
+
+String _placeholder(String label, int width, int height, {int seed = 0}) {
+  if (_usePicsum) {
+    final photoSeed = Uri.encodeComponent('$label-$seed');
+    return 'https://picsum.photos/seed/$photoSeed/$width/$height';
+  }
+  final color = _placeholderPalette[seed % _placeholderPalette.length];
+  // Without an explicit "png" segment, placehold.co serves SVG — which
+  // Flutter's Image.network/instantiateImageCodec can't decode, so every
+  // mock image would silently fall back to the broken-image placeholder icon.
+  return 'https://placehold.co/${width}x$height/$color/ffffff/png?text=${Uri.encodeComponent(label)}';
 }
 
 /// A showcase app that renders a mock backend JSON payload through
@@ -24,7 +87,19 @@ class DemoApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
       ),
-      home: const ScreenPage(),
+      home: FutureBuilder<bool>(
+        future: _picsumProbeFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+          // Read once, before ScreenPage builds its (lazily-initialized,
+          // one-shot) mock data — every _placeholder() call for the rest of
+          // this run picks the same image source this decides.
+          _usePicsum = snapshot.data ?? false;
+          return const ScreenPage();
+        },
+      ),
     );
   }
 }
@@ -147,7 +222,7 @@ class _ScreenPageState extends State<ScreenPage> {
       return List.generate(
         3,
         (i) => SlideItem(
-          image: 'https://picsum.photos/seed/slide$id$i/800/400',
+          image: _placeholder('Slide $i', 800, 400, seed: i),
           action: const WidgetAction(type: WidgetActionType.category, id: 1),
         ),
       );
@@ -159,7 +234,7 @@ class _ScreenPageState extends State<ScreenPage> {
         action: WidgetAction(type: WidgetActionType.category, id: 1),
       ),
     ],
-    fetchModal: (id) async => 'https://picsum.photos/seed/modal$id/600/800',
+    fetchModal: (id) async => _placeholder('Modal', 600, 800, seed: 3),
     isLoggedIn: () => _isLoggedIn,
     onRequireAuth: () => ScaffoldMessenger.of(
       context,
@@ -339,6 +414,18 @@ class _ParamField {
   final List<String>? options;
 }
 
+/// Mirrors the string values `parseBoxFit` (core/utils/param_parsing.dart)
+/// accepts for a `"fit"`/`"bg_fit"` param.
+const List<String> _boxFitOptions = [
+  'cover',
+  'contain',
+  'fill',
+  'fit_width',
+  'fit_height',
+  'scale_down',
+  'none',
+];
+
 final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   WidgetType.text: const [
     _ParamField('text', 'Text', _FieldKind.text),
@@ -371,20 +458,36 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
     _ParamField('button_height', 'Button height', _FieldKind.number),
     _ParamField('radius', 'Radius', _FieldKind.number),
     _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.image: const [
     _ParamField('height_percent', 'Height %', _FieldKind.number),
     _ParamField('radius', 'Radius', _FieldKind.number),
     _ParamField('padding', 'Padding', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.slider: const [
     _ParamField('height_percent', 'Height %', _FieldKind.number),
     _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
     _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+    _ParamField('viewport_fraction', 'Viewport fraction', _FieldKind.number),
+    _ParamField(
+      'item_padding_horizontal',
+      'Item padding H',
+      _FieldKind.number,
+    ),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.imageCarousel: const [
     _ParamField('height_percent', 'Height %', _FieldKind.number),
     _ParamField('item_count', 'Item count', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+    _ParamField(
+      'bg_fit',
+      'Background fit',
+      _FieldKind.enumSelect,
+      options: _boxFitOptions,
+    ),
   ],
   WidgetType.carousel: const [
     _ParamField('category_id', 'Category ID', _FieldKind.number),
@@ -393,16 +496,24 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   WidgetType.grid: const [
     _ParamField('category_id', 'Category ID', _FieldKind.number),
     _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField('columns', 'Columns', _FieldKind.number),
   ],
   WidgetType.productCard: const [
     _ParamField('category_id', 'Category ID', _FieldKind.number),
     _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField('columns', 'Columns', _FieldKind.number),
   ],
   WidgetType.flashSale: const [
     _ParamField('title', 'Title', _FieldKind.text),
     _ParamField('subtitle', 'Subtitle', _FieldKind.text),
     _ParamField('category_id', 'Category ID', _FieldKind.number),
     _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField(
+      'display_mode',
+      'Display mode',
+      _FieldKind.enumSelect,
+      options: ['modal', 'inline'],
+    ),
   ],
   WidgetType.visitedProducts: const [
     _ParamField('limit', 'Limit', _FieldKind.number),
@@ -416,6 +527,8 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
       options: ['left', 'bottom'],
     ),
     _ParamField('title_color', 'Title color', _FieldKind.color),
+    _ParamField('aspect_ratio', 'Aspect ratio', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.youtube: const [_ParamField('url', 'URL', _FieldKind.text)],
   WidgetType.videoList: const [
@@ -425,10 +538,12 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
       _FieldKind.enumSelect,
       options: ['horizontal', 'vertical'],
     ),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.modal: const [
     _ParamField('radius', 'Radius', _FieldKind.number),
     _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
   ],
   WidgetType.divider: const [
     _ParamField('height', 'Height', _FieldKind.number),
@@ -1315,7 +1430,7 @@ List<ProductCardData> _mockProducts() => List.generate(
   6,
   (i) => ProductCardData(
     id: i + 1,
-    image: 'https://picsum.photos/seed/product$i/400/400',
+    image: _placeholder('Product ${i + 1}', 400, 400, seed: i),
     title: 'Product ${i + 1}',
     subtitle: 'Brand ${i % 3}',
     price: 99.9 + i * 10,
@@ -1355,7 +1470,7 @@ final _mockScreenJson = {
       'type': 'SEARCH',
       'params': {
         'hint_text': 'Search products, brands...',
-        'url': 'https://picsum.photos/seed/searchbg/800/400',
+        'url': _placeholder('Search', 800, 400, seed: 4),
         'height_percent': 0.35,
       },
     },
@@ -1369,7 +1484,7 @@ final _mockScreenJson = {
             'bg_color': '#222222',
             'title': 'Lowest Price of the Year',
             'title_color': '#FFFFFF',
-            'url': 'https://picsum.photos/seed/mix1/800/800',
+            'url': _placeholder('Mix', 800, 800, seed: 5),
             'type': 'category',
             'id': 1,
           },
@@ -1392,15 +1507,15 @@ final _mockScreenJson = {
       'params': {
         'list': [
           {
-            'thumbnail': 'https://picsum.photos/seed/story1/100/100',
-            'urls': ['https://picsum.photos/seed/story1a/800/1400'],
+            'thumbnail': _placeholder('S1', 100, 100, seed: 6),
+            'urls': [_placeholder('Story 1', 800, 1400, seed: 6)],
             'contain': 'View Product',
             'type': 'product',
             'product_id_or_url': 1,
           },
           {
-            'thumbnail': 'https://picsum.photos/seed/story2/100/100',
-            'urls': ['https://picsum.photos/seed/story2a/800/1400'],
+            'thumbnail': _placeholder('S2', 100, 100, seed: 7),
+            'urls': [_placeholder('Story 2', 800, 1400, seed: 7)],
           },
         ],
       },
@@ -1424,25 +1539,25 @@ final _mockScreenJson = {
         'list': [
           {
             'title': 'Shoes',
-            'image': 'https://picsum.photos/seed/cat1/100/100',
+            'image': _placeholder('Shoes', 100, 100, seed: 8),
             'type': 'category',
             'id': 1,
           },
           {
             'title': 'Bags',
-            'image': 'https://picsum.photos/seed/cat2/100/100',
+            'image': _placeholder('Bags', 100, 100, seed: 9),
             'type': 'category',
             'id': 2,
           },
           {
             'title': 'Watches',
-            'image': 'https://picsum.photos/seed/cat3/100/100',
+            'image': _placeholder('Watches', 100, 100, seed: 10),
             'type': 'category',
             'id': 3,
           },
           {
             'title': 'Sale',
-            'image': 'https://picsum.photos/seed/cat4/100/100',
+            'image': _placeholder('Sale', 100, 100, seed: 11),
             'type': 'filter',
             'id': 'sale',
           },
@@ -1475,7 +1590,7 @@ final _mockScreenJson = {
     {
       'type': 'IMAGE',
       'params': {
-        'url': 'https://picsum.photos/seed/banner/800/300',
+        'url': _placeholder('Banner', 800, 300, seed: 12),
         'type': 'category',
         'id': 2,
         'height_percent': 0.3,
@@ -1488,12 +1603,12 @@ final _mockScreenJson = {
       'params': {
         'list': [
           {
-            'url': 'https://picsum.photos/seed/il1/400/200',
+            'url': _placeholder('Image 1', 400, 200, seed: 13),
             'type': 'category',
             'id': 1,
           },
           {
-            'url': 'https://picsum.photos/seed/il2/400/200',
+            'url': _placeholder('Image 2', 400, 200, seed: 14),
             'type': 'category',
             'id': 2,
           },
@@ -1551,7 +1666,7 @@ final _mockScreenJson = {
     {
       'type': 'TIMEIMAGE',
       'params': {
-        'url': 'https://picsum.photos/seed/timeimage/800/400',
+        'url': _placeholder('Time Image', 800, 400, seed: 15),
         'title': 'Campaign Ends In',
         'title_position': 'bottom',
         'title_color': '#FFFFFF',
@@ -1569,7 +1684,7 @@ final _mockScreenJson = {
     {
       'type': 'MODAL',
       'params': {
-        'url': 'https://picsum.photos/seed/modalwelcome/600/800',
+        'url': _placeholder('Welcome', 600, 800, seed: 16),
         'type': 'category',
         'id': 1,
       },

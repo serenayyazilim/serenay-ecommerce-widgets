@@ -71,8 +71,9 @@ class _BundleWidgetState extends State<BundleWidget> {
                 Text(title, style: theme.productTitleStyle.copyWith(fontSize: 15)),
                 SizedBox(height: theme.spaceM),
                 SizedBox(
-                  height: 150,
-                  child: Row(
+                  height: 170,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
                     children: [
                       for (var i = 0; i < products.length; i++) ...[
                         if (i > 0)
@@ -80,10 +81,12 @@ class _BundleWidgetState extends State<BundleWidget> {
                             padding: const EdgeInsets.symmetric(horizontal: 4),
                             child: Icon(Icons.add, color: theme.textSecondaryColor, size: 18),
                           ),
-                        Expanded(
+                        SizedBox(
+                          width: 100,
                           child: MiniProductTile(
                             data: products[i],
                             callbacks: widget.callbacks,
+                            imageSize: 80,
                             theme: theme,
                           ),
                         ),
