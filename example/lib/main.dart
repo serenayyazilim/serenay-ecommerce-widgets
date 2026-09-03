@@ -401,6 +401,12 @@ const _wireNames = {
   WidgetType.comparison: 'COMPARISON',
   WidgetType.abandonedCart: 'ABANDONEDCART',
   WidgetType.reviews: 'REVIEWS',
+  WidgetType.qna: 'QNA',
+  WidgetType.urgency: 'URGENCY',
+  WidgetType.recommendedForYou: 'RECOMMENDEDFORYOU',
+  WidgetType.socialProof: 'SOCIALPROOF',
+  WidgetType.sizeGuide: 'SIZEGUIDE',
+  WidgetType.trustBadges: 'TRUSTBADGES',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -1597,6 +1603,30 @@ final _mockScreenJson = {
         'end_time': null,
       },
     },
+    {
+      'type': 'URGENCY',
+      'params': {'stock_left': 3, 'threshold': 10},
+    },
+    {
+      'type': 'SOCIALPROOF',
+      'params': {
+        'list': [
+          {'name': 'Ayşe', 'time_ago': '5 min ago'},
+          {'name': 'Mert', 'time_ago': '22 min ago'},
+        ],
+      },
+    },
+    {
+      'type': 'TRUSTBADGES',
+      'params': {
+        'list': [
+          {'icon': 'shipping', 'label': 'Free Shipping'},
+          {'icon': 'secure', 'label': 'Secure Payment'},
+          {'icon': 'returns', 'label': 'Easy Returns'},
+          {'icon': 'support', 'label': '24/7 Support'},
+        ],
+      },
+    },
     {'type': 'DIVIDER', 'params': {}},
     {
       'type': 'IMAGE',
@@ -1687,6 +1717,41 @@ final _mockScreenJson = {
           },
         ],
       },
+    },
+    {
+      'type': 'QNA',
+      'params': {
+        'list': [
+          {
+            'question': 'Does this run small?',
+            'answer': "It's true to size, order your normal size.",
+            'author': 'Dana',
+            'date': '3 days ago',
+          },
+          {
+            'question': 'Is it machine washable?',
+            'answer': 'Yes, cold wash and hang dry.',
+            'author': 'Elif',
+            'date': '1 week ago',
+          },
+        ],
+      },
+    },
+    {
+      'type': 'SIZEGUIDE',
+      'params': {
+        'headers': ['Size', 'Chest (cm)', 'Waist (cm)'],
+        'rows': [
+          ['S', '88-92', '72-76'],
+          ['M', '96-100', '80-84'],
+          ['L', '104-108', '88-92'],
+        ],
+      },
+    },
+    {'type': 'DIVIDER', 'params': {}},
+    {
+      'type': 'RECOMMENDEDFORYOU',
+      'params': {'title': 'Recommended For You'},
     },
     {'type': 'DIVIDER', 'params': {}},
     {

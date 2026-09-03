@@ -50,6 +50,12 @@ widgets and documented once:
 | `COMPARISON` | [comparison.md](comparison.md) |
 | `ABANDONEDCART` | [abandoned-cart.md](abandoned-cart.md) |
 | `REVIEWS` | [reviews.md](reviews.md) |
+| `QNA` | [qna.md](qna.md) |
+| `URGENCY` | [urgency.md](urgency.md) |
+| `RECOMMENDEDFORYOU` | [recommended-for-you.md](recommended-for-you.md) |
+| `SOCIALPROOF` | [social-proof.md](social-proof.md) |
+| `SIZEGUIDE` | [size-guide.md](size-guide.md) |
+| `TRUSTBADGES` | [trust-badges.md](trust-badges.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

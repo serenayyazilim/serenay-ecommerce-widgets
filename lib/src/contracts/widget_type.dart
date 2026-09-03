@@ -29,7 +29,13 @@ enum WidgetType {
   loyaltyProgress,
   comparison,
   abandonedCart,
-  reviews;
+  reviews,
+  qna,
+  urgency,
+  recommendedForYou,
+  socialProof,
+  sizeGuide,
+  trustBadges;
 
   static const Map<String, WidgetType> _byWireName = {
     'TEXT': WidgetType.text,
@@ -60,6 +66,12 @@ enum WidgetType {
     'COMPARISON': WidgetType.comparison,
     'ABANDONEDCART': WidgetType.abandonedCart,
     'REVIEWS': WidgetType.reviews,
+    'QNA': WidgetType.qna,
+    'URGENCY': WidgetType.urgency,
+    'RECOMMENDEDFORYOU': WidgetType.recommendedForYou,
+    'SOCIALPROOF': WidgetType.socialProof,
+    'SIZEGUIDE': WidgetType.sizeGuide,
+    'TRUSTBADGES': WidgetType.trustBadges,
   };
 
   /// Parses the backend wire value (exact-match, case-sensitive). Any

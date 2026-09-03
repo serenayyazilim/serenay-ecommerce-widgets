@@ -21,14 +21,20 @@ import 'catalog/loyalty_progress_widget.dart';
 import 'catalog/mixed_carousel_widget.dart';
 import 'catalog/modal_widget.dart';
 import 'catalog/product_card_widget.dart';
+import 'catalog/qna_widget.dart';
 import 'catalog/rating_widget.dart';
+import 'catalog/recommended_for_you_widget.dart';
 import 'catalog/reviews_widget.dart';
 import 'catalog/search_widget.dart';
+import 'catalog/size_guide_widget.dart';
 import 'catalog/slider_widget.dart';
+import 'catalog/social_proof_widget.dart';
 import 'catalog/story_widget.dart';
 import 'catalog/text_widget.dart';
 import 'catalog/time_image_widget.dart';
+import 'catalog/trust_badges_widget.dart';
 import 'catalog/unknown_widget.dart';
+import 'catalog/urgency_widget.dart';
 import 'catalog/video_list_widget.dart';
 import 'catalog/visited_products_widget.dart';
 import 'catalog/youtube_widget.dart';
@@ -137,6 +143,18 @@ class WidgetCatalog {
         return AbandonedCartWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.reviews:
         return ReviewsWidget(params: params, theme: theme);
+      case WidgetType.qna:
+        return QnaWidget(params: params, theme: theme);
+      case WidgetType.urgency:
+        return UrgencyWidget(params: params, theme: theme);
+      case WidgetType.recommendedForYou:
+        return RecommendedForYouWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.socialProof:
+        return SocialProofWidget(params: params, theme: theme);
+      case WidgetType.sizeGuide:
+        return SizeGuideWidget(params: params, theme: theme);
+      case WidgetType.trustBadges:
+        return TrustBadgesWidget(params: params, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);

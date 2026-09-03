@@ -75,6 +75,11 @@ class EcommerceWidgetTheme {
     this.abandonedCartCtaLabel = 'Complete your order',
     this.reviewsTitleLabel = 'Customer Reviews',
     this.reviewsVerifiedLabel = 'Verified Purchase',
+    this.qnaTitleLabel = 'Questions & Answers',
+    this.urgencyStockLabel = 'Only {count} left in stock!',
+    this.recommendedForYouTitleLabel = 'Recommended For You',
+    this.socialProofLabel = '{count} people bought this recently',
+    this.sizeGuideButtonLabel = 'Size Guide',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -268,6 +273,25 @@ class EcommerceWidgetTheme {
   /// Badge label shown on a REVIEWS entry whose `verified` field is true.
   final String reviewsVerifiedLabel;
 
+  /// Fallback QNA header when the backend doesn't send `title`.
+  final String qnaTitleLabel;
+
+  /// Template for URGENCY's low-stock text; `{count}` is replaced with
+  /// `params['stock_left']` when the backend doesn't send its own `text`.
+  final String urgencyStockLabel;
+
+  /// Fallback RECOMMENDEDFORYOU header when the backend doesn't send
+  /// `title`.
+  final String recommendedForYouTitleLabel;
+
+  /// Template for SOCIALPROOF's purchase-count text; `{count}` is replaced
+  /// with `params['count']` when the backend doesn't send its own `text`.
+  final String socialProofLabel;
+
+  /// Label for the SIZEGUIDE widget's trigger button, and its dialog title
+  /// when the backend doesn't send its own `title`.
+  final String sizeGuideButtonLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -331,6 +355,11 @@ class EcommerceWidgetTheme {
     String? abandonedCartCtaLabel,
     String? reviewsTitleLabel,
     String? reviewsVerifiedLabel,
+    String? qnaTitleLabel,
+    String? urgencyStockLabel,
+    String? recommendedForYouTitleLabel,
+    String? socialProofLabel,
+    String? sizeGuideButtonLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -394,6 +423,11 @@ class EcommerceWidgetTheme {
       abandonedCartCtaLabel: abandonedCartCtaLabel ?? this.abandonedCartCtaLabel,
       reviewsTitleLabel: reviewsTitleLabel ?? this.reviewsTitleLabel,
       reviewsVerifiedLabel: reviewsVerifiedLabel ?? this.reviewsVerifiedLabel,
+      qnaTitleLabel: qnaTitleLabel ?? this.qnaTitleLabel,
+      urgencyStockLabel: urgencyStockLabel ?? this.urgencyStockLabel,
+      recommendedForYouTitleLabel: recommendedForYouTitleLabel ?? this.recommendedForYouTitleLabel,
+      socialProofLabel: socialProofLabel ?? this.socialProofLabel,
+      sizeGuideButtonLabel: sizeGuideButtonLabel ?? this.sizeGuideButtonLabel,
     );
   }
 }

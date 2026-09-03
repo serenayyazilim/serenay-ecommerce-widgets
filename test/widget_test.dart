@@ -1030,6 +1030,233 @@ void main() {
     expect(find.text('Customer Reviews'), findsNothing);
   });
 
+  testWidgets('QNA renders an inline list of question/answer entries', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'QNA',
+          'params': {
+            'list': [
+              {'question': 'Does this run small?', 'answer': 'True to size.', 'author': 'Dana'},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Questions & Answers'), findsOneWidget);
+    expect(find.text('Does this run small?'), findsOneWidget);
+    expect(find.text('True to size.'), findsOneWidget);
+  });
+
+  testWidgets('QNA hides itself when the list is empty', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'QNA', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Questions & Answers'), findsNothing);
+  });
+
+  testWidgets('URGENCY builds its low-stock text from stock_left and hides above threshold', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'URGENCY',
+          'params': {'stock_left': 3},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Only 3 left in stock!'), findsOneWidget);
+
+    final aboveThreshold = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'URGENCY',
+          'params': {'stock_left': 50},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: aboveThreshold, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('left in stock'), findsNothing);
+  });
+
+  testWidgets('RECOMMENDEDFORYOU fetches products and renders a title header', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'RECOMMENDEDFORYOU', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'R1', price: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Recommended For You'), findsOneWidget);
+    expect(find.text('R1'), findsOneWidget);
+  });
+
+  testWidgets('SOCIALPROOF builds its text from count and hides when there is nothing to show', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SOCIALPROOF',
+          'params': {'count': 47},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('47 people bought this recently'), findsOneWidget);
+
+    final empty = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'SOCIALPROOF', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: empty, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('47 people bought this recently'), findsNothing);
+  });
+
+  testWidgets('SIZEGUIDE opens a dialog with the headers/rows table on tap', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SIZEGUIDE',
+          'params': {
+            'headers': ['Size', 'Chest'],
+            'rows': [
+              ['M', '96-100cm'],
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Size Guide'), findsOneWidget);
+    expect(find.text('96-100cm'), findsNothing);
+
+    await tester.tap(find.text('Size Guide'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('96-100cm'), findsOneWidget);
+  });
+
+  testWidgets('TRUSTBADGES renders an inline list of reassurance icons', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'TRUSTBADGES',
+          'params': {
+            'list': [
+              {'icon': 'shipping', 'label': 'Free Shipping'},
+              {'icon': 'secure', 'label': 'Secure Payment'},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks())),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Free Shipping'), findsOneWidget);
+    expect(find.text('Secure Payment'), findsOneWidget);
+  });
+
   testWidgets('GRID (OldProductCard) renders fetched products without crashing', (tester) async {
     final data = WidgetCatalog.fromJson({
       'data': [

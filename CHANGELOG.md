@@ -1,3 +1,25 @@
+## 1.4.0
+
+- Add six new catalog widgets, all backed by inline `params` (no new fetch
+  callbacks) except RECOMMENDEDFORYOU:
+  - `QNA` — a vertical Q&A list (`params.list` of question/answer/author/
+    date).
+  - `URGENCY` — a low-stock/countdown banner ("Only 3 left in stock!"),
+    reusing COUPON/ABANDONEDCART's `end_time` contract.
+  - `RECOMMENDEDFORYOU` — a titled product row using the same product-query
+    contract as CAROUSEL.
+  - `SOCIALPROOF` — a "N people bought this recently" banner that cycles
+    through a list of recent purchases.
+  - `SIZEGUIDE` — a button that opens a measurement-table dialog built from
+    `params.headers`/`params.rows`.
+  - `TRUSTBADGES` — a static row of reassurance icons (shipping, secure
+    payment, returns, support, guarantee).
+
+  Adds `EcommerceWidgetTheme.qnaTitleLabel`, `.urgencyStockLabel`,
+  `.recommendedForYouTitleLabel`, `.socialProofLabel` and
+  `.sizeGuideButtonLabel`. Ships with `doc/widgets/` usage pages and widget
+  tests for each.
+
 ## 1.3.4
 
 - Add a new catalog widget, `REVIEWS`: a horizontally-scrolling row of
