@@ -1,3 +1,15 @@
+## 1.3.3
+
+- Add a new catalog widget, `ABANDONEDCART`: a "you left items in your cart"
+  card using the same product-query contract as `BUNDLE`/`CAROUSEL`, showing
+  a horizontally-scrolling row of the cart's products under an optional
+  reservation countdown (`"end_time"`, same contract as `COUPON`) and a CTA
+  button that resolves through the shared action contract back to the cart/
+  checkout screen. Hides itself when the product list is empty or once
+  `end_time` has passed. Adds `EcommerceWidgetTheme.abandonedCartTitleLabel`,
+  `.abandonedCartReservedLabel` and `.abandonedCartCtaLabel`. Ships with a
+  `doc/widgets/` usage page and widget tests.
+
 ## 1.3.2
 
 - `FLASHSALE` gains a `"display_mode"` `params` field: `"modal"` (default,

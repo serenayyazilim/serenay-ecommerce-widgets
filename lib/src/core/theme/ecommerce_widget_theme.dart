@@ -70,6 +70,9 @@ class EcommerceWidgetTheme {
     this.addAllToCartLabel = 'Add All to Cart',
     this.couponCopyLabel = 'Copy',
     this.couponCopiedLabel = 'Copied!',
+    this.abandonedCartTitleLabel = 'You left items in your cart',
+    this.abandonedCartReservedLabel = 'Reserved for',
+    this.abandonedCartCtaLabel = 'Complete your order',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -247,6 +250,16 @@ class EcommerceWidgetTheme {
   /// Label shown briefly on the COUPON widget after its code is copied.
   final String couponCopiedLabel;
 
+  /// Fallback ABANDONEDCART header when the backend doesn't send `title`.
+  final String abandonedCartTitleLabel;
+
+  /// Prefix shown before the ABANDONEDCART countdown (e.g. "Reserved for
+  /// 09:58").
+  final String abandonedCartReservedLabel;
+
+  /// Label for the ABANDONEDCART widget's checkout/cart CTA button.
+  final String abandonedCartCtaLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -305,6 +318,9 @@ class EcommerceWidgetTheme {
     String? addAllToCartLabel,
     String? couponCopyLabel,
     String? couponCopiedLabel,
+    String? abandonedCartTitleLabel,
+    String? abandonedCartReservedLabel,
+    String? abandonedCartCtaLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -363,6 +379,9 @@ class EcommerceWidgetTheme {
       addAllToCartLabel: addAllToCartLabel ?? this.addAllToCartLabel,
       couponCopyLabel: couponCopyLabel ?? this.couponCopyLabel,
       couponCopiedLabel: couponCopiedLabel ?? this.couponCopiedLabel,
+      abandonedCartTitleLabel: abandonedCartTitleLabel ?? this.abandonedCartTitleLabel,
+      abandonedCartReservedLabel: abandonedCartReservedLabel ?? this.abandonedCartReservedLabel,
+      abandonedCartCtaLabel: abandonedCartCtaLabel ?? this.abandonedCartCtaLabel,
     );
   }
 }

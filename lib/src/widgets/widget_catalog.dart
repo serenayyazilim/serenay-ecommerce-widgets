@@ -4,6 +4,7 @@ import '../callbacks/widget_callbacks.dart';
 import '../contracts/widget_entry.dart';
 import '../contracts/widget_type.dart';
 import '../core/theme/ecommerce_widget_theme.dart';
+import 'catalog/abandoned_cart_widget.dart';
 import 'catalog/bundle_widget.dart';
 import 'catalog/carousel_widget.dart';
 import 'catalog/category_menu_widget.dart';
@@ -131,6 +132,8 @@ class WidgetCatalog {
         return LoyaltyProgressWidget(params: params, theme: theme);
       case WidgetType.comparison:
         return ComparisonWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.abandonedCart:
+        return AbandonedCartWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);

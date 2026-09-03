@@ -888,6 +888,81 @@ void main() {
     expect(find.text('C2'), findsOneWidget);
   });
 
+  testWidgets('ABANDONEDCART renders fetched products and a CTA that resolves through onAction', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'ABANDONEDCART',
+          'params': {'cart_id': 42, 'goto': 'cart'},
+        },
+      ],
+    });
+
+    WidgetAction? resolved;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'A1', price: 10),
+                ],
+                onAction: (action) => resolved = action,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('A1'), findsOneWidget);
+    expect(find.text('You left items in your cart'), findsOneWidget);
+    expect(find.text('Complete your order'), findsOneWidget);
+
+    await tester.tap(find.text('Complete your order'));
+    expect(resolved?.goto, 'cart');
+  });
+
+  testWidgets('ABANDONEDCART hides itself once end_time has passed', (tester) async {
+    final expired = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'ABANDONEDCART',
+          'params': {
+            'end_time': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: expired,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'A1', price: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('A1'), findsNothing);
+  });
+
   testWidgets('GRID (OldProductCard) renders fetched products without crashing', (tester) async {
     final data = WidgetCatalog.fromJson({
       'data': [

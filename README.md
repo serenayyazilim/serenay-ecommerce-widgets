@@ -116,8 +116,8 @@ WidgetCatalog.registerBuilder('CUSTOM_BANNER', (entry, callbacks, theme) {
 TEXT, IMAGE, SLIDER, DIVIDER, CAROUSEL, GRID, IMAGECAROUSEL, IMAGELIST,
 VIDEOLIST, FASTREGISTER, STORY, VISITEDPRODUCTS, TIMEIMAGE, YOUTUBE, SEARCH,
 PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL, RATING, BUNDLE, COUPON,
-CATEGORYMENU, LOYALTYPROGRESS, COMPARISON. An unrecognized `type` renders as
-an empty 1px box (forward compatibility).
+CATEGORYMENU, LOYALTYPROGRESS, COMPARISON, ABANDONEDCART. An unrecognized
+`type` renders as an empty 1px box (forward compatibility).
 
 GRID has its own card design (taller image, inline video, a pre-order
 banner, a size/package picker); CAROUSEL, PRODUCTCARD and FLASHSALE share

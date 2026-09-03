@@ -399,6 +399,7 @@ const _wireNames = {
   WidgetType.categoryMenu: 'CATEGORYMENU',
   WidgetType.loyaltyProgress: 'LOYALTYPROGRESS',
   WidgetType.comparison: 'COMPARISON',
+  WidgetType.abandonedCart: 'ABANDONEDCART',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -1576,6 +1577,15 @@ final _mockScreenJson = {
     {
       'type': 'BUNDLE',
       'params': {'category_id': 1, 'title': 'Frequently Bought Together'},
+    },
+    {
+      'type': 'ABANDONEDCART',
+      'params': {
+        'cart_id': 7,
+        'title': 'You left items in your cart',
+        'end_time': null,
+        'goto': 'cart',
+      },
     },
     {'type': 'DIVIDER', 'params': {}},
     {
