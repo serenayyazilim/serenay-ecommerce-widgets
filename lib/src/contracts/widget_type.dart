@@ -28,7 +28,8 @@ enum WidgetType {
   categoryMenu,
   loyaltyProgress,
   comparison,
-  abandonedCart;
+  abandonedCart,
+  reviews;
 
   static const Map<String, WidgetType> _byWireName = {
     'TEXT': WidgetType.text,
@@ -58,6 +59,7 @@ enum WidgetType {
     'LOYALTYPROGRESS': WidgetType.loyaltyProgress,
     'COMPARISON': WidgetType.comparison,
     'ABANDONEDCART': WidgetType.abandonedCart,
+    'REVIEWS': WidgetType.reviews,
   };
 
   /// Parses the backend wire value (exact-match, case-sensitive). Any

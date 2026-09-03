@@ -73,6 +73,8 @@ class EcommerceWidgetTheme {
     this.abandonedCartTitleLabel = 'You left items in your cart',
     this.abandonedCartReservedLabel = 'Reserved for',
     this.abandonedCartCtaLabel = 'Complete your order',
+    this.reviewsTitleLabel = 'Customer Reviews',
+    this.reviewsVerifiedLabel = 'Verified Purchase',
   });
 
   /// Primary brand color: CTA buttons, "View Prices" link, selected states.
@@ -260,6 +262,12 @@ class EcommerceWidgetTheme {
   /// Label for the ABANDONEDCART widget's checkout/cart CTA button.
   final String abandonedCartCtaLabel;
 
+  /// Fallback REVIEWS header when the backend doesn't send `title`.
+  final String reviewsTitleLabel;
+
+  /// Badge label shown on a REVIEWS entry whose `verified` field is true.
+  final String reviewsVerifiedLabel;
+
   /// Returns a copy of this theme with the given fields replaced.
   EcommerceWidgetTheme copyWith({
     Color? primaryColor,
@@ -321,6 +329,8 @@ class EcommerceWidgetTheme {
     String? abandonedCartTitleLabel,
     String? abandonedCartReservedLabel,
     String? abandonedCartCtaLabel,
+    String? reviewsTitleLabel,
+    String? reviewsVerifiedLabel,
   }) {
     return EcommerceWidgetTheme(
       primaryColor: primaryColor ?? this.primaryColor,
@@ -382,6 +392,8 @@ class EcommerceWidgetTheme {
       abandonedCartTitleLabel: abandonedCartTitleLabel ?? this.abandonedCartTitleLabel,
       abandonedCartReservedLabel: abandonedCartReservedLabel ?? this.abandonedCartReservedLabel,
       abandonedCartCtaLabel: abandonedCartCtaLabel ?? this.abandonedCartCtaLabel,
+      reviewsTitleLabel: reviewsTitleLabel ?? this.reviewsTitleLabel,
+      reviewsVerifiedLabel: reviewsVerifiedLabel ?? this.reviewsVerifiedLabel,
     );
   }
 }

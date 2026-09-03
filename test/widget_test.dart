@@ -963,6 +963,73 @@ void main() {
     expect(find.text('A1'), findsNothing);
   });
 
+  testWidgets('REVIEWS renders an inline list of reviews with average rating and verified badge', (
+    tester,
+  ) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'REVIEWS',
+          'params': {
+            'average_rating': 4.5,
+            'review_count': 128,
+            'list': [
+              {
+                'author': 'Alice',
+                'rating': 5,
+                'comment': 'Loved it!',
+                'verified': true,
+              },
+              {'author': 'Bob', 'rating': 3, 'comment': 'It was okay.'},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Customer Reviews'), findsOneWidget);
+    expect(find.text('4.5'), findsOneWidget);
+    expect(find.text('(128)'), findsOneWidget);
+    expect(find.text('Alice'), findsOneWidget);
+    expect(find.text('Loved it!'), findsOneWidget);
+    expect(find.text('Verified Purchase'), findsOneWidget);
+    expect(find.text('Bob'), findsOneWidget);
+  });
+
+  testWidgets('REVIEWS hides itself when the list is empty', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'REVIEWS', 'params': {}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Customer Reviews'), findsNothing);
+  });
+
   testWidgets('GRID (OldProductCard) renders fetched products without crashing', (tester) async {
     final data = WidgetCatalog.fromJson({
       'data': [

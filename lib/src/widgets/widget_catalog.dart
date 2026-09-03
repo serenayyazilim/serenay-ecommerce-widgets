@@ -22,6 +22,7 @@ import 'catalog/mixed_carousel_widget.dart';
 import 'catalog/modal_widget.dart';
 import 'catalog/product_card_widget.dart';
 import 'catalog/rating_widget.dart';
+import 'catalog/reviews_widget.dart';
 import 'catalog/search_widget.dart';
 import 'catalog/slider_widget.dart';
 import 'catalog/story_widget.dart';
@@ -134,6 +135,8 @@ class WidgetCatalog {
         return ComparisonWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.abandonedCart:
         return AbandonedCartWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.reviews:
+        return ReviewsWidget(params: params, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);

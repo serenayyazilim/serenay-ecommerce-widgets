@@ -49,6 +49,7 @@ widgets and documented once:
 | `LOYALTYPROGRESS` | [loyalty-progress.md](loyalty-progress.md) |
 | `COMPARISON` | [comparison.md](comparison.md) |
 | `ABANDONEDCART` | [abandoned-cart.md](abandoned-cart.md) |
+| `REVIEWS` | [reviews.md](reviews.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

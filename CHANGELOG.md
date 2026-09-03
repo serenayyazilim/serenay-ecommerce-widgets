@@ -1,3 +1,13 @@
+## 1.3.4
+
+- Add a new catalog widget, `REVIEWS`: a horizontally-scrolling row of
+  customer review cards (author, star rating, comment, optional "Verified
+  Purchase" badge) with an optional average-rating/review-count header.
+  Reads its entries straight from `params.list`, same inline-list contract
+  as `CATEGORYMENU` — no fetch callback required. Adds
+  `EcommerceWidgetTheme.reviewsTitleLabel` and `.reviewsVerifiedLabel`.
+  Ships with a `doc/widgets/` usage page and widget tests.
+
 ## 1.3.3
 
 - Add a new catalog widget, `ABANDONEDCART`: a "you left items in your cart"

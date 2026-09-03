@@ -400,6 +400,7 @@ const _wireNames = {
   WidgetType.loyaltyProgress: 'LOYALTYPROGRESS',
   WidgetType.comparison: 'COMPARISON',
   WidgetType.abandonedCart: 'ABANDONEDCART',
+  WidgetType.reviews: 'REVIEWS',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -1656,6 +1657,36 @@ final _mockScreenJson = {
     {
       'type': 'COMPARISON',
       'params': {'category_id': 1},
+    },
+    {'type': 'DIVIDER', 'params': {}},
+    {
+      'type': 'REVIEWS',
+      'params': {
+        'average_rating': 4.5,
+        'review_count': 128,
+        'list': [
+          {
+            'author': 'Alice',
+            'rating': 5,
+            'comment': 'Loved it, fits perfectly and shipped fast!',
+            'date': '2 days ago',
+            'verified': true,
+          },
+          {
+            'author': 'Bob',
+            'rating': 3,
+            'comment': 'It was okay, shipping took a while.',
+            'date': '1 week ago',
+          },
+          {
+            'author': 'Cara',
+            'rating': 4,
+            'comment': 'Good quality for the price.',
+            'date': '2 weeks ago',
+            'verified': true,
+          },
+        ],
+      },
     },
     {'type': 'DIVIDER', 'params': {}},
     {
