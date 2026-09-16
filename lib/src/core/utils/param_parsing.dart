@@ -17,6 +17,23 @@ int? parseInt(dynamic value) => parseNum(value)?.toInt();
 /// Like [parseNum], converted to a [double].
 double? parseDouble(dynamic value) => parseNum(value)?.toDouble();
 
+/// Parses a widget/JSON boolean param that may arrive as a real [bool], a
+/// `0`/`1` [num] (or numeric [String]), or `"true"`/`"false"`. Returns
+/// `null` for anything else, instead of throwing.
+bool? parseBool(dynamic value) {
+  if (value == null) return null;
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) {
+    final normalized = value.trim().toLowerCase();
+    if (normalized == 'true') return true;
+    if (normalized == 'false') return false;
+    final asNum = num.tryParse(normalized);
+    if (asNum != null) return asNum != 0;
+  }
+  return null;
+}
+
 /// Parses a widget/JSON `fit` param (e.g. `"contain"`, `"cover"`, `"fill"`,
 /// `"fit_width"`, `"fit_height"`, `"scale_down"`, `"none"`) into a [BoxFit].
 /// Falls back to [fallback] for anything unrecognized or null, instead of

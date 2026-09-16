@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/autoplay_controller.dart';
 import '../../core/utils/param_parsing.dart';
 import 'mini_product_tile.dart';
 import 'catalog_network_image.dart';
@@ -34,8 +34,18 @@ class MixedCarouselWidget extends StatefulWidget {
 
 class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   final _pageController = PageController(viewportFraction: 0.8);
-  Timer? _autoplay;
-  bool _userInteracted = false;
+  late final _autoplay = AutoplayController(
+    canAdvance: () => _pageController.hasClients && _items.length >= 2,
+    advance: () {
+      final next = ((_pageController.page ?? 0).round() + 1) % _items.length;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    },
+    interval: Duration(seconds: parseInt(widget.params['autoplay_interval']) ?? 5),
+  );
 
   List<Map<String, dynamic>> get _items => ((widget.params['items'] as List?) ?? const [])
       .whereType<Map>()
@@ -45,22 +55,12 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   @override
   void initState() {
     super.initState();
-    _autoplay = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (_userInteracted || !_pageController.hasClients) return;
-      final items = _items;
-      if (items.isEmpty) return;
-      final next = ((_pageController.page ?? 0).round() + 1) % items.length;
-      _pageController.animateToPage(
-        next,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    });
+    _autoplay.start();
   }
 
   @override
   void dispose() {
-    _autoplay?.cancel();
+    _autoplay.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -88,13 +88,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
         return SizedBox(
           height: math.max(width * heightPercent, requiredHeight),
           child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is ScrollStartNotification &&
-                  notification.dragDetails != null) {
-                _userInteracted = true;
-              }
-              return false;
-            },
+            onNotification: _autoplay.handleScrollNotification,
             child: PageView.builder(
               controller: _pageController,
               padEnds: false,

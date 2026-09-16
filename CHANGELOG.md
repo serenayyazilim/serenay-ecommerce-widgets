@@ -1,3 +1,22 @@
+## 1.4.1
+
+- `SLIDER` and `CAROUSEL` gain two `params` fields for autoplay:
+  `"autoplay"` (`0`/`1`, real `bool`, or `"true"`/`"false"`; default off)
+  and `"autoplay_interval"` (seconds between auto-advances, default `5`).
+  `SLIDER` auto-advances pages; `CAROUSEL` auto-scrolls its product row.
+  Both pause permanently the first time the user drags manually, and never
+  start with fewer than two items. Adds a new `parseBool` helper to
+  `core/utils/param_parsing.dart`.
+- `MIXEDCAROUSEL` (already always auto-playing) gains the same
+  `"autoplay_interval"` field instead of a hardcoded 5 seconds.
+- All three widgets' autoplay timer/drag-detection logic now share one
+  `AutoplayController` (`core/utils/autoplay_controller.dart`) instead of
+  three near-identical copies, and `autoplay_interval` is clamped to a
+  minimum of 1 second to guard against a runaway timer if the backend sends
+  `0` or a negative value.
+- Backward compatible: both fields are optional and default to the previous
+  (no autoplay) behavior.
+
 ## 1.4.0
 
 - Add six new catalog widgets, all backed by inline `params` (no new fetch

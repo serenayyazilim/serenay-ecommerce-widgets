@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../contracts/slide_item.dart';
+import '../../core/utils/autoplay_controller.dart';
 import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
@@ -30,9 +31,35 @@ class _SliderWidgetState extends State<SliderWidget> {
     viewportFraction: parseDouble(widget.params['viewport_fraction']) ?? 0.8,
   );
   int _currentPage = 0;
+  List<SlideItem> _slides = const [];
+  late final _autoplay = AutoplayController(
+    canAdvance: () => _pageController.hasClients && _slides.length >= 2,
+    advance: () {
+      final next = ((_pageController.page ?? 0).round() + 1) % _slides.length;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    },
+    interval: Duration(seconds: parseInt(widget.params['autoplay_interval']) ?? 5),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _future.then((slides) {
+      if (!mounted) return;
+      _slides = slides;
+      if ((parseBool(widget.params['autoplay']) ?? false) && _slides.length >= 2) {
+        _autoplay.start();
+      }
+    }, onError: (_) {});
+  }
 
   @override
   void dispose() {
+    _autoplay.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -104,18 +131,21 @@ class _SliderWidgetState extends State<SliderWidget> {
                 children: [
                   SizedBox(
                     height: width * heightPercent,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (index) => setState(() => _currentPage = index),
-                      itemCount: slides.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.symmetric(horizontal: itemPaddingH),
-                        child: GestureDetector(
-                          onTap: () => _handleTap(slides, index),
-                          child: CatalogNetworkImage(
-                            url: slides[index].image,
-                            fit: fit,
-                            errorBuilder: widget.callbacks.imageErrorBuilder,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: _autoplay.handleScrollNotification,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (index) => setState(() => _currentPage = index),
+                        itemCount: slides.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: itemPaddingH),
+                          child: GestureDetector(
+                            onTap: () => _handleTap(slides, index),
+                            child: CatalogNetworkImage(
+                              url: slides[index].image,
+                              fit: fit,
+                              errorBuilder: widget.callbacks.imageErrorBuilder,
+                            ),
                           ),
                         ),
                       ),

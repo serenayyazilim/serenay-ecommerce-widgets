@@ -14,7 +14,9 @@ fetches the actual slide list (see [SlideItem](action-contract.md)).
     "padding_vertical": 0.1,
     "fit": "cover",
     "viewport_fraction": 0.8,
-    "item_padding_horizontal": 5
+    "item_padding_horizontal": 5,
+    "autoplay": 1,
+    "autoplay_interval": 5
   }
 }
 ```
@@ -33,6 +35,12 @@ fetches the actual slide list (see [SlideItem](action-contract.md)).
   slide, i.e. the gap between adjacent slides (default `5`). Set to `0`
   together with `viewport_fraction: 1.0` for a full-bleed, edge-to-edge
   slider.
+- `autoplay` — auto-advance the slider (`1`/`true` or `0`/`false`; default
+  off). Accepts a real bool, `0`/`1`, or `"true"`/`"false"`. Has no effect
+  with fewer than two slides, and stops permanently once the user drags a
+  slide manually.
+- `autoplay_interval` — seconds between auto-advances while `autoplay` is on
+  (default `5`; clamped to a minimum of `1`).
 
 Slides follow the [action/tap contract](action-contract.md), plus two
 slider-only targets:

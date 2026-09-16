@@ -170,6 +170,84 @@ void main() {
     expect(find.text('P1'), findsOneWidget);
   });
 
+  testWidgets('CAROUSEL autoplay auto-scrolls the row on a timer', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'CAROUSEL',
+          'params': {'category_id': 7, 'autoplay': 1, 'autoplay_interval': 1},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+                  ProductCardData(id: 2, image: '', title: 'P2', price: 10),
+                  ProductCardData(id: 3, image: '', title: 'P3', price: 10),
+                  ProductCardData(id: 4, image: '', title: 'P4', price: 10),
+                  ProductCardData(id: 5, image: '', title: 'P5', price: 10),
+                  ProductCardData(id: 6, image: '', title: 'P6', price: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    final listView = tester.widget<ListView>(find.byType(ListView));
+    final controller = listView.controller!;
+    expect(controller.offset, 0);
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(controller.offset, greaterThan(0));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('CAROUSEL does not autoplay with fewer than two products', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'CAROUSEL',
+          'params': {'category_id': 7, 'autoplay': 1, 'autoplay_interval': 1},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchProducts: (_) async => const [
+                  ProductCardData(id: 1, image: '', title: 'P1', price: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
+
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('getScreen(theme:) overrides the price color rendered by CAROUSEL', (
     tester,
   ) async {
@@ -641,6 +719,80 @@ void main() {
       find.ancestor(of: find.byType(GestureDetector), matching: find.byType(Padding)).first,
     );
     expect(padding.padding, EdgeInsets.zero);
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('SLIDER autoplay advances pages on a timer', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SLIDER',
+          'params': {'id': 5, 'autoplay': 1, 'autoplay_interval': 1},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchSlides: (_) async => const [
+                  SlideItem(image: '', action: WidgetAction(type: WidgetActionType.category, id: 1)),
+                  SlideItem(image: '', action: WidgetAction(type: WidgetActionType.category, id: 2)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    final pageView = tester.widget<PageView>(find.byType(PageView));
+    expect(pageView.controller?.page, 0);
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(pageView.controller?.page, 1);
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('SLIDER does not autoplay with fewer than two slides', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'SLIDER',
+          'params': {'id': 5, 'autoplay': 1, 'autoplay_interval': 1},
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(
+              data: data,
+              callbacks: _callbacks(
+                fetchSlides: (_) async => const [
+                  SlideItem(image: '', action: WidgetAction(type: WidgetActionType.category, id: 1)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
 
     expect(tester.takeException(), isNull);
   });

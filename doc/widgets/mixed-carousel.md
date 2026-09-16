@@ -9,6 +9,7 @@ color, title and description.
   "type": "MIXEDCAROUSEL",
   "params": {
     "height_percent": 1.1,
+    "autoplay_interval": 5,
     "items": [
       {
         "item_type": "image",
@@ -35,6 +36,8 @@ color, title and description.
 ```
 
 - `height_percent` — page height as a fraction of width (default `1.1`).
+- `autoplay_interval` — seconds between auto-advances (default `5`; clamped
+  to a minimum of `1`).
 - Each entry in `items` is one page:
   - `item_type: "image"` — uses the same fields as [IMAGE](image.md)
     (`url`, `type`, `id`, `fit`, ...) via the
@@ -48,5 +51,5 @@ color, title and description.
     values; an `"image"` page can carry its own `title`/`description` on
     top of the photo, same as a `"products"` page.
 
-Auto-plays every 5 seconds; stops permanently the first time the user
-drags a page.
+Auto-plays every `autoplay_interval` seconds; stops permanently the first
+time the user drags a page.
