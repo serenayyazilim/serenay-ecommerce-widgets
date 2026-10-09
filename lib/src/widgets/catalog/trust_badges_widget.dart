@@ -56,8 +56,8 @@ class _Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconKey = item['icon'] as String?;
-    final label = (item['label'] as String?) ?? '';
+    final iconKey = item['icon']?.toString();
+    final label = (item['label']?.toString()) ?? '';
     final icon = TrustBadgesWidget._icons[iconKey] ?? Icons.check_circle_outline;
 
     return SizedBox(

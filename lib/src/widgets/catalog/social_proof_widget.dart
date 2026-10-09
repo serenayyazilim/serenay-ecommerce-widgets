@@ -33,8 +33,8 @@ class _SocialProofWidgetState extends State<SocialProofWidget> {
   List<String> get _entries => ((widget.params['list'] as List?) ?? const [])
       .map((e) {
         if (e is Map) {
-          final name = e['name'] as String?;
-          final timeAgo = e['time_ago'] as String?;
+          final name = e['name']?.toString();
+          final timeAgo = e['time_ago']?.toString();
           if (name == null) return null;
           return timeAgo == null ? name : '$name · $timeAgo';
         }
@@ -65,7 +65,7 @@ class _SocialProofWidgetState extends State<SocialProofWidget> {
     final theme = widget.theme;
     final params = widget.params;
     final entries = _entries;
-    final override = params['text'] as String?;
+    final override = params['text']?.toString();
     final count = parseInt(params['count']);
 
     String? text = override;

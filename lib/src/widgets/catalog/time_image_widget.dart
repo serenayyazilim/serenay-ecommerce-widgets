@@ -68,7 +68,7 @@ class _TimeImageWidgetState extends State<TimeImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final url = (widget.params['url'] as String?) ?? '';
+    final url = (widget.params['url']?.toString()) ?? '';
     if (url.isEmpty) return const SizedBox.shrink();
 
     final aspectRatio = parseDouble(widget.params['aspect_ratio']) ?? 16 / 9;
@@ -96,7 +96,7 @@ class _TimeImageWidgetState extends State<TimeImageWidget> {
     final top = _pos('top');
     final bottom = _pos('bottom');
     final isLeft = widget.params['title_position'] == 'left' || !widget.params.containsKey('title_position');
-    final title = (widget.params['title'] as String?)?.trim() ?? '';
+    final title = (widget.params['title']?.toString())?.trim() ?? '';
 
     return Positioned(
       top: top,

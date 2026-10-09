@@ -10,7 +10,7 @@ class SlideItem {
 
   factory SlideItem.fromJson(Map<String, dynamic> json) {
     return SlideItem(
-      image: (json['url'] as String?) ?? (json['image'] as String?) ?? '',
+      image: (json['url']?.toString()) ?? (json['image']?.toString()) ?? '',
       action: WidgetAction.fromParams(json),
     );
   }
@@ -34,7 +34,7 @@ class ModalContent {
 
   factory ModalContent.fromJson(Map<String, dynamic> json) {
     return ModalContent(
-      image: (json['url'] as String?) ?? (json['image'] as String?) ?? '',
+      image: (json['url']?.toString()) ?? (json['image']?.toString()) ?? '',
       action: json.containsKey('type') ? WidgetAction.fromParams(json) : null,
     );
   }

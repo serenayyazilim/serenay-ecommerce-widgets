@@ -47,7 +47,7 @@ class _ModalWidgetState extends State<ModalWidget> {
   void _show() {
     if (!mounted) return;
     final params = widget.params;
-    final url = params['url'] as String? ?? '';
+    final url = params['url']?.toString() ?? '';
     final radius = parseDouble(params['radius']) ?? 16;
     final fit = parseBoxFit(params['fit']);
     final action = WidgetAction.fromParams(params);

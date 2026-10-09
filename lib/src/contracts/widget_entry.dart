@@ -18,7 +18,7 @@ class WidgetEntry {
   /// Parses a single `{ "type": ..., "params": ... }` entry. `params` may
   /// arrive as a `Map` or as a JSON-encoded `String`; both are accepted.
   factory WidgetEntry.fromJson(Map<String, dynamic> json) {
-    final rawType = json['type'] as String?;
+    final rawType = json['type']?.toString();
     return WidgetEntry(
       type: WidgetType.fromWire(rawType),
       params: _decodeParams(json['params']),

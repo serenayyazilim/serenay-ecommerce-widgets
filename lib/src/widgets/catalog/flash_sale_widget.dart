@@ -119,8 +119,8 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
       return const SizedBox.shrink();
     }
 
-    final title = (widget.params['title'] as String?) ?? widget.theme.flashSaleTitleLabel;
-    final subtitle = widget.params['subtitle'] as String?;
+    final title = (widget.params['title']?.toString()) ?? widget.theme.flashSaleTitleLabel;
+    final subtitle = widget.params['subtitle']?.toString();
     final remaining = _endTime?.difference(now);
 
     final content = AnimatedBuilder(
@@ -368,7 +368,7 @@ class _FlashModalState extends State<_FlashModal> {
 
   @override
   Widget build(BuildContext context) {
-    final title = (widget.params['title'] as String?) ?? widget.theme.flashSaleTitleLabel;
+    final title = (widget.params['title']?.toString()) ?? widget.theme.flashSaleTitleLabel;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,

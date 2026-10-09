@@ -18,7 +18,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
   @override
   void initState() {
     super.initState();
-    final url = widget.params['url'] as String?;
+    final url = widget.params['url']?.toString();
     final videoId = url == null ? null : YoutubePlayerController.convertUrlToId(url);
     if (videoId != null) {
       _controller = YoutubePlayerController.fromVideoId(

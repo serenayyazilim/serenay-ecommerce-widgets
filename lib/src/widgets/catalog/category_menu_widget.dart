@@ -41,8 +41,8 @@ class CategoryMenuWidget extends StatelessWidget {
         separatorBuilder: (context, index) => SizedBox(width: theme.spaceM),
         itemBuilder: (context, index) {
           final item = items[index];
-          final image = item['image'] as String? ?? '';
-          final title = item['title'] as String? ?? '';
+          final image = item['image']?.toString() ?? '';
+          final title = item['title']?.toString() ?? '';
           return GestureDetector(
             onTap: () => callbacks.onAction(WidgetAction.fromParams(item)),
             child: SizedBox(

@@ -53,7 +53,7 @@ class _BundleWidgetState extends State<BundleWidget> {
         final products = snapshot.data ?? const [];
         if (products.length < 2) return const SizedBox.shrink();
 
-        final title = (widget.params['title'] as String?) ?? theme.bundleTitleLabel;
+        final title = (widget.params['title']?.toString()) ?? theme.bundleTitleLabel;
         final total = products.fold<num>(0, (sum, p) => sum + (p.price ?? 0));
 
         return Padding(

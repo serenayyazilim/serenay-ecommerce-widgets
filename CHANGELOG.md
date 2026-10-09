@@ -1,3 +1,10 @@
+## 1.4.2
+
+- Fix: string params (`goto`, `url`, `title`, `name`, `filter`, ...) no longer
+  crash with `type 'int' is not a subtype of type 'String?'` when the
+  backend sends them as numbers; every `as String?` cast on widget/item params
+  is now `?.toString()`.
+
 ## 1.4.1
 
 - `SLIDER` and `CAROUSEL` gain two `params` fields for autoplay:

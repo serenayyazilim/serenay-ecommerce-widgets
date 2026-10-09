@@ -12,8 +12,8 @@ class ProductVariant {
   factory ProductVariant.fromJson(Map<String, dynamic> json) {
     return ProductVariant(
       id: json['id'],
-      name: (json['name'] as String?) ?? '',
-      image: json['image'] as String?,
+      name: (json['name']?.toString()) ?? '',
+      image: json['image']?.toString(),
     );
   }
 }
@@ -35,8 +35,8 @@ class ProductMeasureOption {
   factory ProductMeasureOption.fromJson(Map<String, dynamic> json) {
     return ProductMeasureOption(
       id: json['id'],
-      title: (json['title'] as String?) ?? '',
-      priceText: json['price_text'] as String?,
+      title: (json['title']?.toString()) ?? '',
+      priceText: json['price_text']?.toString(),
     );
   }
 }
@@ -52,7 +52,7 @@ class ProductPrice {
   factory ProductPrice.fromJson(Map<String, dynamic> json) {
     return ProductPrice(
       price: parseNum(json['price']) ?? 0,
-      currency: (json['currency'] as String?) ?? 'tl',
+      currency: (json['currency']?.toString()) ?? 'tl',
     );
   }
 }
@@ -151,14 +151,14 @@ class ProductCardData {
   factory ProductCardData.fromJson(Map<String, dynamic> json) {
     return ProductCardData(
       id: json['id'],
-      image: (json['image'] as String?) ?? '',
-      title: (json['title'] as String?) ?? '',
-      subtitle: json['subtitle'] as String?,
-      subtitle2: json['subtitle2'] as String?,
+      image: (json['image']?.toString()) ?? '',
+      title: (json['title']?.toString()) ?? '',
+      subtitle: json['subtitle']?.toString(),
+      subtitle2: json['subtitle2']?.toString(),
       price: parseNum(json['price']),
       priceOld: parseNum(json['price_old']),
       discount: json['discount']?.toString(),
-      currency: (json['currency'] as String?) ?? 'tl',
+      currency: (json['currency']?.toString()) ?? 'tl',
       brandId: json['brand_id'],
       variants: (json['variants'] as List?)
               ?.whereType<Map>()
@@ -173,7 +173,7 @@ class ProductCardData {
               .toList() ??
           const [],
       isFavorited: (json['is_favorited'] as bool?) ?? false,
-      measureName: json['measure_name'] as String?,
+      measureName: json['measure_name']?.toString(),
       measureOptions: (json['measure_options'] as List?)
               ?.map(
                 (e) => e is Map
@@ -182,11 +182,11 @@ class ProductCardData {
               )
               .toList() ??
           const [],
-      priceText: json['price_text'] as String?,
+      priceText: json['price_text']?.toString(),
       saleDisabled: (json['sale_disabled'] as bool?) ?? false,
-      saleDisabledReason: json['sale_disabled_reason'] as String?,
+      saleDisabledReason: json['sale_disabled_reason']?.toString(),
       unitPrice: json['unit_price']?.toString(),
-      unitPriceText: json['unit_price_text'] as String?,
+      unitPriceText: json['unit_price_text']?.toString(),
       preOrder: (json['pre_order'] as bool?) ?? false,
     );
   }

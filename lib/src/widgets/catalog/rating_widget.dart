@@ -22,7 +22,7 @@ class RatingWidget extends StatelessWidget {
     final maxRating = parseInt(params['max_rating']) ?? 5;
     final rating = (parseDouble(params['rating']) ?? 0).clamp(0, maxRating.toDouble()).toDouble();
     final reviewCount = parseInt(params['review_count']);
-    final label = params['label'] as String?;
+    final label = params['label']?.toString();
 
     if (maxRating <= 0) return const SizedBox.shrink();
 

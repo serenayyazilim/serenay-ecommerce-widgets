@@ -94,7 +94,7 @@ class _AbandonedCartWidgetState extends State<AbandonedCartWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        final title = (widget.params['title'] as String?) ?? theme.abandonedCartTitleLabel;
+        final title = (widget.params['title']?.toString()) ?? theme.abandonedCartTitleLabel;
         final remaining = _endTime?.difference(now);
 
         return Padding(

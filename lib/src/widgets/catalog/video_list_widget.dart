@@ -115,25 +115,25 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                     : Padding(
                         padding: const EdgeInsets.all(8),
                         child: Column(
-                          crossAxisAlignment: _crossAlign(textParams['horizontal'] as String?),
-                          mainAxisAlignment: _mainAlign(textParams['vertical'] as String?),
+                          crossAxisAlignment: _crossAlign(textParams['horizontal']?.toString()),
+                          mainAxisAlignment: _mainAlign(textParams['vertical']?.toString()),
                           children: [
                             Text(
                               video.title!,
                               style: TextStyle(
                                 height: 1.1,
-                                color: _parseColor(textParams['fontcolor_title'] as String?),
+                                color: _parseColor(textParams['fontcolor_title']?.toString()),
                                 fontSize: parseDouble(textParams['fontsize_title']) ?? 16,
-                                fontWeight: _fontWeight(textParams['fontweight_title'] as String?),
+                                fontWeight: _fontWeight(textParams['fontweight_title']?.toString()),
                               ),
                             ),
                             if (video.subtitle != null)
                               Text(
                                 video.subtitle!,
                                 style: TextStyle(
-                                  color: _parseColor(textParams['fontcolor_subtitle'] as String?),
+                                  color: _parseColor(textParams['fontcolor_subtitle']?.toString()),
                                   fontSize: parseDouble(textParams['fontsize_subtitle']) ?? 13,
-                                  fontWeight: _fontWeight(textParams['fontweight_subtitle'] as String?),
+                                  fontWeight: _fontWeight(textParams['fontweight_subtitle']?.toString()),
                                 ),
                               ),
                           ],

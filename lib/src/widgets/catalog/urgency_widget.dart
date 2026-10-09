@@ -74,7 +74,7 @@ class _UrgencyWidgetState extends State<UrgencyWidget> {
     final params = widget.params;
     final stockLeft = parseInt(params['stock_left']);
     final threshold = parseInt(params['threshold']) ?? 10;
-    final override = params['text'] as String?;
+    final override = params['text']?.toString();
 
     String? text = override;
     if (text == null && stockLeft != null) {

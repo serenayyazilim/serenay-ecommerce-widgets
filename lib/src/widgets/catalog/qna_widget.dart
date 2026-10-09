@@ -26,7 +26,7 @@ class QnaWidget extends StatelessWidget {
     final items = _items;
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final title = (params['title'] as String?) ?? theme.qnaTitleLabel;
+    final title = (params['title']?.toString()) ?? theme.qnaTitleLabel;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: theme.spaceM, vertical: theme.spaceS),
@@ -65,10 +65,10 @@ class _QnaEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final question = (item['question'] as String?) ?? '';
-    final answer = (item['answer'] as String?) ?? '';
-    final author = item['author'] as String?;
-    final date = item['date'] as String?;
+    final question = (item['question']?.toString()) ?? '';
+    final answer = (item['answer']?.toString()) ?? '';
+    final author = item['author']?.toString();
+    final date = item['date']?.toString();
     if (question.isEmpty) return const SizedBox.shrink();
 
     return Column(

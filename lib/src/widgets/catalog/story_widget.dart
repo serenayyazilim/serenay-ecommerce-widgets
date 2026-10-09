@@ -42,7 +42,7 @@ class StoryWidget extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(width: AppDimens.spaceM),
         itemBuilder: (context, index) {
           final story = stories[index];
-          final thumbnail = story['thumbnail'] as String? ?? '';
+          final thumbnail = story['thumbnail']?.toString() ?? '';
           return GestureDetector(
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
@@ -148,7 +148,7 @@ class _StoryViewerState extends State<_StoryViewer> {
   }
 
   void _handleCta(Map<String, dynamic> story) {
-    final type = story['type'] as String?;
+    final type = story['type']?.toString();
     final target = story['product_id_or_url'];
     if (type == 'product') {
       widget.callbacks.onAction(WidgetAction(type: WidgetActionType.product, id: target));
@@ -162,7 +162,7 @@ class _StoryViewerState extends State<_StoryViewer> {
     final story = widget.stories[_storyIndex];
     final urls = _urls;
     final image = urls.isNotEmpty ? urls[_imageIndex] : '';
-    final footer = story['contain'] as String?;
+    final footer = story['contain']?.toString();
 
     return Scaffold(
       backgroundColor: Colors.black,

@@ -29,7 +29,7 @@ class ReviewsWidget extends StatelessWidget {
     final items = _items;
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final title = (params['title'] as String?) ?? theme.reviewsTitleLabel;
+    final title = (params['title']?.toString()) ?? theme.reviewsTitleLabel;
     final averageRating = parseDouble(params['average_rating']);
     final reviewCount = parseInt(params['review_count']);
 
@@ -83,10 +83,10 @@ class _ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final author = (item['author'] as String?) ?? '';
-    final avatar = item['avatar'] as String?;
-    final comment = (item['comment'] as String?) ?? '';
-    final date = item['date'] as String?;
+    final author = (item['author']?.toString()) ?? '';
+    final avatar = item['avatar']?.toString();
+    final comment = (item['comment']?.toString()) ?? '';
+    final date = item['date']?.toString();
     final verified = item['verified'] == true;
     final rating = (parseDouble(item['rating']) ?? 0).clamp(0, 5).round();
 

@@ -69,14 +69,14 @@ class WidgetAction {
   /// shared tap contract (§1.3 of the widget catalog doc).
   factory WidgetAction.fromParams(Map<String, dynamic> params) {
     return WidgetAction(
-      type: WidgetActionType.fromWire(params['type'] as String?),
+      type: WidgetActionType.fromWire(params['type']?.toString()),
       id: params['id'],
-      url: params['url'] as String?,
-      filter: params['filter'] as String?,
-      searchText: params['search_text'] as String?,
-      goto: params['goto'] as String?,
-      title: params['title'] as String?,
-      name: params['name'] as String?,
+      url: params['url']?.toString(),
+      filter: params['filter']?.toString(),
+      searchText: params['search_text']?.toString(),
+      goto: params['goto']?.toString(),
+      title: params['title']?.toString(),
+      name: params['name']?.toString(),
     );
   }
 }

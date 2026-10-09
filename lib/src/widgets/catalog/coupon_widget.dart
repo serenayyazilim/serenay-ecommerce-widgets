@@ -80,9 +80,9 @@ class _CouponWidgetState extends State<CouponWidget> {
       return const SizedBox.shrink();
     }
 
-    final code = widget.params['code'] as String?;
-    final discountText = widget.params['discount_text'] as String?;
-    final description = widget.params['description'] as String?;
+    final code = widget.params['code']?.toString();
+    final discountText = widget.params['discount_text']?.toString();
+    final description = widget.params['description']?.toString();
     if (code == null || code.isEmpty) return const SizedBox.shrink();
 
     final remaining = _endTime?.difference(now);

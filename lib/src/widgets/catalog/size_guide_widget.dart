@@ -30,8 +30,8 @@ class SizeGuideWidget extends StatelessWidget {
     final rows = _rows;
     if (headers.isEmpty || rows.isEmpty) return const SizedBox.shrink();
 
-    final buttonLabel = (params['button_label'] as String?) ?? theme.sizeGuideButtonLabel;
-    final dialogTitle = (params['title'] as String?) ?? theme.sizeGuideButtonLabel;
+    final buttonLabel = (params['button_label']?.toString()) ?? theme.sizeGuideButtonLabel;
+    final dialogTitle = (params['title']?.toString()) ?? theme.sizeGuideButtonLabel;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: theme.spaceM, vertical: theme.spaceXs),

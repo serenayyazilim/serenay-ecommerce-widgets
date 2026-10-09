@@ -19,10 +19,10 @@ class VideoItem {
 
   factory VideoItem.fromJson(Map<String, dynamic> json) {
     return VideoItem(
-      video: (json['video'] as String?) ?? (json['url'] as String?) ?? '',
+      video: (json['video']?.toString()) ?? (json['url']?.toString()) ?? '',
       action: WidgetAction.fromParams(json),
-      title: json['title'] as String?,
-      subtitle: json['subtitle'] as String?,
+      title: json['title']?.toString(),
+      subtitle: json['subtitle']?.toString(),
     );
   }
 

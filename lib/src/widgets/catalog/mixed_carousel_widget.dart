@@ -117,8 +117,8 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     // Non-image chrome per mini tile: padding + spacing + title line + spacing + price line.
     const tileChromeHeight = cardPadding * 2 + 6 + 18 + 4 + 20;
 
-    final hasTitle = (item['title'] as String?)?.isNotEmpty ?? false;
-    final hasDescription = (item['description'] as String?)?.isNotEmpty ?? false;
+    final hasTitle = (item['title']?.toString())?.isNotEmpty ?? false;
+    final hasDescription = (item['description']?.toString())?.isNotEmpty ?? false;
     var headerHeight = 0.0;
     if (hasTitle || hasDescription) {
       headerHeight += hasTitle ? (hasDescription ? 22.0 : 44.0) : 0.0;
@@ -139,12 +139,12 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   }
 
   Widget _buildPage(Map<String, dynamic> item) {
-    final itemType = item['item_type'] as String?;
-    final bgColor = _bgColor(item['bg_color'] as String?);
-    final title = item['title'] as String?;
-    final titleColor = _bgColor(item['title_color'] as String?);
-    final description = item['description'] as String?;
-    final descriptionColor = _bgColor(item['description_color'] as String?);
+    final itemType = item['item_type']?.toString();
+    final bgColor = _bgColor(item['bg_color']?.toString());
+    final title = item['title']?.toString();
+    final titleColor = _bgColor(item['title_color']?.toString());
+    final description = item['description']?.toString();
+    final descriptionColor = _bgColor(item['description_color']?.toString());
 
     return Container(
       decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(16)),
@@ -185,7 +185,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   }
 
   Widget _buildImagePage(Map<String, dynamic> item) {
-    final url = item['url'] as String? ?? '';
+    final url = item['url']?.toString() ?? '';
     final fit = parseBoxFit(item['fit']);
     final action = WidgetAction.fromParams(item);
     return GestureDetector(

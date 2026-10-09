@@ -27,7 +27,7 @@ class ImageWidget extends StatelessWidget {
       return const SizedBox();
     }
 
-    final url = params['url'] as String? ?? '';
+    final url = params['url']?.toString() ?? '';
     final heightPercent = parseDouble(params['height_percent']);
     final radius = parseDouble(params['radius']) ?? 0;
     final padding = parseDouble(params['padding']) ?? 0;

@@ -47,7 +47,7 @@ class ProductQuery {
   /// `type` + `id` pair resolves the same way as the tap contract, and its
   /// absence falls back to reading the direct filter fields.
   factory ProductQuery.fromParams(Map<String, dynamic> params) {
-    final type = params['type'] as String?;
+    final type = params['type']?.toString();
     final id = params['id'];
 
     if (type != null && id != null) {
@@ -63,9 +63,9 @@ class ProductQuery {
         case 'group':
           return ProductQuery(groupId: id);
         case 'filter':
-          return ProductQuery(filter: (params['filter'] as String?) ?? '$id');
+          return ProductQuery(filter: (params['filter']?.toString()) ?? '$id');
         case 'search':
-          final searchText = params['search_text'] as String?;
+          final searchText = params['search_text']?.toString();
           return searchText != null
               ? ProductQuery(search: searchText)
               : ProductQuery(collectionId: id);
@@ -79,15 +79,15 @@ class ProductQuery {
       collectionId: params['collection_id'],
       brandId: params['brand_id'],
       groupId: params['group_id'],
-      search: params['search'] as String?,
-      searchFields: params['search_fields'] as String?,
-      orderBy: params['order_by'] as String?,
+      search: params['search']?.toString(),
+      searchFields: params['search_fields']?.toString(),
+      orderBy: params['order_by']?.toString(),
       limit: parseInt(params['limit']),
       page: parseInt(params['page']),
-      filterName: params['filter_name'] as String?,
+      filterName: params['filter_name']?.toString(),
       exceptProductIds: (params['except_product_ids'] as List?)?.toList(),
-      filter: params['filter'] as String?,
-      link: params['link'] as String?,
+      filter: params['filter']?.toString(),
+      link: params['link']?.toString(),
       isFavoritedList: params['is_favorited_list'] as bool?,
       isBundleProduct: params['is_bundle_product'] as bool?,
     );

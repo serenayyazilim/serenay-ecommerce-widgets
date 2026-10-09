@@ -46,8 +46,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final url = (widget.params['url'] as String?) ?? '';
-    final hintText = (widget.params['hint_text'] as String?) ?? widget.theme.searchHintLabel;
+    final url = (widget.params['url']?.toString()) ?? '';
+    final hintText = (widget.params['hint_text']?.toString()) ?? widget.theme.searchHintLabel;
     final bottom = (parseNum(widget.params['bottom']) ?? 10) / 2;
     final barHeight = parseDouble(widget.params['bar_height']) ?? 56.0;
     final buttonHeight = parseDouble(widget.params['button_height']) ?? 40.0;

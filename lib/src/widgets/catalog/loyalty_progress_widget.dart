@@ -23,8 +23,8 @@ class LoyaltyProgressWidget extends StatelessWidget {
     if (target <= 0) return const SizedBox.shrink();
 
     final current = (parseDouble(params['current']) ?? 0).clamp(0, target);
-    final title = params['title'] as String?;
-    final rewardText = params['reward_text'] as String?;
+    final title = params['title']?.toString();
+    final rewardText = params['reward_text']?.toString();
     final progress = current / target;
 
     return Padding(

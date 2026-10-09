@@ -1598,4 +1598,11 @@ void main() {
 
     expect(find.text('custom error placeholder'), findsOneWidget);
   });
+
+  test("WidgetAction.fromParams tolerates numeric string fields", () {
+    final action = WidgetAction.fromParams({"type": "link", "goto": 0, "title": 5, "url": 7});
+    expect(action.goto, "0");
+    expect(action.title, "5");
+    expect(action.url, "7");
+  });
 }

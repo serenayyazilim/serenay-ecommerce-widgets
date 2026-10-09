@@ -39,7 +39,7 @@ class _RecommendedForYouWidgetState extends State<RecommendedForYouWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        final title = (widget.params['title'] as String?) ?? theme.recommendedForYouTitleLabel;
+        final title = (widget.params['title']?.toString()) ?? theme.recommendedForYouTitleLabel;
 
         return Padding(
           padding: EdgeInsets.symmetric(vertical: theme.spaceS),

@@ -48,11 +48,11 @@ class TextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = (params['text'] as String?) ?? '';
-    final subtitle = params['subtitle'] as String?;
-    final style = (params['style'] as String?) ?? 'default';
-    final align = _align(params['align'] as String?);
-    final color = _color(params['color'] as String?) ?? theme.textPrimaryColor;
+    final text = (params['text']?.toString()) ?? '';
+    final subtitle = params['subtitle']?.toString();
+    final style = (params['style']?.toString()) ?? 'default';
+    final align = _align(params['align']?.toString());
+    final color = _color(params['color']?.toString()) ?? theme.textPrimaryColor;
     final paddingH = parseDouble(params['padding_horizontal']) ?? 16;
     final paddingV = parseDouble(params['padding_vertical']) ?? 12;
 
@@ -123,7 +123,7 @@ class TextWidget extends StatelessWidget {
           text,
           textAlign: align,
           style: TextStyle(
-            fontSize: _fontSize(params['size'] as String?),
+            fontSize: _fontSize(params['size']?.toString()),
             fontWeight: FontWeight.w600,
             color: color,
           ),

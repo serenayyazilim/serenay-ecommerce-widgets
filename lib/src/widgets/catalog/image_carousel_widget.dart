@@ -38,7 +38,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
-    final bgImage = widget.params['bg_image'] as String?;
+    final bgImage = widget.params['bg_image']?.toString();
     final itemCount = parseInt(widget.params['item_count']) ?? 2;
     final fit = parseBoxFit(widget.params['fit']);
     final bgFit = parseBoxFit(widget.params['bg_fit']);
