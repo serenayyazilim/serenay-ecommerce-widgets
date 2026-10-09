@@ -16,7 +16,11 @@ equal share of the row's width.
 ```
 
 Each entry in `list` uses the same fields as [IMAGE](image.md) (`url`,
-`type`, `id`, `radius`, `padding`, `height_percent`, ...) — each entry is an
-independent IMAGE, just laid out in an equal-width column instead of full
-row width. Entries with different `height_percent` values will end up
-different heights within the same row.
+`type`, `id`, `radius`, `padding`, ...) — each entry is an independent
+IMAGE, just laid out in an equal-width column instead of full row width.
+
+Unlike IMAGE, `height_percent` is ignored and `fit` defaults to
+`fit_width`: each image keeps its natural aspect ratio so narrow cells
+don't crop the banner. Images with different aspect ratios will end up
+different heights within the same row, so use same-ratio images for an
+even row.

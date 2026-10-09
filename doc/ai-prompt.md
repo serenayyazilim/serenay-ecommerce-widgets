@@ -240,8 +240,9 @@ Fields: `url` (required), plus the full §2.1 action contract inline
   }
 }
 ```
-Each `list` entry uses the exact same fields as IMAGE, laid out in
-equal-width columns.
+Each `list` entry uses the same fields as IMAGE, laid out in equal-width
+columns, except `height_percent` is ignored and `fit` defaults to
+`fit_width` (natural aspect ratio, no cropping).
 
 ### `SLIDER` — paged image slider (fetched by id)
 ```json
