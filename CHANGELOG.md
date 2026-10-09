@@ -1,3 +1,9 @@
+## 1.4.3
+
+- Fix: `IMAGELIST` images were cropped. Each cell now ignores
+  `height_percent` and defaults to `fit_width` (natural aspect ratio), matching
+  the legacy SerBuilder IMAGELIST. An explicit per-item `fit` still wins.
+
 ## 1.4.2
 
 - Fix: string params (`goto`, `url`, `title`, `name`, `filter`, ...) no longer

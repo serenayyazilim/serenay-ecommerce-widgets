@@ -1605,4 +1605,39 @@ void main() {
     expect(action.title, "5");
     expect(action.url, "7");
   });
+
+  testWidgets('IMAGELIST ignores height_percent and keeps the image uncropped', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'IMAGELIST',
+          'params': {
+            'list': [
+              {'id': 1, 'url': 'https://example.com/a.webp', 'type': 'main_category', 'height_percent': 0.65},
+              {'id': 2, 'url': 'https://example.com/b.webp', 'type': 'main_category', 'height_percent': 0.65},
+            ],
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: WidgetCatalog.getScreen(data: data, callbacks: _callbacks()),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+
+    final images = tester.widgetList<Image>(find.byType(Image));
+    expect(images, hasLength(2));
+    for (final image in images) {
+      expect(image.fit, BoxFit.fitWidth);
+      expect(image.height, isNull);
+    }
+  });
 }
