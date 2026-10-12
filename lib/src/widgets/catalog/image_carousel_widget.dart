@@ -24,8 +24,6 @@ class ImageCarouselWidget extends StatefulWidget {
 }
 
 class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
-  static const double _marginHorizontal = 5.0;
-
   late final Future<List<SlideItem>> _future = _load();
 
   Future<List<SlideItem>> _load() {
@@ -39,9 +37,15 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   Widget build(BuildContext context) {
     final heightPercent = parseDouble(widget.params['height_percent']) ?? 0.3;
     final bgImage = widget.params['bg_image']?.toString();
-    final itemCount = parseInt(widget.params['item_count']) ?? 2;
+    final parsedItemCount = parseDouble(widget.params['item_count']) ?? 2;
+    final itemCount = parsedItemCount > 0 ? parsedItemCount : 2;
     final fit = parseBoxFit(widget.params['fit']);
     final bgFit = parseBoxFit(widget.params['bg_fit']);
+    final itemMargin = parseDouble(widget.params['item_margin_horizontal']) ?? 5.0;
+    final itemWidthOffset = parseDouble(widget.params['item_width_offset']) ?? itemMargin;
+    final paddingH = parseDouble(widget.params['padding_horizontal']) ?? 0.0;
+    final paddingV = parseDouble(widget.params['padding_vertical']) ?? 0.0;
+    final radius = parseDouble(widget.params['radius']) ?? 0.0;
 
     return FutureBuilder<List<SlideItem>>(
       future: _future,
@@ -53,10 +57,15 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
           builder: (context, constraints) {
             final width = constraints.maxWidth;
             final height = width * heightPercent;
-            final itemWidth = ((width - (itemCount * 2 * _marginHorizontal)) / itemCount) - _marginHorizontal;
+            final rowWidth = width * (1 - 2 * paddingH);
+            final itemWidth = ((rowWidth - (itemCount * 2 * itemMargin)) / itemCount) - itemWidthOffset;
 
             return Container(
-              height: height,
+              height: height + 2 * width * paddingV,
+              padding: EdgeInsets.symmetric(
+                horizontal: width * paddingH,
+                vertical: width * paddingV,
+              ),
               decoration: (bgImage == null || bgImage.isEmpty)
                   ? null
                   : BoxDecoration(
@@ -67,13 +76,14 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                 scrollDirection: Axis.horizontal,
                 itemCount: slides.length,
                 itemBuilder: (context, index) => Container(
-                  width: itemWidth,
-                  margin: const EdgeInsets.symmetric(horizontal: _marginHorizontal),
+                  width: itemWidth > 0 ? itemWidth : 0,
+                  margin: EdgeInsets.symmetric(horizontal: itemMargin),
                   child: GestureDetector(
                     onTap: () => widget.callbacks.onAction(slides[index].action),
                     child: CatalogNetworkImage(
                       url: slides[index].image,
                       fit: fit,
+                      borderRadius: radius > 0 ? BorderRadius.circular(radius) : null,
                       errorBuilder: widget.callbacks.imageErrorBuilder,
                     ),
                   ),

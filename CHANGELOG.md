@@ -1,3 +1,16 @@
+## 1.4.4
+
+- `IMAGECAROUSEL` gains optional layout params; all default to the previous
+  hardcoded values, so existing layouts are unchanged:
+  - `item_margin_horizontal` — px on each side of every item (default `5`).
+  - `item_width_offset` — px subtracted from each item width (default: the
+    margin).
+  - `padding_horizontal` / `padding_vertical` — outer padding as a fraction
+    of width, like `SLIDER`.
+  - `radius` — image corner radius in px.
+  - `item_count` now accepts decimals (e.g. `2.5` for a peek); `0` or
+    negative falls back to `2`.
+
 ## 1.4.3
 
 - Fix: `IMAGELIST` images were cropped. Each cell now ignores

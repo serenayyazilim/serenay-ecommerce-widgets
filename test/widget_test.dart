@@ -1640,4 +1640,83 @@ void main() {
       expect(image.height, isNull);
     }
   });
+
+  testWidgets('IMAGECAROUSEL defaults keep the 1.4.3 layout', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {'type': 'IMAGECAROUSEL', 'params': {'id': 1}},
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 400,
+            child: Column(
+              children: WidgetCatalog.getScreen(
+                data: data,
+                callbacks: _callbacks(
+                  fetchSlides: (_) async => const [
+                    SlideItem(image: 'https://example.com/a.webp', action: WidgetAction(type: WidgetActionType.category)),
+                    SlideItem(image: 'https://example.com/b.webp', action: WidgetAction(type: WidgetActionType.category)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // ((400 - 2*2*5) / 2) - 5 = 185
+    expect(tester.getSize(find.byType(Image).first).width, 185);
+    expect(tester.widget<Image>(find.byType(Image).first).fit, BoxFit.cover);
+  });
+
+  testWidgets('IMAGECAROUSEL honors item margin, width offset, padding, radius and fit', (tester) async {
+    final data = WidgetCatalog.fromJson({
+      'data': [
+        {
+          'type': 'IMAGECAROUSEL',
+          'params': {
+            'id': 1,
+            'item_count': '2',
+            'item_margin_horizontal': 6,
+            'item_width_offset': 16,
+            'padding_horizontal': 0.05,
+            'radius': 8,
+            'fit': 'scale_down',
+          },
+        },
+      ],
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 400,
+            child: Column(
+              children: WidgetCatalog.getScreen(
+                data: data,
+                callbacks: _callbacks(
+                  fetchSlides: (_) async => const [
+                    SlideItem(image: 'https://example.com/a.webp', action: WidgetAction(type: WidgetActionType.category)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // row = 400 * 0.9 = 360; ((360 - 2*2*6) / 2) - 16 = 152
+    expect(tester.getSize(find.byType(Image)).width, 152);
+    expect(tester.widget<Image>(find.byType(Image)).fit, BoxFit.scaleDown);
+    expect(find.byType(ClipRRect), findsOneWidget);
+  });
 }

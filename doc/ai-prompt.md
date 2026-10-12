@@ -282,13 +282,22 @@ action types.
     "item_count": 2,
     "bg_image": "https://.../background.jpg",
     "fit": "cover",
-    "bg_fit": "cover"
+    "bg_fit": "cover",
+    "item_margin_horizontal": 5,
+    "item_width_offset": 5,
+    "padding_horizontal": 0.0,
+    "padding_vertical": 0.0,
+    "radius": 0
   }
 }
 ```
 `id` (required), `height_percent`, `item_count` (default `2`, how many
-items are visible at once), `bg_image` (optional background), `fit`
-(default `"cover"`), `bg_fit` (default `"cover"`).
+items are visible at once; decimals allowed for a peek), `bg_image`
+(optional background), `fit` (default `"cover"`), `bg_fit` (default
+`"cover"`), `item_margin_horizontal` (px on each side of an item, default
+`5`), `item_width_offset` (px subtracted from each item width, default: the
+margin), `padding_horizontal`/`padding_vertical` (fraction of width, default
+`0`), `radius` (image corner radius in px, default `0`).
 
 ### `CAROUSEL` — horizontal product row
 ```json
