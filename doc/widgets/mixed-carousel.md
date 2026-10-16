@@ -53,3 +53,16 @@ color, title and description.
 
 Auto-plays every `autoplay_interval` seconds; stops permanently the first
 time the user drags a page.
+
+## Layout params (1.5.0)
+
+All optional; defaults keep the previous look. Sizes are px.
+
+- `autoplay` — auto-advance pages (default on); `0`/`false` disables it.
+- `viewport_fraction` — share of the width each page takes, `(0, 1]`
+  (default `0.8`).
+- `page_spacing` — horizontal padding around each page (default `6`).
+- `radius` — page card corner radius (default `16`).
+- `image_radius` — corner radius of image pages' photo (default `12`).
+- `inner_padding` — padding inside each page card (default `14`).
+- `title_size` / `description_size` — default `19` / `13`.

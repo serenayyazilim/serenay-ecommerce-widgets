@@ -43,3 +43,12 @@ One or more silent, looping, auto-playing videos fetched by `id` via
   applies to the single-video layout.
 - Tapping a video resolves its `action` through the
   [action/tap contract](action-contract.md).
+
+## Style params (1.5.0)
+
+All optional; defaults keep the previous look.
+
+- `radius` — corner radius of each video in px (default `0`).
+- `bg_color` — background of the multi-video list, hex (default white).
+- `overlay_color` / `overlay_opacity` — tint behind the single-video
+  `textparams` overlay (default black at `0.3`).

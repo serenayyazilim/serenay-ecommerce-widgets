@@ -6,6 +6,7 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/product_card_data.dart';
 import '../../contracts/product_query.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import 'rich_product_card.dart';
 
 /// FLASHSALE: an animated countdown bar while the sale is active, and
@@ -51,17 +52,20 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     if (_inlineMode) {
       _inlineFuture = widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
     }
+    final start = _colorStart;
+    final end = _colorEnd;
     _colorController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    );
+    if (parseBool(widget.params['animate']) ?? true) _colorController.repeat(reverse: true);
     _colorA = ColorTween(
-      begin: widget.theme.discountColor,
-      end: widget.theme.secondaryColor,
+      begin: start,
+      end: end,
     ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
     _colorB = ColorTween(
-      begin: widget.theme.secondaryColor,
-      end: widget.theme.discountColor,
+      begin: end,
+      end: start,
     ).animate(CurvedAnimation(parent: _colorController, curve: Curves.easeInOut));
     _borderController = AnimationController(
       vsync: this,
@@ -83,6 +87,11 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     _borderController.dispose();
     super.dispose();
   }
+
+  Color get _colorStart =>
+      parseColor(widget.params['color_start'], fallback: widget.theme.discountColor)!;
+  Color get _colorEnd =>
+      parseColor(widget.params['color_end'], fallback: widget.theme.secondaryColor)!;
 
   DateTime? _parseDate(dynamic raw) {
     if (raw == null) return null;
@@ -108,7 +117,13 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _FlashModal(params: widget.params, callbacks: widget.callbacks, theme: widget.theme),
+      builder: (context) => _FlashModal(
+        params: widget.params,
+        callbacks: widget.callbacks,
+        theme: widget.theme,
+        colorStart: _colorStart,
+        colorEnd: _colorEnd,
+      ),
     );
   }
 
@@ -122,38 +137,62 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     final title = (widget.params['title']?.toString()) ?? widget.theme.flashSaleTitleLabel;
     final subtitle = widget.params['subtitle']?.toString();
     final remaining = _endTime?.difference(now);
+    final params = widget.params;
+    final textColor = parseColor(params['text_color'], fallback: Colors.white)!;
+    final radius = parseDouble(params['radius']) ?? 12;
+    final showIcon = parseBool(params['show_icon']) ?? true;
+    final showBorder = parseBool(params['show_border']) ?? true;
+    final outerPadding = EdgeInsets.symmetric(
+      horizontal: parseDouble(params['padding_horizontal']) ?? 12,
+      vertical: parseDouble(params['padding_vertical']) ?? 6,
+    );
 
     final content = AnimatedBuilder(
       animation: _colorController,
       builder: (context, _) {
-        final c1 = _colorA.value ?? widget.theme.discountColor;
-        final c2 = _colorB.value ?? widget.theme.secondaryColor;
+        final c1 = _colorA.value ?? _colorStart;
+        final c2 = _colorB.value ?? _colorEnd;
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [c1, c2], begin: Alignment.centerLeft, end: Alignment.centerRight),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(radius),
             boxShadow: [BoxShadow(color: c1.withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 4))],
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
-              const Icon(Icons.bolt, color: Colors.white, size: 26),
-              const SizedBox(width: 10),
+              if (showIcon) ...[
+                Icon(Icons.bolt, color: textColor, size: 26),
+                const SizedBox(width: 10),
+              ],
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: parseDouble(params['title_size']) ?? 15,
+                      ),
+                    ),
                     if (subtitle != null)
-                      Text(subtitle, style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          color: textColor.withValues(alpha: 0.7),
+                          fontSize: parseDouble(params['subtitle_size']) ?? 11,
+                        ),
+                      ),
                   ],
                 ),
               ),
               if (remaining != null) _TimerChip(timerText: _timerText(remaining)),
               if (!_inlineMode) ...[
                 const SizedBox(width: 8),
-                const Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 20),
+                Icon(Icons.keyboard_arrow_up, color: textColor, size: 20),
               ],
             ],
           ),
@@ -161,23 +200,31 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
       },
     );
 
-    final borderedContent = AnimatedBuilder(
-      animation: _borderController,
-      builder: (context, child) => CustomPaint(
-        painter: _ProgressBorderPainter(progress: _borderController.value, radius: 14),
-        child: Padding(padding: const EdgeInsets.all(2.5), child: child),
-      ),
-      child: content,
-    );
+    final borderedContent = !showBorder
+        ? content
+        : AnimatedBuilder(
+            animation: _borderController,
+            builder: (context, child) => CustomPaint(
+              painter: _ProgressBorderPainter(
+                progress: _borderController.value,
+                radius: radius + 2,
+                color: parseColor(params['border_color'], fallback: const Color(0xFFFFD600))!,
+              ),
+              child: Padding(padding: const EdgeInsets.all(2.5), child: child),
+            ),
+            child: content,
+          );
 
     final header = _inlineMode ? borderedContent : GestureDetector(onTap: _openModal, child: borderedContent);
 
     if (!_inlineMode) {
-      return Padding(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), child: header);
+      return Padding(padding: outerPadding, child: header);
     }
 
+    final itemWidth = parseDouble(params['item_width']) ?? 160;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: outerPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -189,21 +236,22 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
               final products = snapshot.data ?? const [];
               if (products.isEmpty) return const SizedBox.shrink();
               return SizedBox(
-                height: 260,
+                height: parseDouble(params['height']) ?? 260,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: products.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                  separatorBuilder: (context, index) =>
+                      SizedBox(width: parseDouble(params['item_spacing']) ?? 12),
                   itemBuilder: (context, index) {
                     final builder = widget.callbacks.productCardBuilder;
                     return SizedBox(
-                      width: 160,
+                      width: itemWidth,
                       child: builder != null
                           ? builder(products[index])
                           : RichProductCard(
                               data: products[index],
                               callbacks: widget.callbacks,
-                              imageSize: 160,
+                              imageSize: itemWidth,
                               theme: widget.theme,
                             ),
                     );
@@ -252,21 +300,21 @@ class _TimerChip extends StatelessWidget {
 }
 
 class _ProgressBorderPainter extends CustomPainter {
-  _ProgressBorderPainter({required this.progress, required this.radius});
+  _ProgressBorderPainter({required this.progress, required this.radius, required Color color})
+      : _segPaint = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5
+          ..strokeCap = StrokeCap.round;
 
   final double progress;
   final double radius;
+  final Paint _segPaint;
 
   static const double _segmentRatio = 0.32;
 
   static final Paint _trackPaint = Paint()
     ..color = Colors.white.withValues(alpha: 0.2)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.5
-    ..strokeCap = StrokeCap.round;
-
-  static final Paint _segPaint = Paint()
-    ..color = const Color(0xFFFFD600)
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.5
     ..strokeCap = StrokeCap.round;
@@ -296,15 +344,26 @@ class _ProgressBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ProgressBorderPainter oldDelegate) => oldDelegate.progress != progress;
+  bool shouldRepaint(covariant _ProgressBorderPainter oldDelegate) =>
+      oldDelegate.progress != progress ||
+      oldDelegate.radius != radius ||
+      oldDelegate._segPaint.color != _segPaint.color;
 }
 
 class _FlashModal extends StatefulWidget {
-  const _FlashModal({required this.params, required this.callbacks, required this.theme});
+  const _FlashModal({
+    required this.params,
+    required this.callbacks,
+    required this.theme,
+    required this.colorStart,
+    required this.colorEnd,
+  });
 
   final Map<String, dynamic> params;
   final WidgetCallbacks callbacks;
   final EcommerceWidgetTheme theme;
+  final Color colorStart;
+  final Color colorEnd;
 
   @override
   State<_FlashModal> createState() => _FlashModalState();
@@ -356,6 +415,11 @@ class _FlashModalState extends State<_FlashModal> {
 
   String _pad(int n) => n.toString().padLeft(2, '0');
 
+  int get _columns {
+    final columns = parseInt(widget.params['columns']) ?? 2;
+    return columns > 0 ? columns : 2;
+  }
+
   String get _timerText {
     final d = _remaining.inDays;
     final h = _remaining.inHours % 24;
@@ -394,7 +458,7 @@ class _FlashModalState extends State<_FlashModal> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [widget.theme.discountColor, widget.theme.secondaryColor]),
+                  gradient: LinearGradient(colors: [widget.colorStart, widget.colorEnd]),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -420,8 +484,8 @@ class _FlashModalState extends State<_FlashModal> {
                     return GridView.builder(
                       controller: scrollController,
                       padding: const EdgeInsets.all(12),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: _columns,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
                         childAspectRatio: 0.6,

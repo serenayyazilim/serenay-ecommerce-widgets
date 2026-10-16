@@ -24,3 +24,13 @@ Unlike IMAGE, `height_percent` is ignored and `fit` defaults to
 don't crop the banner. Images with different aspect ratios will end up
 different heights within the same row, so use same-ratio images for an
 even row.
+
+## Layout params (1.5.0)
+
+All optional; sizes are px.
+
+- `spacing` — gap between images (default `0`).
+- `padding_horizontal` / `padding_vertical` — outer padding (default `0`).
+- `radius` — corner radius applied to every image; a per-item `radius`
+  still wins.
+- `bg_color` — row background, hex (default transparent).

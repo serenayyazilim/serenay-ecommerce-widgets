@@ -407,6 +407,9 @@ const _wireNames = {
   WidgetType.socialProof: 'SOCIALPROOF',
   WidgetType.sizeGuide: 'SIZEGUIDE',
   WidgetType.trustBadges: 'TRUSTBADGES',
+  WidgetType.brands: 'BRANDS',
+  WidgetType.bannerGrid: 'BANNERGRID',
+  WidgetType.announcementBar: 'ANNOUNCEMENTBAR',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -432,6 +435,17 @@ const List<String> _boxFitOptions = [
   'fit_height',
   'scale_down',
   'none',
+];
+
+const List<_ParamField> _gridFields = [
+  _ParamField('category_id', 'Category ID', _FieldKind.number),
+  _ParamField('limit', 'Limit', _FieldKind.number),
+  _ParamField('columns', 'Columns', _FieldKind.number),
+  _ParamField('spacing', 'Spacing', _FieldKind.number),
+  _ParamField('run_spacing', 'Run spacing', _FieldKind.number),
+  _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+  _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+  _ParamField('bg_color', 'Background', _FieldKind.color),
 ];
 
 final Map<WidgetType, List<_ParamField>> _paramSchemas = {
@@ -500,17 +514,15 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   WidgetType.carousel: const [
     _ParamField('category_id', 'Category ID', _FieldKind.number),
     _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField('item_width', 'Item width', _FieldKind.number),
+    _ParamField('height', 'Height', _FieldKind.number),
+    _ParamField('item_spacing', 'Item spacing', _FieldKind.number),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
   ],
-  WidgetType.grid: const [
-    _ParamField('category_id', 'Category ID', _FieldKind.number),
-    _ParamField('limit', 'Limit', _FieldKind.number),
-    _ParamField('columns', 'Columns', _FieldKind.number),
-  ],
-  WidgetType.productCard: const [
-    _ParamField('category_id', 'Category ID', _FieldKind.number),
-    _ParamField('limit', 'Limit', _FieldKind.number),
-    _ParamField('columns', 'Columns', _FieldKind.number),
-  ],
+  WidgetType.grid: _gridFields,
+  WidgetType.productCard: _gridFields,
   WidgetType.flashSale: const [
     _ParamField('title', 'Title', _FieldKind.text),
     _ParamField('subtitle', 'Subtitle', _FieldKind.text),
@@ -522,6 +534,17 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
       _FieldKind.enumSelect,
       options: ['modal', 'inline'],
     ),
+    _ParamField('color_start', 'Color start', _FieldKind.color),
+    _ParamField('color_end', 'Color end', _FieldKind.color),
+    _ParamField('text_color', 'Text color', _FieldKind.color),
+    _ParamField('border_color', 'Border color', _FieldKind.color),
+    _ParamField('animate', 'Animate', _FieldKind.boolValue),
+    _ParamField('show_icon', 'Show icon', _FieldKind.boolValue),
+    _ParamField('show_border', 'Show border', _FieldKind.boolValue),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('title_size', 'Title size', _FieldKind.number),
+    _ParamField('item_width', 'Item width (inline)', _FieldKind.number),
+    _ParamField('columns', 'Columns (modal)', _FieldKind.number),
   ],
   WidgetType.visitedProducts: const [
     _ParamField('limit', 'Limit', _FieldKind.number),
@@ -547,6 +570,10 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
       options: ['horizontal', 'vertical'],
     ),
     _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+    _ParamField('overlay_color', 'Overlay color', _FieldKind.color),
+    _ParamField('overlay_opacity', 'Overlay opacity', _FieldKind.number),
   ],
   WidgetType.modal: const [
     _ParamField('radius', 'Radius', _FieldKind.number),
@@ -562,12 +589,33 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   ],
   WidgetType.imageList: const [
     _ParamField('list', 'Images (JSON)', _FieldKind.json),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
   ],
   WidgetType.story: const [
     _ParamField('list', 'Stories (JSON)', _FieldKind.json),
+    _ParamField('size', 'Size', _FieldKind.number),
+    _ParamField('ring_width', 'Ring width', _FieldKind.number),
+    _ParamField('ring_colors', 'Ring colors (JSON)', _FieldKind.json),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('show_title', 'Show title', _FieldKind.boolValue),
+    _ParamField('title_size', 'Title size', _FieldKind.number),
+    _ParamField('title_color', 'Title color', _FieldKind.color),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
   ],
   WidgetType.mixedCarousel: const [
     _ParamField('items', 'Items (JSON)', _FieldKind.json),
+    _ParamField('autoplay', 'Autoplay', _FieldKind.boolValue),
+    _ParamField('viewport_fraction', 'Viewport fraction', _FieldKind.number),
+    _ParamField('page_spacing', 'Page spacing', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('image_radius', 'Image radius', _FieldKind.number),
+    _ParamField('inner_padding', 'Inner padding', _FieldKind.number),
+    _ParamField('title_size', 'Title size', _FieldKind.number),
+    _ParamField('description_size', 'Description size', _FieldKind.number),
   ],
   WidgetType.rating: const [
     _ParamField('rating', 'Rating', _FieldKind.number),
@@ -585,6 +633,65 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
   ],
   WidgetType.categoryMenu: const [
     _ParamField('list', 'Categories (JSON)', _FieldKind.json),
+    _ParamField('image_size', 'Image size', _FieldKind.number),
+    _ParamField('item_width', 'Item width', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+    _ParamField('image_bg_color', 'Image background', _FieldKind.color),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('title_size', 'Title size', _FieldKind.number),
+    _ParamField('title_color', 'Title color', _FieldKind.color),
+    _ParamField('max_lines', 'Max lines', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.brands: const [
+    _ParamField('list', 'Brands (JSON)', _FieldKind.json),
+    _ParamField('layout', 'Layout', _FieldKind.enumSelect, options: ['row', 'grid']),
+    _ParamField('columns', 'Columns (grid)', _FieldKind.number),
+    _ParamField('item_width', 'Item width (row)', _FieldKind.number),
+    _ParamField('aspect_ratio', 'Aspect ratio', _FieldKind.number),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('item_padding', 'Item padding', _FieldKind.number),
+    _ParamField('item_bg_color', 'Item background', _FieldKind.color),
+    _ParamField('border_color', 'Border color', _FieldKind.color),
+    _ParamField('border_width', 'Border width', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+    _ParamField('show_title', 'Show title', _FieldKind.boolValue),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.bannerGrid: const [
+    _ParamField('list', 'Banners (JSON)', _FieldKind.json),
+    _ParamField(
+      'layout',
+      'Layout',
+      _FieldKind.enumSelect,
+      options: ['left_big', 'right_big', 'top_big', 'grid'],
+    ),
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('big_ratio', 'Big ratio', _FieldKind.number),
+    _ParamField('columns', 'Columns (grid)', _FieldKind.number),
+    _ParamField('aspect_ratio', 'Aspect ratio (grid)', _FieldKind.number),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+  ],
+  WidgetType.announcementBar: const [
+    _ParamField('text', 'Text', _FieldKind.text),
+    _ParamField('list', 'Messages (JSON)', _FieldKind.json),
+    _ParamField('interval', 'Interval (s)', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+    _ParamField('text_color', 'Text color', _FieldKind.color),
+    _ParamField('text_size', 'Text size', _FieldKind.number),
+    _ParamField('bold', 'Bold', _FieldKind.boolValue),
+    _ParamField(
+      'align',
+      'Align',
+      _FieldKind.enumSelect,
+      options: ['left', 'center', 'right'],
+    ),
   ],
   WidgetType.loyaltyProgress: const [
     _ParamField('title', 'Title', _FieldKind.text),
@@ -1467,6 +1574,17 @@ List<ProductCardData> _mockProducts() => List.generate(
 final _mockScreenJson = {
   'data': [
     {
+      'type': 'ANNOUNCEMENTBAR',
+      'params': {
+        'bg_color': '#111111',
+        'interval': 4,
+        'list': [
+          'Free shipping over 500 TL',
+          {'text': 'Autumn sale: up to 50% off', 'type': 'category', 'id': 75},
+        ],
+      },
+    },
+    {
       'type': 'TEXT',
       'params': {
         'text': 'Serenay E-commerce Widgets',
@@ -1653,6 +1771,37 @@ final _mockScreenJson = {
             'type': 'category',
             'id': 2,
           },
+        ],
+      },
+    },
+    {
+      'type': 'BANNERGRID',
+      'params': {
+        'layout': 'left_big',
+        'height_percent': 0.6,
+        'spacing': 8,
+        'radius': 8,
+        'padding_horizontal': 12,
+        'padding_vertical': 8,
+        'list': [
+          {'url': _placeholder('Big banner', 400, 480, seed: 17), 'type': 'category', 'id': 1},
+          {'url': _placeholder('Small 1', 400, 240, seed: 18), 'type': 'category', 'id': 2},
+          {'url': _placeholder('Small 2', 400, 240, seed: 19), 'type': 'collection', 'id': 3},
+        ],
+      },
+    },
+    {
+      'type': 'BRANDS',
+      'params': {
+        'show_title': true,
+        'list': [
+          for (final (i, name) in ['Nike', 'Adidas', 'Puma', 'Vans', 'Levi\'s'].indexed)
+            {
+              'image': _placeholder(name, 160, 160, seed: 20 + i),
+              'title': name,
+              'type': 'brand',
+              'id': i + 1,
+            },
         ],
       },
     },

@@ -56,6 +56,9 @@ widgets and documented once:
 | `SOCIALPROOF` | [social-proof.md](social-proof.md) |
 | `SIZEGUIDE` | [size-guide.md](size-guide.md) |
 | `TRUSTBADGES` | [trust-badges.md](trust-badges.md) |
+| `BRANDS` | [brands.md](brands.md) |
+| `BANNERGRID` | [banner-grid.md](banner-grid.md) |
+| `ANNOUNCEMENTBAR` | [announcement-bar.md](announcement-bar.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

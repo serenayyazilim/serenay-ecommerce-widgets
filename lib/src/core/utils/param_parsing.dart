@@ -58,3 +58,14 @@ BoxFit parseBoxFit(dynamic value, {BoxFit fallback = BoxFit.cover}) {
       return fallback;
   }
 }
+
+/// Parses a widget/JSON color param: `"#RRGGBB"`, `"RRGGBB"` (opaque) or
+/// `"#AARRGGBB"`/`"AARRGGBB"` (with alpha). Returns [fallback] for anything
+/// else, instead of throwing.
+Color? parseColor(dynamic value, {Color? fallback}) {
+  if (value is! String) return fallback;
+  final hex = value.trim().replaceFirst('#', '');
+  if (hex.length != 6 && hex.length != 8) return fallback;
+  final parsed = int.tryParse(hex.length == 6 ? 'FF$hex' : hex, radix: 16);
+  return parsed != null ? Color(parsed) : fallback;
+}

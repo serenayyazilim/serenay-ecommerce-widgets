@@ -26,3 +26,15 @@ nothing while loading resolves to an empty list.
 CAROUSEL, [GRID](grid.md), [PRODUCTCARD](product-card.md) and
 [FLASHSALE](flash-sale.md)'s product sheet all render the exact same rich
 card — CAROUSEL just lays it out in a horizontal row instead of a grid.
+
+## Layout params (1.5.0)
+
+All optional; defaults keep the previous layout. Sizes are px.
+
+- `item_width` — card width (default `160`).
+- `height` — row height (default `260`).
+- `item_spacing` — gap between cards (default `12`).
+- `padding_horizontal` — space before the first / after the last card
+  (default `16`).
+- `padding_vertical` — space above and below the row (default `0`).
+- `bg_color` — row background, hex `"#RRGGBB"` (default transparent).

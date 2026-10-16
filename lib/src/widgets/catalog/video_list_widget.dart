@@ -42,6 +42,13 @@ class _VideoListWidgetState extends State<VideoListWidget> {
 
   BoxFit get _fit => parseBoxFit(widget.params['fit']);
 
+  /// Rounds [child]'s corners when the `radius` param is set.
+  Widget _clip(Widget child) {
+    final radius = _pd('radius', 0);
+    if (radius <= 0) return child;
+    return ClipRRect(borderRadius: BorderRadius.circular(radius), child: child);
+  }
+
   Axis _scrollDirection() =>
       widget.params['scroll_direction'] == 'horizontal' ? Axis.horizontal : Axis.vertical;
 
@@ -102,14 +109,17 @@ class _VideoListWidgetState extends State<VideoListWidget> {
       child: SizedBox(
         width: width,
         height: height,
-        child: Stack(
+        child: _clip(Stack(
           children: [
             MutedLoopVideo(url: video.video, fit: _fit),
             if (video.title != null)
               Container(
                 width: width,
                 height: height,
-                color: textParams != null ? Colors.black.withValues(alpha: 0.3) : Colors.transparent,
+                color: textParams != null
+                    ? parseColor(widget.params['overlay_color'], fallback: Colors.black)!
+                        .withValues(alpha: _pd('overlay_opacity', 0.3))
+                    : Colors.transparent,
                 child: textParams == null
                     ? null
                     : Padding(
@@ -122,7 +132,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                               video.title!,
                               style: TextStyle(
                                 height: 1.1,
-                                color: _parseColor(textParams['fontcolor_title']?.toString()),
+                                color: parseColor(textParams['fontcolor_title'], fallback: Colors.white),
                                 fontSize: parseDouble(textParams['fontsize_title']) ?? 16,
                                 fontWeight: _fontWeight(textParams['fontweight_title']?.toString()),
                               ),
@@ -131,7 +141,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                               Text(
                                 video.subtitle!,
                                 style: TextStyle(
-                                  color: _parseColor(textParams['fontcolor_subtitle']?.toString()),
+                                  color: parseColor(textParams['fontcolor_subtitle'], fallback: Colors.white),
                                   fontSize: parseDouble(textParams['fontsize_subtitle']) ?? 13,
                                   fontWeight: _fontWeight(textParams['fontweight_subtitle']?.toString()),
                                 ),
@@ -141,20 +151,14 @@ class _VideoListWidgetState extends State<VideoListWidget> {
                       ),
               ),
           ],
-        ),
+        )),
       ),
     );
   }
 
-  Color _parseColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.white;
-    final value = int.tryParse('FF${hex.replaceFirst('#', '')}', radix: 16);
-    return value != null ? Color(value) : Colors.white;
-  }
-
   Widget _buildList(BuildContext context, List<VideoItem> videos) {
     return Container(
-      color: Colors.white,
+      color: parseColor(widget.params['bg_color'], fallback: Colors.white),
       height: MediaQuery.of(context).size.height * _pd('container_height', 0.3),
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -170,7 +174,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * _pd('width_percent', 1.0),
               height: MediaQuery.of(context).size.height * _pd('height_percent', 0.3),
-              child: MutedLoopVideo(url: videos[index].video, fit: _fit),
+              child: _clip(MutedLoopVideo(url: videos[index].video, fit: _fit)),
             ),
           ),
         ),

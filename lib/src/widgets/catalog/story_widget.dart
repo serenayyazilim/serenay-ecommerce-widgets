@@ -6,6 +6,7 @@ import '../../callbacks/widget_callbacks.dart';
 import '../../contracts/widget_action.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/theme/ecommerce_widget_theme.dart';
+import '../../core/utils/param_parsing.dart';
 import 'catalog_network_image.dart';
 
 /// STORY: an Instagram-style story tray. Built from scratch (no third-party
@@ -33,16 +34,38 @@ class StoryWidget extends StatelessWidget {
     final stories = _stories;
     if (stories.isEmpty) return const SizedBox.shrink();
 
-    return SizedBox(
-      height: 96,
+    final size = parseDouble(params['size']) ?? 56;
+    final ringWidth = parseDouble(params['ring_width']) ?? 2;
+    final ringColors = ((params['ring_colors'] as List?) ?? const [])
+        .map((c) => parseColor(c))
+        .whereType<Color>()
+        .toList();
+    final gradientColors = ringColors.isEmpty
+        ? const [Color(0xFFFF512F), Color(0xFFDD2476)]
+        : ringColors.length == 1
+            ? [ringColors.first, ringColors.first]
+            : ringColors;
+    final showTitle = parseBool(params['show_title']) ?? false;
+    final titleSize = parseDouble(params['title_size']) ?? 12;
+    final titleColor = parseColor(params['title_color'], fallback: theme.textPrimaryColor);
+    // Avatar = image + 2px white gap on each side, wrapped in the ring.
+    final avatarSize = size + 4 + 2 * ringWidth;
+
+    return Container(
+      height: avatarSize + 32 + (showTitle ? titleSize * 1.4 + AppDimens.spaceXs : 0),
+      color: parseColor(params['bg_color']),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.spaceM),
+        padding: EdgeInsets.symmetric(
+          horizontal: parseDouble(params['padding_horizontal']) ?? AppDimens.spaceM,
+        ),
         itemCount: stories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: AppDimens.spaceM),
+        separatorBuilder: (context, index) =>
+            SizedBox(width: parseDouble(params['spacing']) ?? AppDimens.spaceM),
         itemBuilder: (context, index) {
           final story = stories[index];
           final thumbnail = story['thumbnail']?.toString() ?? '';
+          final title = story['title']?.toString() ?? '';
           return GestureDetector(
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
@@ -55,32 +78,43 @@ class StoryWidget extends StatelessWidget {
                 ),
               ),
             ),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFFF512F), Color(0xFFDD2476)],
+            child: SizedBox(
+              width: avatarSize,
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(ringWidth),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(colors: gradientColors),
                     ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: SizedBox(
-                        width: 56,
-                        height: 56,
-                        child: CatalogNetworkImage(
-                          url: thumbnail,
-                          errorBuilder: callbacks.imageErrorBuilder,
+                    child: CircleAvatar(
+                      radius: size / 2 + 2,
+                      backgroundColor: Colors.white,
+                      child: ClipOval(
+                        child: SizedBox(
+                          width: size,
+                          height: size,
+                          child: CatalogNetworkImage(
+                            url: thumbnail,
+                            errorBuilder: callbacks.imageErrorBuilder,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  if (showTitle) ...[
+                    const SizedBox(height: AppDimens.spaceXs),
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: titleSize, color: titleColor),
+                    ),
+                  ],
+                ],
+              ),
             ),
           );
         },

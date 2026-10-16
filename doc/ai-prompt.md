@@ -77,8 +77,8 @@ Each entry in `data` (or in the bare array) is:
 ### 2.1 The action/tap contract (shared by many widgets)
 
 IMAGE, SLIDER, IMAGECAROUSEL, MODAL, MIXEDCAROUSEL's image pages, STORY's
-footer CTA, SEARCH's submit, CATEGORYMENU items, and ABANDONEDCART's CTA all
-resolve taps through the same shape, embedded directly in `params` (or in a
+footer CTA, SEARCH's submit, CATEGORYMENU items, ABANDONEDCART's CTA,
+BRANDS and BANNERGRID items, and ANNOUNCEMENTBAR messages all resolve taps through the same shape, embedded directly in `params` (or in a
 list item):
 
 ```json
@@ -177,7 +177,7 @@ all optional.
 
 ## 3. Widget reference
 
-33 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
+36 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
 widget as `PRODUCTCARD` (no distinct schema). Any other string renders as an
 empty box.
 
@@ -243,6 +243,9 @@ Fields: `url` (required), plus the full §2.1 action contract inline
 Each `list` entry uses the same fields as IMAGE, laid out in equal-width
 columns, except `height_percent` is ignored and `fit` defaults to
 `fit_width` (natural aspect ratio, no cropping).
+Optional layout (px): `spacing` (0, gap between images),
+`padding_horizontal` / `padding_vertical` (0), `radius` (all images; a
+per-item `radius` wins), `bg_color`.
 
 ### `SLIDER` — paged image slider (fetched by id)
 ```json
@@ -311,12 +314,16 @@ margin), `padding_horizontal`/`padding_vertical` (fraction of width, default
 stops permanently once the user drags) and `autoplay_interval` (seconds
 between auto-scrolls, default `5`). Renders the rich product card in a
 horizontal row.
+Optional layout (px): `item_width` (160), `height` (260), `item_spacing`
+(12), `padding_horizontal` (16), `padding_vertical` (0), `bg_color`.
 
 ### `GRID` — 2-column product grid
 ```json
 { "type": "GRID", "params": { "search": "TEAM" } }
 ```
 Same product query contract as CAROUSEL, rendered as a 2-column grid.
+Optional layout (px): `columns`, `spacing` (8), `run_spacing` (=
+`spacing`), `padding_horizontal` / `padding_vertical` (8), `bg_color`.
 
 ### `PRODUCTCARD` — 2-column product grid (distinct backend type from GRID)
 ```json
@@ -324,6 +331,8 @@ Same product query contract as CAROUSEL, rendered as a 2-column grid.
 ```
 Visually/behaviorally identical to GRID; kept as its own type so a backend
 can configure a "product card section" separately from a plain grid.
+Optional layout (px): `columns`, `spacing` (8), `run_spacing` (=
+`spacing`), `padding_horizontal` / `padding_vertical` (8), `bg_color`.
 
 ### `FLASHSALE` — countdown bar with a product sheet
 ```json
@@ -343,6 +352,12 @@ omit for a countdown-less bar that never expires. `display_mode` —
 `"modal"` (default; tap opens a bottom sheet grid) or `"inline"` (products
 render eagerly in a row under the bar). Every other field is a §2.2 product
 query.
+Optional style: `color_start` / `color_end` (gradient, hex), `animate`
+(default on), `text_color` (white), `title_size` (15), `subtitle_size`
+(11), `show_icon` / `show_border` (on), `border_color` (`#FFD600`),
+`radius` (12), `padding_horizontal` / `padding_vertical` (12 / 6); inline
+row `item_width` (160) / `height` (260) / `item_spacing` (12); modal sheet
+`columns` (2).
 
 ### `MODAL` — once-per-session popup
 ```json
@@ -402,6 +417,9 @@ render as a 2x2 mini grid. Both types accept `bg_color`,
 `title`/`title_color`, `description`/`description_color` to style the page
 shell. Always auto-plays (no on/off switch); stops permanently once the
 user drags.
+Optional layout: `autoplay` (default on), `viewport_fraction` (0.8),
+`page_spacing` (6), `radius` (16), `image_radius` (12), `inner_padding`
+(14), `title_size` (19), `description_size` (13).
 
 ### `VIDEOLIST` — one or more silent auto-playing videos (fetched by id)
 ```json
@@ -432,6 +450,9 @@ when more than one video is fetched. `fit` (default `"cover"`).
 `textparams` (single-video layout only) — `horizontal`/`vertical` alignment,
 `fontcolor_*` (hex, no `#`), `fontsize_*`, `fontweight_*`
 (`"regular"`/`"normal"`/`"bold"`).
+Optional style: `radius` (0), `bg_color` (multi-video list, default
+white), `overlay_color` / `overlay_opacity` (single-video text overlay
+tint, default black / 0.3).
 
 ### `STORY` — Instagram-style story tray (inline list)
 ```json
@@ -456,6 +477,10 @@ present, tapping it uses `type`/`product_id_or_url`: `type: "product"`
 resolves as a product tap on `product_id_or_url`; any other `type` with a
 string `product_id_or_url` opens it as an external link). Renders nothing
 if `list` is empty.
+Optional tray params (px): `size` (56, thumbnail diameter), `ring_width`
+(2), `ring_colors` (list of hex), `spacing` (16), `padding_horizontal`
+(16), `show_title` (off; shows each entry's `title`), `title_size` (12),
+`title_color`, `bg_color`.
 
 ### `VISITEDPRODUCTS` — locally-tracked recently-viewed products
 ```json
@@ -581,6 +606,10 @@ ISO-8601; omit for no countdown/no expiry).
 }
 ```
 Each `list` entry is `title` + `image` plus the §2.1 action contract.
+Optional layout (px): `image_size` (56), `item_width` (`image_size + 8`),
+`radius` (`image_size / 2` = circle; `0` = square), `fit`,
+`image_bg_color`, `spacing` (16), `padding_horizontal` (16), `title_size`
+(12), `title_color`, `max_lines` (1), `height` (auto), `bg_color`.
 
 ### `LOYALTYPROGRESS` — "N more to go" progress bar
 ```json
@@ -742,6 +771,74 @@ labels), `rows` (one array of cell strings per row — length should match
 Each `list` entry: `icon` (one of `shipping`, `secure`, `payment`,
 `returns`, `support`, `guarantee` — anything else falls back to a generic
 checkmark) + `label`. Hides itself when `list` is empty/missing.
+
+### `BRANDS` — brand logo row or grid (inline list)
+```json
+{
+  "type": "BRANDS",
+  "params": {
+    "layout": "row",
+    "list": [
+      { "image": "https://.../nike.png", "title": "Nike", "type": "brand", "id": 12 },
+      { "image": "https://.../adidas.png", "title": "Adidas", "type": "brand", "id": 13 }
+    ]
+  }
+}
+```
+Each `list` entry is `image` + optional `title` plus the §2.1 action
+contract. Optional (px): `layout` (`"row"` default / `"grid"`), `columns`
+(4, grid), `item_width` (88, row), `aspect_ratio` (1 = square tile),
+`spacing` (8), `padding_horizontal` / `padding_vertical` (16 / 8), `radius`
+(8), `item_padding` (8), `item_bg_color` (white), `border_color`,
+`border_width` (1; 0 = none), `fit` (`"contain"`), `show_title` (off),
+`title_size` (12), `title_color`, `bg_color`. Hides itself when `list` is
+empty.
+
+### `BANNERGRID` — banner mosaic (inline list)
+```json
+{
+  "type": "BANNERGRID",
+  "params": {
+    "layout": "left_big",
+    "height_percent": 0.6,
+    "spacing": 8,
+    "radius": 8,
+    "list": [
+      { "url": "https://.../big.jpg", "type": "category", "id": 1 },
+      { "url": "https://.../small-1.jpg", "type": "category", "id": 2 },
+      { "url": "https://.../small-2.jpg", "type": "collection", "id": 3 }
+    ]
+  }
+}
+```
+Each `list` entry is `url` + optional `fit` plus the §2.1 action contract.
+`layout`: `"left_big"` (default; big left, two stacked right),
+`"right_big"`, `"top_big"` (big top, two below) — these use the first 3
+items and fall back to `"grid"` with fewer — or `"grid"` (equal cells).
+Optional (px): `height_percent` (0.6, presets), `big_ratio` (0.5, share of
+the big banner), `columns` (2, grid), `aspect_ratio` (1, grid cell),
+`spacing` (8), `radius` (0), `fit` (`"cover"`), `padding_horizontal` /
+`padding_vertical` (0), `bg_color`. Hides itself when `list` is empty.
+
+### `ANNOUNCEMENTBAR` — thin rotating message strip
+```json
+{
+  "type": "ANNOUNCEMENTBAR",
+  "params": {
+    "bg_color": "#111111",
+    "list": [
+      "Free shipping over 500 TL",
+      { "text": "Autumn sale: up to 50% off", "type": "category", "id": 75 }
+    ]
+  }
+}
+```
+`text` (one message; put §2.1 action fields beside it to make it tappable)
+or `list` (rotating; plain strings, or `{text, ...action}` objects — only
+items with a `type` are tappable). Optional (px): `interval` (4 s),
+`bg_color` (theme primary), `text_color` (white), `text_size` (13), `bold`
+(on), `align` (`"left"` / `"center"` default / `"right"`),
+`padding_horizontal` / `padding_vertical` (16 / 8). Single line, ellipsized.
 
 ## 4. Output rules
 

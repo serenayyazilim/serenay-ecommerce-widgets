@@ -1,3 +1,37 @@
+## 1.5.0
+
+- New widgets:
+  - `BRANDS` — brand logo tiles as a scrolling row or a grid.
+  - `BANNERGRID` — banner mosaic (`left_big`, `right_big`, `top_big`,
+    `grid`).
+  - `ANNOUNCEMENTBAR` — thin message strip; a `list` rotates every
+    `interval` seconds.
+- More layout/style params on existing widgets. All optional; defaults keep
+  the 1.4.4 look:
+  - `CAROUSEL` — `item_width`, `height`, `item_spacing`,
+    `padding_horizontal`, `padding_vertical`, `bg_color`.
+  - `GRID` / `PRODUCTCARD` — `spacing`, `run_spacing`, `padding_horizontal`,
+    `padding_vertical`, `bg_color`.
+  - `STORY` — `size`, `ring_width`, `ring_colors`, `spacing`,
+    `padding_horizontal`, `show_title`, `title_size`, `title_color`,
+    `bg_color`.
+  - `CATEGORYMENU` — `image_size`, `item_width`, `radius`, `fit`,
+    `image_bg_color`, `spacing`, `padding_horizontal`, `title_size`,
+    `title_color`, `max_lines`, `height`, `bg_color`.
+  - `IMAGELIST` — `spacing`, `padding_horizontal`, `padding_vertical`,
+    `radius`, `bg_color`.
+  - `VIDEOLIST` — `radius`, `bg_color`, `overlay_color`, `overlay_opacity`.
+  - `FLASHSALE` — `color_start`, `color_end`, `animate`, `text_color`,
+    `title_size`, `subtitle_size`, `show_icon`, `show_border`,
+    `border_color`, `radius`, `padding_horizontal`, `padding_vertical`,
+    inline `item_width` / `height` / `item_spacing`, modal `columns`.
+  - `MIXEDCAROUSEL` — `autoplay`, `viewport_fraction`, `page_spacing`,
+    `radius`, `image_radius`, `inner_padding`, `title_size`,
+    `description_size`.
+- Color params accept `#RRGGBB`, `RRGGBB` or `#AARRGGBB`.
+- `GRID` / `PRODUCTCARD`: `columns: 0` (or negative) now falls back to the
+  theme default instead of crashing.
+
 ## 1.4.4
 
 - `IMAGECAROUSEL` gains optional layout params; all default to the previous

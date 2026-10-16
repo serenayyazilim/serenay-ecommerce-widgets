@@ -33,7 +33,13 @@ class MixedCarouselWidget extends StatefulWidget {
 }
 
 class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
-  final _pageController = PageController(viewportFraction: 0.8);
+  late final double _viewportFraction = () {
+    final value = parseDouble(widget.params['viewport_fraction']) ?? 0.8;
+    return value > 0 && value <= 1 ? value : 0.8;
+  }();
+  late final _pageController = PageController(viewportFraction: _viewportFraction);
+  double _p(String key, double fallback) => parseDouble(widget.params[key]) ?? fallback;
+
   late final _autoplay = AutoplayController(
     canAdvance: () => _pageController.hasClients && _items.length >= 2,
     advance: () {
@@ -55,7 +61,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   @override
   void initState() {
     super.initState();
-    _autoplay.start();
+    if (parseBool(widget.params['autoplay']) ?? true) _autoplay.start();
   }
 
   @override
@@ -65,12 +71,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     super.dispose();
   }
 
-  Color _bgColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.white;
-    final value = hex.replaceFirst('#', '');
-    final parsed = int.tryParse('FF$value', radix: 16);
-    return parsed != null ? Color(parsed) : Colors.white;
-  }
+  Color _bgColor(dynamic hex) => parseColor(hex, fallback: Colors.white)!;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
               padEnds: false,
               itemCount: items.length,
               itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding: EdgeInsets.symmetric(horizontal: _p('page_spacing', 6)),
                 child: _buildPage(items[index]),
               ),
             ),
@@ -109,9 +110,11 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
   /// `item_type: "products"` pages have a real minimum (the 2x2 mini grid);
   /// image pages just fill whatever space they're given.
   double _requiredPageHeight(Map<String, dynamic> item, double width) {
-    const pageViewportFraction = 0.8;
-    const pagePadding = 6.0; // horizontal padding around each PageView page
-    const containerPadding = 14.0; // _buildPage's Container padding
+    final pageViewportFraction = _viewportFraction;
+    final pagePadding = _p('page_spacing', 6); // horizontal padding around each PageView page
+    final containerPadding = _p('inner_padding', 14); // _buildPage's Container padding
+    final titleSize = _p('title_size', 19);
+    final descriptionSize = _p('description_size', 13);
     const gridSpacing = 8.0;
     const cardPadding = 8.0;
     // Non-image chrome per mini tile: padding + spacing + title line + spacing + price line.
@@ -121,8 +124,10 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     final hasDescription = (item['description']?.toString())?.isNotEmpty ?? false;
     var headerHeight = 0.0;
     if (hasTitle || hasDescription) {
-      headerHeight += hasTitle ? (hasDescription ? 22.0 : 44.0) : 0.0;
-      headerHeight += hasDescription ? 35.0 : 0.0;
+      // One title line is ~22px at the default 19px font; two description lines ~35px at 13px.
+      final titleLine = titleSize * 22 / 19;
+      headerHeight += hasTitle ? (hasDescription ? titleLine : titleLine * 2) : 0.0;
+      headerHeight += hasDescription ? descriptionSize * 35 / 13 : 0.0;
       headerHeight += 10.0;
     }
 
@@ -140,15 +145,15 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
 
   Widget _buildPage(Map<String, dynamic> item) {
     final itemType = item['item_type']?.toString();
-    final bgColor = _bgColor(item['bg_color']?.toString());
+    final bgColor = _bgColor(item['bg_color']);
     final title = item['title']?.toString();
-    final titleColor = _bgColor(item['title_color']?.toString());
+    final titleColor = _bgColor(item['title_color']);
     final description = item['description']?.toString();
-    final descriptionColor = _bgColor(item['description_color']?.toString());
+    final descriptionColor = _bgColor(item['description_color']);
 
     return Container(
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(16)),
-      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(_p('radius', 16))),
+      padding: EdgeInsets.all(_p('inner_padding', 14)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -160,7 +165,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
               style: TextStyle(
                 color: titleColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 19,
+                fontSize: _p('title_size', 19),
                 height: 1.15,
               ),
             ),
@@ -170,7 +175,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
               description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: descriptionColor, fontSize: 13),
+              style: TextStyle(color: descriptionColor, fontSize: _p('description_size', 13)),
             ),
           ],
           if (title != null || description != null) const SizedBox(height: 10),
@@ -191,7 +196,7 @@ class _MixedCarouselWidgetState extends State<MixedCarouselWidget> {
     return GestureDetector(
       onTap: () => widget.callbacks.onAction(action),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(_p('image_radius', 12)),
         child: CatalogNetworkImage(
           url: url,
           width: double.infinity,

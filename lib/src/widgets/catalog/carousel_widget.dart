@@ -27,18 +27,18 @@ class CarouselWidget extends StatefulWidget {
   State<CarouselWidget> createState() => _CarouselWidgetState();
 }
 
-const _kItemWidth = 160.0;
-const _kItemSpacing = 12.0;
-
 class _CarouselWidgetState extends State<CarouselWidget> {
   late final Future<List<ProductCardData>> _future =
       widget.callbacks.fetchProducts(ProductQuery.fromParams(widget.params));
   final _scrollController = ScrollController();
   int _itemCount = 0;
+
+  double get _itemWidth => parseDouble(widget.params['item_width']) ?? 160;
+  double get _itemSpacing => parseDouble(widget.params['item_spacing']) ?? 12;
   late final _autoplay = AutoplayController(
     canAdvance: () => _scrollController.hasClients && _itemCount >= 2,
     advance: () {
-      const step = _kItemWidth + _kItemSpacing;
+      final step = _itemWidth + _itemSpacing;
       final maxExtent = _scrollController.position.maxScrollExtent;
       final next = _scrollController.offset + step;
       _scrollController.animateTo(
@@ -75,26 +75,33 @@ class _CarouselWidgetState extends State<CarouselWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        return SizedBox(
-          height: 260,
+        final itemWidth = _itemWidth;
+        final paddingV = parseDouble(widget.params['padding_vertical']) ?? 0;
+
+        return Container(
+          height: (parseDouble(widget.params['height']) ?? 260) + 2 * paddingV,
+          color: parseColor(widget.params['bg_color']),
+          padding: EdgeInsets.symmetric(vertical: paddingV),
           child: NotificationListener<ScrollNotification>(
             onNotification: _autoplay.handleScrollNotification,
             child: ListView.separated(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: parseDouble(widget.params['padding_horizontal']) ?? 16,
+              ),
               itemCount: products.length,
-              separatorBuilder: (context, index) => const SizedBox(width: _kItemSpacing),
+              separatorBuilder: (context, index) => SizedBox(width: _itemSpacing),
               itemBuilder: (context, index) {
                 final builder = widget.callbacks.productCardBuilder;
                 return SizedBox(
-                  width: _kItemWidth,
+                  width: itemWidth,
                   child: builder != null
                       ? builder(products[index])
                       : RichProductCard(
                           data: products[index],
                           callbacks: widget.callbacks,
-                          imageSize: _kItemWidth,
+                          imageSize: itemWidth,
                           theme: widget.theme,
                         ),
                 );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:serenay_ecommerce_widgets/serenay_ecommerce_widgets.dart';
+import 'package:serenay_ecommerce_widgets/src/core/utils/param_parsing.dart';
 
 WidgetCallbacks _callbacks({
   void Function(WidgetAction action)? onAction,
@@ -26,6 +27,34 @@ WidgetCallbacks _callbacks({
     productCardBuilder: productCardBuilder,
     imageErrorBuilder: imageErrorBuilder,
   );
+}
+
+/// Pumps [entries] through [WidgetCatalog.getScreen] inside a [width]-wide
+/// column.
+Future<void> _pumpScreen(
+  WidgetTester tester,
+  List<Map<String, dynamic>> entries, {
+  WidgetCallbacks? callbacks,
+  double width = 400,
+}) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        body: SizedBox(
+          width: width,
+          child: SingleChildScrollView(
+            child: Column(
+              children: WidgetCatalog.getScreen(
+                data: WidgetCatalog.fromJson({'data': entries}),
+                callbacks: callbacks ?? _callbacks(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pump();
 }
 
 void main() {
@@ -1718,5 +1747,210 @@ void main() {
     expect(tester.getSize(find.byType(Image)).width, 152);
     expect(tester.widget<Image>(find.byType(Image)).fit, BoxFit.scaleDown);
     expect(find.byType(ClipRRect), findsOneWidget);
+  });
+
+  test('parseColor accepts #RRGGBB, RRGGBB and #AARRGGBB, falls back otherwise', () {
+    expect(parseColor('#FF0000'), const Color(0xFFFF0000));
+    expect(parseColor('00FF00'), const Color(0xFF00FF00));
+    expect(parseColor('#800000FF'), const Color(0x800000FF));
+    expect(parseColor('nope', fallback: Colors.white), Colors.white);
+    expect(parseColor(123), isNull);
+  });
+
+  testWidgets('CAROUSEL honors item_width, height, spacing and bg_color', (tester) async {
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'CAROUSEL',
+          'params': {'item_width': 120, 'height': 200, 'padding_vertical': 10, 'bg_color': '#EEEEEE'},
+        },
+      ],
+      callbacks: _callbacks(
+        fetchProducts: (_) async => const [ProductCardData(id: 1, image: '', title: 'P1', price: 10)],
+        productCardBuilder: (data) => const SizedBox.expand(key: Key('card')),
+      ),
+    );
+
+    expect(tester.getSize(find.byKey(const Key('card'))), const Size(120, 200));
+    final container = tester.widget<Container>(find.ancestor(of: find.byType(ListView), matching: find.byType(Container)).first);
+    expect((container.decoration as BoxDecoration?)?.color ?? container.color, const Color(0xFFEEEEEE));
+  });
+
+  testWidgets('PRODUCTCARD honors spacing and padding_horizontal', (tester) async {
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'PRODUCTCARD',
+          'params': {'columns': 2, 'spacing': 20, 'padding_horizontal': 10},
+        },
+      ],
+      callbacks: _callbacks(
+        fetchProducts: (_) async => const [ProductCardData(id: 1, image: '', title: 'P1', price: 10)],
+        productCardBuilder: (data) => const SizedBox(key: Key('card'), height: 10),
+      ),
+    );
+
+    // (400 - 2*10 - 20) / 2 = 180
+    expect(tester.getSize(find.byKey(const Key('card'))).width, 180);
+  });
+
+  testWidgets('STORY honors size and show_title', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'STORY',
+        'params': {
+          'size': 70,
+          'show_title': true,
+          'ring_colors': ['#000000'],
+          'list': [
+            {'thumbnail': '', 'title': 'New in', 'urls': []},
+          ],
+        },
+      },
+    ]);
+
+    expect(find.text('New in'), findsOneWidget);
+    expect(tester.getSize(find.byType(ClipOval)), const Size(70, 70));
+  });
+
+  testWidgets('CATEGORYMENU honors image_size, item_width and max_lines', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'CATEGORYMENU',
+        'params': {
+          'image_size': 72,
+          'item_width': 90,
+          'max_lines': 2,
+          'list': [
+            {'title': 'Shoes', 'image': ''},
+          ],
+        },
+      },
+    ]);
+
+    expect(tester.getSize(find.byType(ClipRRect)), const Size(72, 72));
+    expect(tester.widget<Text>(find.text('Shoes')).maxLines, 2);
+  });
+
+  testWidgets('IMAGELIST honors spacing between images', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'IMAGELIST',
+        'params': {
+          'spacing': 20,
+          'list': [
+            {'url': 'https://example.com/a.webp'},
+            {'url': 'https://example.com/b.webp'},
+          ],
+        },
+      },
+    ]);
+
+    // (400 - 20) / 2 = 190
+    expect(tester.getSize(find.byType(Image).first).width, 190);
+  });
+
+  testWidgets('ANNOUNCEMENTBAR rotates its list and fires item actions', (tester) async {
+    WidgetAction? tapped;
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'ANNOUNCEMENTBAR',
+          'params': {
+            'interval': 2,
+            'list': [
+              'Free shipping',
+              {'text': 'Sale', 'type': 'category', 'id': 7},
+            ],
+          },
+        },
+      ],
+      callbacks: _callbacks(onAction: (a) => tapped = a),
+    );
+
+    expect(find.text('Free shipping'), findsOneWidget);
+    await tester.tap(find.text('Free shipping'));
+    expect(tapped, isNull);
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+    expect(find.text('Sale'), findsOneWidget);
+    await tester.tap(find.text('Sale'));
+    expect(tapped?.id, 7);
+  });
+
+  testWidgets('BRANDS renders a grid with the requested columns and fires actions', (tester) async {
+    WidgetAction? tapped;
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'BRANDS',
+          'params': {
+            'layout': 'grid',
+            'columns': 3,
+            'spacing': 10,
+            'padding_horizontal': 0,
+            'list': [
+              {'image': '', 'type': 'brand', 'id': 1},
+              {'image': '', 'type': 'brand', 'id': 2},
+            ],
+          },
+        },
+      ],
+      callbacks: _callbacks(onAction: (a) => tapped = a),
+    );
+
+    // (400 - 2*10) / 3 ≈ 126.67, square tiles
+    final size = tester.getSize(find.byType(AspectRatio).first);
+    expect(size.width, closeTo(126.67, 0.01));
+    expect(size.height, closeTo(126.67, 0.01));
+    await tester.tap(find.byType(AspectRatio).last);
+    expect(tapped?.type, WidgetActionType.brand);
+    expect(tapped?.id, 2);
+  });
+
+  testWidgets('BANNERGRID left_big splits width by big_ratio', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'BANNERGRID',
+        'params': {
+          'layout': 'left_big',
+          'big_ratio': 0.6,
+          'spacing': 0,
+          'height_percent': 0.5,
+          'list': [
+            {'url': 'https://example.com/a.webp'},
+            {'url': 'https://example.com/b.webp'},
+            {'url': 'https://example.com/c.webp'},
+          ],
+        },
+      },
+    ]);
+
+    final images = find.byType(Image);
+    expect(tester.getSize(images.at(0)), const Size(240, 200));
+    expect(tester.getSize(images.at(1)), const Size(160, 100));
+  });
+
+  testWidgets('BANNERGRID falls back to grid with fewer than three items', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'BANNERGRID',
+        'params': {
+          'spacing': 0,
+          'aspect_ratio': 2,
+          'list': [
+            {'url': 'https://example.com/a.webp'},
+            {'url': 'https://example.com/b.webp'},
+          ],
+        },
+      },
+    ]);
+
+    expect(tester.getSize(find.byType(Image).first), const Size(200, 100));
   });
 }

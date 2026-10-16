@@ -39,20 +39,27 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
         final products = snapshot.data ?? const [];
         if (products.isEmpty) return const SizedBox.shrink();
 
-        final columns = parseInt(widget.params['columns']) ?? widget.theme.gridColumns;
+        final params = widget.params;
+        final parsedColumns = parseInt(params['columns']) ?? widget.theme.gridColumns;
+        final columns = parsedColumns > 0 ? parsedColumns : widget.theme.gridColumns;
+        final spacing = parseDouble(params['spacing']) ?? 8;
+        final runSpacing = parseDouble(params['run_spacing']) ?? spacing;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        return Container(
+          color: parseColor(params['bg_color']),
+          padding: EdgeInsets.symmetric(
+            horizontal: parseDouble(params['padding_horizontal']) ?? 8,
+            vertical: parseDouble(params['padding_vertical']) ?? 8,
+          ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              const spacing = 8.0;
               final itemWidth =
                   (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
               final builder = widget.callbacks.productCardBuilder;
               return Wrap(
                 spacing: spacing,
-                runSpacing: spacing,
+                runSpacing: runSpacing,
                 children: [
                   for (final product in products)
                     SizedBox(

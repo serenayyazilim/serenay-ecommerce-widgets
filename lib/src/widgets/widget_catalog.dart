@@ -5,6 +5,9 @@ import '../contracts/widget_entry.dart';
 import '../contracts/widget_type.dart';
 import '../core/theme/ecommerce_widget_theme.dart';
 import 'catalog/abandoned_cart_widget.dart';
+import 'catalog/announcement_bar_widget.dart';
+import 'catalog/banner_grid_widget.dart';
+import 'catalog/brands_widget.dart';
 import 'catalog/bundle_widget.dart';
 import 'catalog/carousel_widget.dart';
 import 'catalog/category_menu_widget.dart';
@@ -155,6 +158,12 @@ class WidgetCatalog {
         return SizeGuideWidget(params: params, theme: theme);
       case WidgetType.trustBadges:
         return TrustBadgesWidget(params: params, theme: theme);
+      case WidgetType.brands:
+        return BrandsWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.bannerGrid:
+        return BannerGridWidget(params: params, callbacks: callbacks);
+      case WidgetType.announcementBar:
+        return AnnouncementBarWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);
