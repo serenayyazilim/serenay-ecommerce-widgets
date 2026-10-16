@@ -18,7 +18,7 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Serenay E-commerce Widgets live demo">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -27,12 +27,61 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>Serenay E-commerce Widgets</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    body { margin: 0; background: #fff; }
+    #loading {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+      background: #fff;
+      transition: opacity .4s, transform .4s;
+    }
+    #loading.done { opacity: 0; transform: scale(1.08); }
+    #loading .logo {
+      width: 96px;
+      animation: appear .6s ease-out both, float 2.4s ease-in-out .6s infinite;
+    }
+    #loading .shadow {
+      width: 64px; height: 8px; margin-top: -18px;
+      border-radius: 50%; background: rgba(0, 0, 0, .12);
+      animation: shadow 2.4s ease-in-out .6s infinite;
+    }
+    #loading .bar {
+      width: 140px; height: 3px; border-radius: 3px;
+      background: #eee; overflow: hidden;
+    }
+    #loading .bar::after {
+      content: ""; display: block; width: 40%; height: 100%;
+      border-radius: 3px; background: #000;
+      animation: sweep 1.2s ease-in-out infinite;
+    }
+    @keyframes appear { from { opacity: 0; transform: scale(.6) rotate(-20deg); } }
+    @keyframes float { 50% { transform: translateY(-12px) rotate(4deg); } }
+    @keyframes shadow { 50% { transform: scaleX(.7); opacity: .5; } }
+    @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+    @media (prefers-reduced-motion: reduce) {
+      #loading * { animation: none !important; }
+      #loading .bar::after { animation: none; width: 100%; }
+    }
+  </style>
 </head>
 <body>
+  <div id="loading" role="progressbar" aria-label="Loading">
+    <img class="logo" src="icons/logo.svg" alt="">
+    <div class="shadow"></div>
+    <div class="bar"></div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var el = document.getElementById('loading');
+      el.classList.add('done');
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

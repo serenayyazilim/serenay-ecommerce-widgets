@@ -1,0 +1,2 @@
+/* Logo is black; the header is colored, so show it white. */
+.md-header .md-logo img { filter: invert(1); }

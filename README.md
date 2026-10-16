@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/example/web/icons/logo.svg" width="120" alt="Serenay logo"></p>
+
 # serenay_ecommerce_widgets
 
 [![pub package](https://img.shields.io/pub/v/serenay_ecommerce_widgets.svg)](https://pub.dev/packages/serenay_ecommerce_widgets)
