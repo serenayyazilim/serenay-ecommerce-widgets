@@ -1,5 +1,6 @@
 {
   "name": "serenay-ecommerce-widgets",
+  "displayName": "Serenay E-commerce Widgets",
   "version": "1.5.1",
   "description": "Build server-driven (JSON) e-commerce screens in Flutter with serenay_ecommerce_widgets",
   "author": {
