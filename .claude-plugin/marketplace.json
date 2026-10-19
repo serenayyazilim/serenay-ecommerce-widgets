@@ -1,0 +1,15 @@
+{
+  "name": "serenay",
+  "description": "Claude Code plugins for the serenay_ecommerce_widgets Flutter package",
+  "owner": {
+    "name": "Serenay Yazılım",
+    "url": "https://github.com/serenayyazilim"
+  },
+  "plugins": [
+    {
+      "name": "serenay-ecommerce-widgets",
+      "source": "./plugins/serenay-ecommerce-widgets",
+      "description": "Build server-driven (JSON) e-commerce screens in Flutter with serenay_ecommerce_widgets"
+    }
+  ]
+}

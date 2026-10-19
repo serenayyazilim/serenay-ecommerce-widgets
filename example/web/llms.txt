@@ -1,0 +1,67 @@
+# serenay_ecommerce_widgets
+
+> Flutter package for server-driven UI (SDUI) in e-commerce apps. The backend sends a JSON list of `{ "type": "...", "params": { ... } }` entries and `WidgetCatalog.getScreen` renders a full home/category screen from it: banners, sliders, product carousels and grids, flash sales, stories, coupons, reviews and 36 widget types in total. Navigation, product fetching, auth and cart are injected by the host app via `WidgetCallbacks`, so it works with any backend.
+
+- Install: `flutter pub add serenay_ecommerce_widgets` (pub.dev: https://pub.dev/packages/serenay_ecommerce_widgets)
+- Platforms: Android, iOS, macOS, Web. License: MIT.
+- Unknown `type` values render as an empty 1px box, so new widgets never crash old app versions.
+- Unsupported types can be added in-app with `WidgetCatalog.registerBuilder('TYPE', builder)`.
+- Restyle everything with `EcommerceWidgetTheme`; replace product cards with `WidgetCallbacks.productCardBuilder`.
+
+## Docs
+
+- [llms-full.txt](https://serenayyazilim.github.io/serenay-ecommerce-widgets/llms-full.txt): everything below in one file
+- [README / quick start](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/README.md): install, `WidgetCallbacks`, `WidgetCatalog.fromJson` + `getScreen`, theming
+- [Full JSON schema for every widget](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/ai-prompt.md): single-file reference of all widget types and params, written for AI assistants
+- [Live demo](https://serenayyazilim.github.io/serenay-ecommerce-widgets/): every widget rendered in the browser
+- [Docs site](https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/)
+
+## Shared contracts
+
+- [Action/tap contract](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/action-contract.md): Shared by IMAGE, SLIDER, IMAGECAROUSEL, MODAL, MIXEDCAROUSEL, STORY and SEARCH: the `type`/`id`/`url` navigation target the host resolves in `onAction`.
+- [Product query contract](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/product-query.md): Shared by CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and MIXEDCAROUSEL: the `params` shape `fetchProducts` receives (`type`+`id`, or `category_id`, `order_by`, `limit`, `page`, ...).
+- [Product card data](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/product-card-data.md): The shape every product returned from `WidgetCallbacks.fetchProducts` should have.
+
+## Widgets
+
+- [TEXT](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/text.md): A simple or compound text block with three visual styles.
+- [DIVIDER](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/divider.md): Pure vertical spacing between widgets — nothing else.
+- [IMAGE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/image.md): A single tappable banner image, using the shared action/tap contract.
+- [IMAGELIST](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/image-list.md): Several IMAGE widgets laid out side by side, each taking an equal share of the row's width.
+- [SLIDER](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/slider.md): A swipeable image slider with a page-dot indicator.
+- [IMAGECAROUSEL](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/image-carousel.md): Similar to SLIDER, but a flat horizontally-scrolling row of individual images (not paged), optionally over a background image.
+- [CAROUSEL](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/carousel.md): A horizontally-scrolling row of the rich product card (photo/variant slider, favorite heart, discount badge, variant picker — see product-card-data.md), backed by the product query contract.
+- [GRID](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/grid.md): The same product query contract as CAROUSEL, rendered as a 2-column grid of the rich product card instead of a horizontal row.
+- [PRODUCTCARD](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/product-card.md): Visually and behaviorally identical to GRID — a 2-column grid of the rich product card, backed by the same product query contract.
+- [FLASHSALE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/flash-sale.md): An animated countdown bar whose products open in a bottom sheet (`display_mode: "modal"`) or sit in a row beneath it (`"inline"`); disappears once `end_time` has passed.
+- [MODAL](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/modal.md): Shows an announcement/campaign popup automatically once per app session for a given `url`+`type`+`id` combination — not persisted, so it reappears on the next app launch.
+- [MIXEDCAROUSEL](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/mixed-carousel.md): An auto-playing carousel (stops once the user drags) whose pages are either a 2x2 mini product grid or a full-page image, each with its own background color, title and description.
+- [VIDEOLIST](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/video-list.md): One or more silent, looping, auto-playing videos fetched by `id` via `WidgetCallbacks.fetchVideos`, which returns a list of `VideoItem` (`video` URL, action, optional `title`/`subtitle`).
+- [STORY](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/story.md): An Instagram-style story tray: a horizontal row of circular thumbnails; tapping one opens a full-screen story viewer for that entry.
+- [VISITEDPRODUCTS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/visited-products.md): Shows the locally-tracked "recently viewed" product list — never fetched from the backend.
+- [TIMEIMAGE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/time-image.md): A banner image with an optional "countdown to date" overlay: a title plus boxed day/hour/minute/second fields.
+- [YOUTUBE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/youtube.md): A single YouTube video embedded inline, auto-playing muted and looping.
+- [SEARCH](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/search.md): A full-width background image with a floating, editable search bar near the bottom and a separate "Search" button.
+- [FASTREGISTER](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/fast-register.md): A static WhatsApp quick-registration card: a 3-step explainer (enter number, send the code, talk to a rep), a country code + phone field, and a "Send" button that opens a WhatsApp chat with that number.
+- [RATING](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/rating.md): A star rating row plus an optional review count.
+- [BUNDLE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/bundle.md): A "frequently bought together" row: the same product query contract as CAROUSEL/GRID (typically sent with `is_bundle_product: true`), rendered as products joined by `+` separators with a combined price and a single "Add All to Cart" button.
+- [COUPON](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/coupon.md): A dashed-border coupon card with a tap-to-copy code and an optional countdown.
+- [CATEGORYMENU](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/category-menu.md): A horizontal row of circular category icons with a label underneath, each resolving through the shared action/tap contract.
+- [LOYALTYPROGRESS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/loyalty-progress.md): A "N more to go" progress bar — purchases toward a loyalty reward, spend toward free shipping, etc.
+- [COMPARISON](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/comparison.md): Fetches products through the shared product query contract (like CAROUSEL/GRID) and lays the first 3 out side by side in a spec table — image, title, subtitle and price — so a shopper can compare them without tapping in and out of each product.
+- [ABANDONEDCART](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/abandoned-cart.md): A "you left items in your cart" card: the same product query contract as BUNDLE/CAROUSEL (typically the backend's current cart/reservation contents), rendered as a horizontally-scrolling row of product tiles under an optional reservation countdown, with a single CTA button that resolves through the shared action contract — usually back to the cart or checkout screen.
+- [REVIEWS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/reviews.md): A horizontally-scrolling row of customer review cards — author, star rating, comment and an optional "Verified Purchase" badge — with an optional aggregate rating/count header, matching RATING's summary style.
+- [QNA](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/qna.md): A vertical "Questions & Answers" card — each entry's question and answer, plus an optional asker name/date.
+- [URGENCY](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/urgency.md): A slim scarcity/countdown banner (e.g. "Only 3 left in stock!"), reusing COUPON's `end_time` countdown.
+- [RECOMMENDEDFORYOU](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/recommended-for-you.md): A titled, horizontally-scrolling row of the shared rich product card — the same product query contract as CAROUSEL, plus a header (CAROUSEL has none) so a personalized recommendation rail reads as its own section rather than blending into the feed.
+- [SOCIALPROOF](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/social-proof.md): A slim "N people bought this recently" banner.
+- [SIZEGUIDE](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/size-guide.md): A "Size Guide" trigger button that opens a dialog with a measurement table built from `params.headers`/`params.rows`.
+- [TRUSTBADGES](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/trust-badges.md): A static row of reassurance icons (secure payment, free shipping, easy returns, ...) with a caption under each — purely informational, no tap contract.
+- [BRANDS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/brands.md): Brand logos on bordered tiles, as a horizontally-scrolling row (default) or a wrapping grid.
+- [BANNERGRID](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/banner-grid.md): A mosaic of tappable banner images: one large banner next to two stacked small ones, or an even grid.
+- [ANNOUNCEMENTBAR](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/announcement-bar.md): A thin full-width strip with a short message, usually at the top of the screen ("Free shipping over 500 TL").
+
+## Optional
+
+- [Example app](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/example/lib/main.dart): mock JSON payload and mock callbacks driving every widget
+- [CHANGELOG](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/CHANGELOG.md)

@@ -49,6 +49,8 @@ jobs:
           cp -r example/build/web/. public/
           mkdir -p public/docs
           cp -r site/docs/. public/docs/
+          # llms.txt ships from example/web; the full single-file schema rides along.
+          cp doc/ai-prompt.md public/llms-full.txt
 
       - uses: actions/upload-pages-artifact@v3
         with:

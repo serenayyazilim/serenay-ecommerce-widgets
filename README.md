@@ -9,9 +9,10 @@
 [![Platform](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)](https://pub.dev/packages/serenay_ecommerce_widgets)
 
 **[🚀 Live demo](https://serenayyazilim.github.io/serenay-ecommerce-widgets/)** ·
-**[📖 Docs](https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/)**
+**[📖 Docs](https://serenayyazilim.github.io/serenay-ecommerce-widgets/docs/)** ·
+**[🤖 llms.txt](https://serenayyazilim.github.io/serenay-ecommerce-widgets/llms.txt)**
 
-A dynamic widget system that renders e-commerce home/category screens from
+A server-driven UI (SDUI) widget system that renders e-commerce home/category screens from
 a backend-driven JSON payload. For the full widget catalog — one usage doc
 per widget type, with JSON schemas and examples — see
 [doc/widgets/](doc/widgets/README.md).
@@ -129,6 +130,23 @@ the same card.
 
 For the `params` schema each widget expects, see
 [doc/widgets/](doc/widgets/README.md) — one page per widget type.
+
+## Using with Claude Code
+
+A Claude Code plugin ships in this repo. It teaches Claude the package's API
+and every widget's JSON schema, so it can wire the package into your app and
+write screen JSON for you:
+
+```
+/plugin install serenay-ecommerce-widgets --marketplace serenayyazilim/serenay-ecommerce-widgets
+```
+
+On older Claude Code versions:
+`/plugin marketplace add serenayyazilim/serenay-ecommerce-widgets`, then
+`/plugin install serenay-ecommerce-widgets@serenay`.
+
+Other AI tools can read
+[llms.txt](https://serenayyazilim.github.io/serenay-ecommerce-widgets/llms.txt).
 
 ## Contributing
 

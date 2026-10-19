@@ -1,15 +1,17 @@
 name: serenay_ecommerce_widgets
 description: >-
-  A backend-driven widget system for e-commerce screens. Renders TEXT, IMAGE,
-  CAROUSEL, GRID, PRODUCTCARD, FLASHSALE and more from JSON, with
-  nav/data/cart injected by the host app.
+  Server-driven UI for Flutter e-commerce apps: render home and category
+  screens (banners, product carousels, grids, flash sales, stories) from
+  backend JSON.
 version: 1.5.0
 homepage: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 repository: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 topics:
-  - widgets
+  - server-driven-ui
   - ecommerce
-  - ui
+  - json-ui
+  - dynamic-ui
+  - widgets
 
 environment:
   sdk: ^3.10.3
