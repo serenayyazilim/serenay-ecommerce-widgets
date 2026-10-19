@@ -1,3 +1,16 @@
+## 1.5.1
+
+No code changes. Widgets and params are unchanged from 1.5.0.
+
+- pub.dev: new topics `server-driven-ui`, `json-ui` and `dynamic-ui` (`ui`
+  dropped); the description now leads with server-driven UI.
+- `llms.txt` and `llms-full.txt` on the docs site, so AI assistants can read
+  every widget's schema:
+  https://serenayyazilim.github.io/serenay-ecommerce-widgets/llms.txt
+- Claude Code plugin with a `serenay-ecommerce-widgets` skill. It teaches
+  Claude the package API and how to write screen JSON. Install:
+  `/plugin install serenay-ecommerce-widgets --marketplace serenayyazilim/serenay-ecommerce-widgets`
+
 ## 1.5.0
 
 - New widgets:
