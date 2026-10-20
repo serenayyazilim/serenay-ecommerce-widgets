@@ -24,7 +24,8 @@ Supports two display modes via `display_mode`:
 ```
 
 - `end_time` — a Unix timestamp in seconds, or an ISO-8601 string. When
-  omitted, the bar shows with no countdown and never expires.
+  omitted, the bar shows with no countdown and never expires. When sent but
+  unparseable, the widget hides itself.
 - `title` / `subtitle` — shown on the bar and repeated in the bottom sheet
   header (modal mode only).
 - `display_mode` — `"modal"` (default) or `"inline"`, as described above.

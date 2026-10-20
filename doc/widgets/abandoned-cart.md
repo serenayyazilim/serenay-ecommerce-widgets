@@ -24,7 +24,8 @@ button that resolves through the shared [action contract](action-contract.md)
 - `end_time` — a Unix timestamp in seconds, or an ISO-8601 string. When set,
   a countdown ("Reserved for 09:58") renders under the title and the widget
   hides itself entirely once it passes, matching COUPON/FLASHSALE. Omit it
-  for a reservation with no expiry.
+  for a reservation with no expiry. When sent but unparseable, the
+  widget hides itself.
 - Every other field is forwarded to `ProductQuery.fromParams` (see
   [product-query.md](product-query.md)) to fetch the cart's products, and to
   `WidgetAction.fromParams` (see [action-contract.md](action-contract.md)) to

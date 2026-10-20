@@ -456,6 +456,40 @@ void main() {
     expect(find.byType(DraggableScrollableSheet), findsNothing);
   });
 
+  testWidgets('timed widgets hide on an unparseable end_time but show when end_time is omitted', (tester) async {
+    // Each entry renders its `label` as visible text.
+    const cases = {
+      'FLASHSALE': 'title',
+      'COUPON': 'code',
+      'URGENCY': 'text',
+      'ABANDONEDCART': 'title',
+    };
+    await _pumpScreen(
+      tester,
+      [
+        for (final MapEntry(key: type, value: field) in cases.entries) ...[
+          {
+            'type': type,
+            'params': {field: '$type bad', 'end_time': 'next friday'},
+          },
+          {
+            'type': type,
+            'params': {field: '$type open'},
+          },
+        ],
+      ],
+      callbacks: _callbacks(
+        fetchProducts: (_) async => const [ProductCardData(id: 1, image: '', title: 'P1', price: 10)],
+      ),
+    );
+    await tester.pump();
+
+    for (final type in cases.keys) {
+      expect(find.text('$type bad'), findsNothing, reason: type);
+      expect(find.text('$type open'), findsOneWidget, reason: type);
+    }
+  });
+
   testWidgets('FLASHSALE defaults to modal mode: products are not fetched until tapped', (tester) async {
     var fetchCount = 0;
     final data = WidgetCatalog.fromJson({

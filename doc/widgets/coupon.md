@@ -19,4 +19,5 @@ countdown. Disappears entirely once `end_time` has passed, like FLASHSALE.
   Tapping the code copies it to the clipboard via `Clipboard.setData`.
 - `discount_text` / `description` — free-text headline and subtext.
 - `end_time` — a Unix timestamp in seconds, or an ISO-8601 string. When
-  omitted, the coupon shows with no countdown and never expires.
+  omitted, the coupon shows with no countdown and never expires. When sent but
+  unparseable, the widget hides itself.

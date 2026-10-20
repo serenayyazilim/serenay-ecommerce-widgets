@@ -1,3 +1,9 @@
+## Unreleased
+
+- FLASHSALE, COUPON, URGENCY and ABANDONEDCART now hide themselves when
+  `end_time` is sent but can't be parsed, instead of rendering a widget
+  that never expires. Omitting `end_time` still means no expiry.
+
 ## 1.5.1
 
 No code changes. Widgets and params are unchanged from 1.5.0.

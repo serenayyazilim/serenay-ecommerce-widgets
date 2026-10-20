@@ -79,6 +79,11 @@ class _CouponWidgetState extends State<CouponWidget> {
     if (_endTime != null && _endTime!.isBefore(now)) {
       return const SizedBox.shrink();
     }
+    // A sent-but-unparseable `end_time` hides the widget rather than letting it
+    // run forever; omitting `end_time` still means no expiry.
+    if (_endTime == null && widget.params['end_time'] != null) {
+      return const SizedBox.shrink();
+    }
 
     final code = widget.params['code']?.toString();
     final discountText = widget.params['discount_text']?.toString();

@@ -70,6 +70,11 @@ class _UrgencyWidgetState extends State<UrgencyWidget> {
     if (_endTime != null && _endTime!.isBefore(now)) {
       return const SizedBox.shrink();
     }
+    // A sent-but-unparseable `end_time` hides the widget rather than letting it
+    // run forever; omitting `end_time` still means no expiry.
+    if (_endTime == null && widget.params['end_time'] != null) {
+      return const SizedBox.shrink();
+    }
 
     final params = widget.params;
     final stockLeft = parseInt(params['stock_left']);

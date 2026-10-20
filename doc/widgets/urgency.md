@@ -23,6 +23,7 @@ COUPON/ABANDONEDCART's `end_time` countdown contract.
   stock is actually low.
 - `end_time` — a Unix timestamp in seconds, or an ISO-8601 string. When set,
   a countdown renders next to the text and the widget hides itself entirely
-  once it passes, matching COUPON/FLASHSALE/ABANDONEDCART.
+  once it passes, matching COUPON/FLASHSALE/ABANDONEDCART. When sent but
+  unparseable, the widget hides itself.
 - Hides itself entirely when there's nothing to show: no `text` override, no
   `stock_left`, or a `stock_left` above `threshold`.

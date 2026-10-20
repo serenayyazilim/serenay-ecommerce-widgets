@@ -87,6 +87,11 @@ class _AbandonedCartWidgetState extends State<AbandonedCartWidget> {
     if (_endTime != null && _endTime!.isBefore(now)) {
       return const SizedBox.shrink();
     }
+    // A sent-but-unparseable `end_time` hides the widget rather than letting it
+    // run forever; omitting `end_time` still means no expiry.
+    if (_endTime == null && widget.params['end_time'] != null) {
+      return const SizedBox.shrink();
+    }
 
     return FutureBuilder<List<ProductCardData>>(
       future: _future,

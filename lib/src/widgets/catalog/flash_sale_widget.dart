@@ -133,6 +133,12 @@ class _FlashSaleWidgetState extends State<FlashSaleWidget>
     if (_endTime != null && _endTime!.isBefore(now)) {
       return const SizedBox.shrink();
     }
+    // An `end_time` that was sent but doesn't parse would otherwise render a
+    // bar that never expires; hide it instead. Omitting `end_time` entirely
+    // still means a countdown-less, never-expiring bar.
+    if (_endTime == null && widget.params['end_time'] != null) {
+      return const SizedBox.shrink();
+    }
 
     final title = (widget.params['title']?.toString()) ?? widget.theme.flashSaleTitleLabel;
     final subtitle = widget.params['subtitle']?.toString();
