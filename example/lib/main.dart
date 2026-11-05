@@ -410,6 +410,9 @@ const _wireNames = {
   WidgetType.brands: 'BRANDS',
   WidgetType.bannerGrid: 'BANNERGRID',
   WidgetType.announcementBar: 'ANNOUNCEMENTBAR',
+  WidgetType.tabs: 'TABS',
+  WidgetType.quickFilters: 'QUICKFILTERS',
+  WidgetType.hotspot: 'HOTSPOT',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -692,6 +695,40 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
       _FieldKind.enumSelect,
       options: ['left', 'center', 'right'],
     ),
+  ],
+  WidgetType.tabs: const [
+    _ParamField('tabs', 'Tabs (JSON)', _FieldKind.json),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField('initial_index', 'Initial tab', _FieldKind.number),
+    _ParamField('selected_color', 'Selected color', _FieldKind.color),
+    _ParamField('text_color', 'Text color', _FieldKind.color),
+    _ParamField('text_size', 'Text size', _FieldKind.number),
+    _ParamField('tab_spacing', 'Tab spacing', _FieldKind.number),
+    _ParamField('item_width', 'Item width', _FieldKind.number),
+    _ParamField('height', 'Row height', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.quickFilters: const [
+    _ParamField('list', 'Chips (JSON)', _FieldKind.json),
+    _ParamField('chip_color', 'Chip color', _FieldKind.color),
+    _ParamField('text_color', 'Text color', _FieldKind.color),
+    _ParamField('border_color', 'Border color', _FieldKind.color),
+    _ParamField('text_size', 'Text size', _FieldKind.number),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('spacing', 'Spacing', _FieldKind.number),
+    _ParamField('padding_horizontal', 'Padding H', _FieldKind.number),
+    _ParamField('padding_vertical', 'Padding V', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.hotspot: const [
+    _ParamField('url', 'Image URL', _FieldKind.text),
+    _ParamField('list', 'Dots (JSON)', _FieldKind.json),
+    _ParamField('height_percent', 'Height %', _FieldKind.number),
+    _ParamField('fit', 'Fit', _FieldKind.enumSelect, options: _boxFitOptions),
+    _ParamField('dot_size', 'Dot size', _FieldKind.number),
+    _ParamField('dot_color', 'Dot color', _FieldKind.color),
+    _ParamField('radius', 'Radius', _FieldKind.number),
+    _ParamField('padding', 'Padding', _FieldKind.number),
   ],
   WidgetType.loyaltyProgress: const [
     _ParamField('title', 'Title', _FieldKind.text),
@@ -1787,6 +1824,39 @@ final _mockScreenJson = {
           {'url': _placeholder('Big banner', 400, 480, seed: 17), 'type': 'category', 'id': 1},
           {'url': _placeholder('Small 1', 400, 240, seed: 18), 'type': 'category', 'id': 2},
           {'url': _placeholder('Small 2', 400, 240, seed: 19), 'type': 'collection', 'id': 3},
+        ],
+      },
+    },
+    {
+      'type': 'QUICKFILTERS',
+      'params': {
+        'list': [
+          {'title': 'Under 500 TL', 'type': 'filter', 'id': 1, 'filter': 'price:0-500'},
+          {'title': 'Free Shipping', 'type': 'search', 'id': 0, 'search_text': 'free shipping'},
+          {'title': 'New Season', 'type': 'collection', 'id': 3},
+          {'title': 'Sneakers', 'type': 'category', 'id': 75},
+        ],
+      },
+    },
+    {
+      'type': 'TABS',
+      'params': {
+        'limit': 8,
+        'tabs': [
+          {'title': 'Best Sellers', 'category_id': 1},
+          {'title': 'New In', 'category_id': 2, 'order_by': 'id|DESC'},
+          {'title': 'On Sale', 'type': 'collection', 'id': 3},
+        ],
+      },
+    },
+    {
+      'type': 'HOTSPOT',
+      'params': {
+        'url': _placeholder('Shop the look', 800, 1000, seed: 30),
+        'height_percent': 1.25,
+        'list': [
+          {'x': 0.4, 'y': 0.3, 'title': 'Wool Coat', 'subtitle': '1.299 TL', 'type': 'product', 'id': 1},
+          {'x': 0.6, 'y': 0.8, 'title': 'Chelsea Boots', 'subtitle': '899 TL', 'type': 'product', 'id': 2},
         ],
       },
     },

@@ -1,6 +1,6 @@
 # serenay_ecommerce_widgets
 
-> Flutter package for server-driven UI (SDUI) in e-commerce apps. The backend sends a JSON list of `{ "type": "...", "params": { ... } }` entries and `WidgetCatalog.getScreen` renders a full home/category screen from it: banners, sliders, product carousels and grids, flash sales, stories, coupons, reviews and 36 widget types in total. Navigation, product fetching, auth and cart are injected by the host app via `WidgetCallbacks`, so it works with any backend.
+> Flutter package for server-driven UI (SDUI) in e-commerce apps. The backend sends a JSON list of `{ "type": "...", "params": { ... } }` entries and `WidgetCatalog.getScreen` renders a full home/category screen from it: banners, sliders, product carousels and grids, flash sales, stories, coupons, reviews and 39 widget types in total. Navigation, product fetching, auth and cart are injected by the host app via `WidgetCallbacks`, so it works with any backend.
 
 - Install: `flutter pub add serenay_ecommerce_widgets` (pub.dev: https://pub.dev/packages/serenay_ecommerce_widgets)
 - Platforms: Android, iOS, macOS, Web. License: MIT.
@@ -60,6 +60,9 @@
 - [BRANDS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/brands.md): Brand logos on bordered tiles, as a horizontally-scrolling row (default) or a wrapping grid.
 - [BANNERGRID](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/banner-grid.md): A mosaic of tappable banner images: one large banner next to two stacked small ones, or an even grid.
 - [ANNOUNCEMENTBAR](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/announcement-bar.md): A thin full-width strip with a short message, usually at the top of the screen ("Free shipping over 500 TL").
+- [TABS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/tabs.md): Tab labels over a product row; each tab is its own CAROUSEL with its own product query.
+- [QUICKFILTERS](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/quick-filters.md): A scrolling row of pill-shaped filter/search chips, each resolving through the action/tap contract.
+- [HOTSPOT](https://raw.githubusercontent.com/serenayyazilim/serenay-ecommerce-widgets/main/doc/widgets/hotspot.md): A "shop the look" image with tappable dots placed by x/y over the products in it.
 
 ## Optional
 

@@ -59,6 +59,9 @@ widgets and documented once:
 | `BRANDS` | [brands.md](brands.md) |
 | `BANNERGRID` | [banner-grid.md](banner-grid.md) |
 | `ANNOUNCEMENTBAR` | [announcement-bar.md](announcement-bar.md) |
+| `TABS` | [tabs.md](tabs.md) |
+| `QUICKFILTERS` | [quick-filters.md](quick-filters.md) |
+| `HOTSPOT` | [hotspot.md](hotspot.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

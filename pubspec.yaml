@@ -3,7 +3,7 @@ description: >-
   Server-driven UI for Flutter e-commerce apps: render home and category
   screens (banners, product carousels, grids, flash sales, stories) from
   backend JSON.
-version: 1.5.2
+version: 1.6.0
 homepage: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 repository: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 topics:

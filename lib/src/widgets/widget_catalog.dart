@@ -17,6 +17,7 @@ import 'catalog/divider_widget.dart';
 import 'catalog/fast_register_widget.dart';
 import 'catalog/flash_sale_widget.dart';
 import 'catalog/grid_widget.dart';
+import 'catalog/hotspot_widget.dart';
 import 'catalog/image_carousel_widget.dart';
 import 'catalog/image_list_widget.dart';
 import 'catalog/image_widget.dart';
@@ -25,6 +26,7 @@ import 'catalog/mixed_carousel_widget.dart';
 import 'catalog/modal_widget.dart';
 import 'catalog/product_card_widget.dart';
 import 'catalog/qna_widget.dart';
+import 'catalog/quick_filters_widget.dart';
 import 'catalog/rating_widget.dart';
 import 'catalog/recommended_for_you_widget.dart';
 import 'catalog/reviews_widget.dart';
@@ -33,6 +35,7 @@ import 'catalog/size_guide_widget.dart';
 import 'catalog/slider_widget.dart';
 import 'catalog/social_proof_widget.dart';
 import 'catalog/story_widget.dart';
+import 'catalog/tabs_widget.dart';
 import 'catalog/text_widget.dart';
 import 'catalog/time_image_widget.dart';
 import 'catalog/trust_badges_widget.dart';
@@ -164,6 +167,12 @@ class WidgetCatalog {
         return BannerGridWidget(params: params, callbacks: callbacks);
       case WidgetType.announcementBar:
         return AnnouncementBarWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.tabs:
+        return TabsWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.quickFilters:
+        return QuickFiltersWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.hotspot:
+        return HotspotWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);

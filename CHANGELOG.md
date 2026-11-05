@@ -1,3 +1,16 @@
+## 1.6.0
+
+Three new widgets. None need a new callback; they use `fetchProducts` and
+`onAction` like the existing ones.
+
+- `TABS`: tab labels over a product row ("Best Sellers | New In | On
+  Sale"). Each tab is its own CAROUSEL with its own product query, fetched
+  the first time the tab is opened.
+- `QUICKFILTERS`: a scrolling row of pill-shaped chips that resolve
+  through the action/tap contract, usually `filter` or `search`.
+- `HOTSPOT`: a "shop the look" image with tappable dots placed by `x`/`y`
+  over the products in it; a dot with a `title` opens a label first.
+
 ## 1.5.2
 
 - Dropped the unused `cupertino_icons` dependency (pub.dev flagged it as

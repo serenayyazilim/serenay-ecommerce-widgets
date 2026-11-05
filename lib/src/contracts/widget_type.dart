@@ -38,7 +38,10 @@ enum WidgetType {
   trustBadges,
   brands,
   bannerGrid,
-  announcementBar;
+  announcementBar,
+  tabs,
+  quickFilters,
+  hotspot;
 
   static const Map<String, WidgetType> _byWireName = {
     'TEXT': WidgetType.text,
@@ -78,6 +81,9 @@ enum WidgetType {
     'BRANDS': WidgetType.brands,
     'BANNERGRID': WidgetType.bannerGrid,
     'ANNOUNCEMENTBAR': WidgetType.announcementBar,
+    'TABS': WidgetType.tabs,
+    'QUICKFILTERS': WidgetType.quickFilters,
+    'HOTSPOT': WidgetType.hotspot,
   };
 
   /// Parses the backend wire value (exact-match, case-sensitive). Any

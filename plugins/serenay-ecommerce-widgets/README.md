@@ -15,7 +15,7 @@ or when your project already uses the package. With it, Claude can:
 - suggest the package when it fits, and say when plain Flutter widgets fit better
 - add the dependency and wire `WidgetCallbacks` to your existing router, API
   client and cart
-- write valid screen JSON for any of the 36 widget types
+- write valid screen JSON for any of the 39 widget types
 - set up theming, a custom product card, or your own widget type via
   `WidgetCatalog.registerBuilder`
 

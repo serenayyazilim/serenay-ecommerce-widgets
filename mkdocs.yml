@@ -77,3 +77,6 @@ nav:
       - Brands: brands.md
       - Banner grid: banner-grid.md
       - Announcement bar: announcement-bar.md
+      - Tabs: tabs.md
+      - Quick filters: quick-filters.md
+      - Hotspot: hotspot.md

@@ -78,7 +78,8 @@ Each entry in `data` (or in the bare array) is:
 
 IMAGE, SLIDER, IMAGECAROUSEL, MODAL, MIXEDCAROUSEL's image pages, STORY's
 footer CTA, SEARCH's submit, CATEGORYMENU items, ABANDONEDCART's CTA,
-BRANDS and BANNERGRID items, and ANNOUNCEMENTBAR messages all resolve taps through the same shape, embedded directly in `params` (or in a
+BRANDS, BANNERGRID, QUICKFILTERS and HOTSPOT items, and ANNOUNCEMENTBAR
+messages all resolve taps through the same shape, embedded directly in `params` (or in a
 list item):
 
 ```json
@@ -177,7 +178,7 @@ all optional.
 
 ## 3. Widget reference
 
-36 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
+39 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
 widget as `PRODUCTCARD` (no distinct schema). Any other string renders as an
 empty box.
 
@@ -839,6 +840,64 @@ items with a `type` are tappable). Optional (px): `interval` (4 s),
 `bg_color` (theme primary), `text_color` (white), `text_size` (13), `bold`
 (on), `align` (`"left"` / `"center"` default / `"right"`),
 `padding_horizontal` / `padding_vertical` (16 / 8). Single line, ellipsized.
+
+### `TABS` — tabbed product rows (one CAROUSEL per tab)
+```json
+{
+  "type": "TABS",
+  "params": {
+    "limit": 10,
+    "tabs": [
+      { "title": "Best Sellers", "category_id": 75, "order_by": "sales|DESC" },
+      { "title": "On Sale", "type": "collection", "id": 12 }
+    ]
+  }
+}
+```
+`tabs`: each needs a `title`; the rest of the tab is a §2.2 product query.
+Any CAROUSEL param next to `tabs` applies to every tab; the same key in a
+tab overrides it. A tab fetches when first opened. Optional (px):
+`initial_index` (0), `selected_color` (theme primary), `text_color` (theme
+secondary text), `text_size` (14), `tab_spacing` (20), `bg_color`. Hides
+itself when no tab has a `title`.
+
+### `QUICKFILTERS` — filter chip row (inline list)
+```json
+{
+  "type": "QUICKFILTERS",
+  "params": {
+    "list": [
+      { "title": "Under 500 TL", "type": "filter", "id": 1, "filter": "price:0-500" },
+      { "title": "Free Shipping", "type": "search", "id": 0, "search_text": "free shipping" }
+    ]
+  }
+}
+```
+Each chip: `title` (required) + §2.1 action fields, optional `image` (small
+icon). Optional (px): `chip_color` (theme surface), `text_color`,
+`border_color` (theme border), `text_size` (13), `radius` (20), `spacing`
+(8), `padding_horizontal` / `padding_vertical` (16 / 8), `bg_color`.
+
+### `HOTSPOT` — shop-the-look image with tappable dots
+```json
+{
+  "type": "HOTSPOT",
+  "params": {
+    "url": "https://example.com/look.jpg",
+    "height_percent": 1.25,
+    "list": [
+      { "x": 0.42, "y": 0.30, "title": "Wool Coat", "subtitle": "1.299 TL", "type": "product", "id": 812 }
+    ]
+  }
+}
+```
+`url` (required). Each dot: `x` / `y` (0–1 fraction of the image box,
+from top-left) + §2.1 action fields; with a `title` (and optional
+`subtitle`) the dot opens a label first and the label fires the action,
+without one the dot fires it directly. Set `height_percent` (1.0) to the
+image's own aspect ratio so dots stay aligned. Optional: `fit` (`"cover"`),
+`dot_size` (24), `dot_color` (theme primary), `radius` (0), `padding` (0);
+action fields beside `url` make the image itself tappable.
 
 ## 4. Output rules
 

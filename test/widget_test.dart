@@ -1987,4 +1987,119 @@ void main() {
 
     expect(tester.getSize(find.byType(Image).first), const Size(200, 100));
   });
+
+  testWidgets('TABS fetches a tab only when opened and keeps it on switch back', (tester) async {
+    final queries = <dynamic>[];
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'TABS',
+          'params': {
+            'tabs': [
+              {'title': 'Best', 'category_id': 1},
+              {'title': 'New', 'category_id': 2},
+              {'category_id': 3}, // no title → dropped
+            ],
+          },
+        },
+      ],
+      callbacks: _callbacks(
+        fetchProducts: (q) async {
+          queries.add(q.categoryId);
+          return [ProductCardData(id: q.categoryId, image: '', title: 'P${q.categoryId}', price: 10)];
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(queries, [1]);
+    expect(find.text('P1'), findsOneWidget);
+    expect(find.text('Best'), findsOneWidget);
+
+    await tester.tap(find.text('New'));
+    await tester.pumpAndSettle();
+    expect(queries, [1, 2]);
+    expect(find.text('P2'), findsOneWidget);
+
+    await tester.tap(find.text('Best'));
+    await tester.pumpAndSettle();
+    expect(queries, [1, 2]);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('TABS renders nothing without a titled tab', (tester) async {
+    await _pumpScreen(tester, [
+      {'type': 'TABS', 'params': {'tabs': [{'category_id': 1}]}},
+    ]);
+    expect(find.byType(GestureDetector), findsNothing);
+  });
+
+  testWidgets('QUICKFILTERS renders chips and fires their actions', (tester) async {
+    WidgetAction? tapped;
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'QUICKFILTERS',
+          'params': {
+            'list': [
+              {'title': 'Under 500', 'type': 'filter', 'id': 1, 'filter': 'price:0-500'},
+              {'title': 'Free Shipping', 'type': 'search', 'search_text': 'free'},
+              {'type': 'filter', 'id': 9}, // no title → dropped
+            ],
+          },
+        },
+      ],
+      callbacks: _callbacks(onAction: (a) => tapped = a),
+    );
+
+    expect(find.byType(GestureDetector), findsNWidgets(2));
+    await tester.tap(find.text('Under 500'));
+    expect(tapped?.type, WidgetActionType.filter);
+    expect(tapped?.filter, 'price:0-500');
+    await tester.tap(find.text('Free Shipping'));
+    expect(tapped?.searchText, 'free');
+  });
+
+  testWidgets('HOTSPOT places dots by x/y, opens a label, then fires the action', (tester) async {
+    WidgetAction? tapped;
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'HOTSPOT',
+          'params': {
+            'url': 'https://example.com/look.jpg',
+            'height_percent': 1.0,
+            'list': [
+              {'x': 0.25, 'y': 0.5, 'title': 'Jacket', 'subtitle': '999 TL', 'type': 'product', 'id': 12},
+              {'x': 0.75, 'y': 0.75, 'type': 'product', 'id': 13},
+              {'x': 'bad', 'y': 0.1, 'title': 'Skipped'},
+            ],
+          },
+        },
+      ],
+      callbacks: _callbacks(onAction: (a) => tapped = a),
+      width: 400,
+    );
+
+    final dots = find.byWidgetPredicate(
+      (w) => w is Container && w.constraints == BoxConstraints.tight(const Size(24, 24)),
+    );
+    expect(dots, findsNWidgets(2));
+    expect(tester.getCenter(dots.first) - tester.getTopLeft(find.byType(Stack).first), const Offset(100, 200));
+
+    await tester.tap(dots.first);
+    await tester.pump();
+    expect(tapped, isNull);
+    expect(find.text('Jacket'), findsOneWidget);
+
+    await tester.tap(find.text('Jacket'));
+    expect(tapped?.id, 12);
+
+    await tester.tap(dots.last);
+    expect(tapped?.id, 13);
+    expect(find.text('Skipped'), findsNothing);
+  });
 }
