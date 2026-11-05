@@ -1,4 +1,7 @@
-## Unreleased
+## 1.5.2
+
+- Dropped the unused `cupertino_icons` dependency (pub.dev flagged it as
+  outdated against 2.0.0).
 
 - FLASHSALE, COUPON, URGENCY and ABANDONEDCART now hide themselves when
   `end_time` is sent but can't be parsed, instead of rendering a widget

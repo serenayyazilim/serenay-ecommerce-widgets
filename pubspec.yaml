@@ -3,7 +3,7 @@ description: >-
   Server-driven UI for Flutter e-commerce apps: render home and category
   screens (banners, product carousels, grids, flash sales, stories) from
   backend JSON.
-version: 1.5.1
+version: 1.5.2
 homepage: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 repository: https://github.com/serenayyazilim/serenay-ecommerce-widgets
 topics:
@@ -20,9 +20,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # Cupertino-style icons used by the widget catalog.
-  cupertino_icons: ^1.0.9
 
   # Opens external links (LINK action, YOUTUBE tap-through, FASTREGISTER's
   # WhatsApp deep link).
