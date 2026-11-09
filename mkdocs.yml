@@ -80,3 +80,6 @@ nav:
       - Tabs: tabs.md
       - Quick filters: quick-filters.md
       - Hotspot: hotspot.md
+      - Accordion: accordion.md
+      - Ranking: ranking.md
+      - Order tracker: order-tracker.md

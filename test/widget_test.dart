@@ -2102,4 +2102,92 @@ void main() {
     expect(tapped?.id, 13);
     expect(find.text('Skipped'), findsNothing);
   });
+
+  testWidgets('ACCORDION drops untitled sections and expands on tap', (tester) async {
+    await _pumpScreen(tester, [
+      {
+        'type': 'ACCORDION',
+        'params': {
+          'list': [
+            {'title': 'Shipping', 'text': 'Ships same day.'},
+            {'title': 'Returns', 'text': '30 days free.'},
+            {'text': 'no title → dropped'},
+          ],
+        },
+      },
+    ]);
+
+    expect(find.byType(ExpansionTile), findsNWidgets(2));
+    expect(find.text('Ships same day.'), findsNothing);
+    await tester.tap(find.text('Shipping'));
+    await tester.pumpAndSettle();
+    expect(find.text('Ships same day.'), findsOneWidget);
+    expect(find.text('30 days free.'), findsNothing);
+  });
+
+  testWidgets('RANKING numbers products in fetch order', (tester) async {
+    await _pumpScreen(
+      tester,
+      [
+        {'type': 'RANKING', 'params': {'title': 'Top', 'category_id': 1}},
+      ],
+      callbacks: _callbacks(
+        fetchProducts: (_) async => [
+          ProductCardData(id: 1, image: '', title: 'A', price: 10),
+          ProductCardData(id: 2, image: '', title: 'B', price: 10),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Top'), findsOneWidget);
+    expect(find.text('1'), findsOneWidget);
+    expect(find.text('2'), findsOneWidget);
+    expect(tester.getCenter(find.text('1')).dx, lessThan(tester.getCenter(find.text('2')).dx));
+  });
+
+  testWidgets('RANKING renders nothing without products', (tester) async {
+    await _pumpScreen(tester, [
+      {'type': 'RANKING', 'params': {'title': 'Top'}},
+    ]);
+    await tester.pumpAndSettle();
+    expect(find.text('Top'), findsNothing);
+  });
+
+  testWidgets('ORDERTRACKER fills steps up to current and fires its action', (tester) async {
+    WidgetAction? tapped;
+    await _pumpScreen(
+      tester,
+      [
+        {
+          'type': 'ORDERTRACKER',
+          'params': {
+            'title': 'On its way',
+            'steps': ['Ordered', 'Shipped', 'Delivered'],
+            'current': 9, // clamped to the last step
+            'active_color': '#FF0000',
+            'type': 'link',
+            'url': 'https://example.com/o/1',
+          },
+        },
+      ],
+      callbacks: _callbacks(onAction: (a) => tapped = a),
+    );
+
+    final filled = find.byWidgetPredicate(
+      (w) => w is Container && (w.decoration as BoxDecoration?)?.color == const Color(0xFFFF0000),
+    );
+    expect(filled, findsNWidgets(3));
+
+    await tester.tap(find.text('On its way'));
+    expect(tapped?.type, WidgetActionType.link);
+    expect(tapped?.url, 'https://example.com/o/1');
+  });
+
+  testWidgets('ORDERTRACKER renders nothing without steps', (tester) async {
+    await _pumpScreen(tester, [
+      {'type': 'ORDERTRACKER', 'params': {'title': 'Hidden', 'steps': []}},
+    ]);
+    expect(find.text('Hidden'), findsNothing);
+  });
 }

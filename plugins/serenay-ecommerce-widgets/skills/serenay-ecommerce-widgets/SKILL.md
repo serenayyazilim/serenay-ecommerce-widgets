@@ -8,7 +8,7 @@ description: Build server-driven (backend JSON) e-commerce screens in Flutter wi
 Flutter package (pub.dev: `serenay_ecommerce_widgets`, MIT). The backend sends
 a list of `{ "type": "...", "params": { ... } }` entries.
 `WidgetCatalog.getScreen` renders them top to bottom as one scrolling screen,
-using 39 built-in e-commerce widgets. The package never makes network calls.
+using 42 built-in e-commerce widgets. The package never makes network calls.
 Navigation, product fetching, auth and cart all come from the host app through
 `WidgetCallbacks`, so it works with any backend.
 
@@ -96,7 +96,8 @@ PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL, VIDEOLIST, STORY,
 VISITEDPRODUCTS, TIMEIMAGE, YOUTUBE, SEARCH, FASTREGISTER, RATING, BUNDLE,
 COUPON, CATEGORYMENU, LOYALTYPROGRESS, COMPARISON, ABANDONEDCART, REVIEWS,
 QNA, URGENCY, RECOMMENDEDFORYOU, SOCIALPROOF, SIZEGUIDE, TRUSTBADGES, BRANDS,
-BANNERGRID, ANNOUNCEMENTBAR, TABS, QUICKFILTERS, HOTSPOT.
+BANNERGRID, ANNOUNCEMENTBAR, TABS, QUICKFILTERS, HOTSPOT, ACCORDION, RANKING,
+ORDERTRACKER.
 
 Two shared shapes come up everywhere:
 

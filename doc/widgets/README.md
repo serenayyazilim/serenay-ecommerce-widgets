@@ -62,6 +62,9 @@ widgets and documented once:
 | `TABS` | [tabs.md](tabs.md) |
 | `QUICKFILTERS` | [quick-filters.md](quick-filters.md) |
 | `HOTSPOT` | [hotspot.md](hotspot.md) |
+| `ACCORDION` | [accordion.md](accordion.md) |
+| `RANKING` | [ranking.md](ranking.md) |
+| `ORDERTRACKER` | [order-tracker.md](order-tracker.md) |
 | any other value | rendered as an empty 1px box (forward compatibility) |
 
 For install and quick-start (`WidgetCallbacks`, `WidgetCatalog.getScreen`),

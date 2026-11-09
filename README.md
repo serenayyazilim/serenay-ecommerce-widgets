@@ -26,7 +26,7 @@ per widget type, with JSON schemas and examples — see
 
 ```yaml
 dependencies:
-  serenay_ecommerce_widgets: ^1.6.0
+  serenay_ecommerce_widgets: ^1.6.1
 ```
 
 ## Quick start
@@ -121,7 +121,8 @@ VIDEOLIST, FASTREGISTER, STORY, VISITEDPRODUCTS, TIMEIMAGE, YOUTUBE, SEARCH,
 PRODUCTCARD, FLASHSALE, MODAL, MIXEDCAROUSEL, RATING, BUNDLE, COUPON,
 CATEGORYMENU, LOYALTYPROGRESS, COMPARISON, ABANDONEDCART, REVIEWS, QNA,
 URGENCY, RECOMMENDEDFORYOU, SOCIALPROOF, SIZEGUIDE, TRUSTBADGES, BRANDS,
-BANNERGRID, ANNOUNCEMENTBAR, TABS, QUICKFILTERS, HOTSPOT. An
+BANNERGRID, ANNOUNCEMENTBAR, TABS, QUICKFILTERS, HOTSPOT, ACCORDION,
+RANKING, ORDERTRACKER. An
 unrecognized `type` renders as an empty 1px box (forward compatibility).
 
 GRID has its own card design (taller image, inline video, a pre-order

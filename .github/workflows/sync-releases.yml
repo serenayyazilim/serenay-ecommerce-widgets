@@ -1,0 +1,27 @@
+name: Sync GitHub releases with CHANGELOG
+
+on:
+  push:
+    branches: [main]
+    paths: [CHANGELOG.md, pubspec.yaml]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-releases
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create or update releases from CHANGELOG.md
+        run: .github/scripts/sync-releases.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET: ${{ github.sha }}

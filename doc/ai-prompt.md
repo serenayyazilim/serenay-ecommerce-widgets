@@ -78,8 +78,8 @@ Each entry in `data` (or in the bare array) is:
 
 IMAGE, SLIDER, IMAGECAROUSEL, MODAL, MIXEDCAROUSEL's image pages, STORY's
 footer CTA, SEARCH's submit, CATEGORYMENU items, ABANDONEDCART's CTA,
-BRANDS, BANNERGRID, QUICKFILTERS and HOTSPOT items, and ANNOUNCEMENTBAR
-messages all resolve taps through the same shape, embedded directly in `params` (or in a
+BRANDS, BANNERGRID, QUICKFILTERS and HOTSPOT items, ORDERTRACKER, and
+ANNOUNCEMENTBAR messages all resolve taps through the same shape, embedded directly in `params` (or in a
 list item):
 
 ```json
@@ -178,7 +178,7 @@ all optional.
 
 ## 3. Widget reference
 
-39 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
+42 wire type strings are recognized. `PRODUCTIMAGE` maps to the exact same
 widget as `PRODUCTCARD` (no distinct schema). Any other string renders as an
 empty box.
 
@@ -898,6 +898,47 @@ without one the dot fires it directly. Set `height_percent` (1.0) to the
 image's own aspect ratio so dots stay aligned. Optional: `fit` (`"cover"`),
 `dot_size` (24), `dot_color` (theme primary), `radius` (0), `padding` (0);
 action fields beside `url` make the image itself tappable.
+### `ACCORDION` — collapsible sections (inline list)
+```json
+{
+  "type": "ACCORDION",
+  "params": {
+    "title": "FAQ",
+    "list": [
+      { "title": "When will my order ship?", "text": "Orders placed before 3 PM ship the same day." }
+    ]
+  }
+}
+```
+Each section: `title` (required) + `text` (shown when open). Optional (px):
+`initial_index` (all closed), `text_color` (theme primary text),
+`text_size` (14), `bg_color` (theme surface).
+
+### `RANKING` — "Top 10" product row with rank numbers
+```json
+{ "type": "RANKING", "params": { "title": "Top 10 This Week", "category_id": 75, "order_by": "sales|DESC", "limit": 10 } }
+```
+A §2.2 product query; products are numbered 1, 2, 3, ... in the order
+returned. Optional (px): `title`, `rank_color` (theme primary),
+`item_width` (150), `height` (260), `bg_color`.
+
+### `ORDERTRACKER` — order status card with a step bar
+```json
+{
+  "type": "ORDERTRACKER",
+  "params": {
+    "title": "Your order is on its way",
+    "subtitle": "Arrives tomorrow",
+    "steps": ["Ordered", "Packed", "Shipped", "Delivered"],
+    "current": 2,
+    "type": "link",
+    "url": "https://example.com/orders/1042"
+  }
+}
+```
+`steps` (required) + `current` (0-based, default 0). Optional: `title`,
+`subtitle`, `image`, `active_color` (theme primary), `bg_color`; §2.1
+action fields make the whole card tappable.
 
 ## 4. Output rules
 

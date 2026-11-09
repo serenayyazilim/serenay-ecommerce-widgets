@@ -413,6 +413,9 @@ const _wireNames = {
   WidgetType.tabs: 'TABS',
   WidgetType.quickFilters: 'QUICKFILTERS',
   WidgetType.hotspot: 'HOTSPOT',
+  WidgetType.accordion: 'ACCORDION',
+  WidgetType.ranking: 'RANKING',
+  WidgetType.orderTracker: 'ORDERTRACKER',
   WidgetType.unknown: 'UNKNOWN',
 };
 
@@ -729,6 +732,32 @@ final Map<WidgetType, List<_ParamField>> _paramSchemas = {
     _ParamField('dot_color', 'Dot color', _FieldKind.color),
     _ParamField('radius', 'Radius', _FieldKind.number),
     _ParamField('padding', 'Padding', _FieldKind.number),
+  ],
+  WidgetType.accordion: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField('list', 'Sections (JSON)', _FieldKind.json),
+    _ParamField('initial_index', 'Open section', _FieldKind.number),
+    _ParamField('text_color', 'Text color', _FieldKind.color),
+    _ParamField('text_size', 'Text size', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.ranking: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField('category_id', 'Category ID', _FieldKind.number),
+    _ParamField('limit', 'Limit', _FieldKind.number),
+    _ParamField('rank_color', 'Rank color', _FieldKind.color),
+    _ParamField('item_width', 'Item width', _FieldKind.number),
+    _ParamField('height', 'Row height', _FieldKind.number),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
+  ],
+  WidgetType.orderTracker: const [
+    _ParamField('title', 'Title', _FieldKind.text),
+    _ParamField('subtitle', 'Subtitle', _FieldKind.text),
+    _ParamField('image', 'Image URL', _FieldKind.text),
+    _ParamField('steps', 'Steps (JSON)', _FieldKind.json),
+    _ParamField('current', 'Current step', _FieldKind.number),
+    _ParamField('active_color', 'Active color', _FieldKind.color),
+    _ParamField('bg_color', 'Background', _FieldKind.color),
   ],
   WidgetType.loyaltyProgress: const [
     _ParamField('title', 'Title', _FieldKind.text),
@@ -1857,6 +1886,33 @@ final _mockScreenJson = {
         'list': [
           {'x': 0.4, 'y': 0.3, 'title': 'Wool Coat', 'subtitle': '1.299 TL', 'type': 'product', 'id': 1},
           {'x': 0.6, 'y': 0.8, 'title': 'Chelsea Boots', 'subtitle': '899 TL', 'type': 'product', 'id': 2},
+        ],
+      },
+    },
+    {
+      'type': 'ORDERTRACKER',
+      'params': {
+        'title': 'Your order is on its way',
+        'subtitle': 'Arrives tomorrow',
+        'image': _placeholder('Order', 96, 96, seed: 31),
+        'steps': ['Ordered', 'Packed', 'Shipped', 'Delivered'],
+        'current': 2,
+        'type': 'link',
+        'url': 'https://example.com/orders/1042',
+      },
+    },
+    {
+      'type': 'RANKING',
+      'params': {'title': 'Top 10 This Week', 'category_id': 1, 'limit': 10},
+    },
+    {
+      'type': 'ACCORDION',
+      'params': {
+        'title': 'FAQ',
+        'list': [
+          {'title': 'When will my order ship?', 'text': 'Orders placed before 3 PM ship the same day.'},
+          {'title': 'How do returns work?', 'text': 'Return any item within 30 days for free from the Orders page.'},
+          {'title': 'Which payment methods do you accept?', 'text': 'Credit and debit cards, and installments up to 12 months.'},
         ],
       },
     },

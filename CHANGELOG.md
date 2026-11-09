@@ -1,3 +1,14 @@
+## 1.6.1
+
+Three new widgets. None need a new callback.
+
+- `ACCORDION`: collapsible sections (FAQ, shipping & returns) from an
+  inline `list` of `title` + `text`.
+- `RANKING`: a "Top 10" product row from a product query, with a large
+  rank number beside each card.
+- `ORDERTRACKER`: a "your order is on its way" card with a step bar filled
+  up to `current`; action fields make the card tappable.
+
 ## 1.6.0
 
 Three new widgets. None need a new callback; they use `fetchProducts` and

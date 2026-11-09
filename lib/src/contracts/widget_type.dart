@@ -41,7 +41,10 @@ enum WidgetType {
   announcementBar,
   tabs,
   quickFilters,
-  hotspot;
+  hotspot,
+  accordion,
+  ranking,
+  orderTracker;
 
   static const Map<String, WidgetType> _byWireName = {
     'TEXT': WidgetType.text,
@@ -84,6 +87,9 @@ enum WidgetType {
     'TABS': WidgetType.tabs,
     'QUICKFILTERS': WidgetType.quickFilters,
     'HOTSPOT': WidgetType.hotspot,
+    'ACCORDION': WidgetType.accordion,
+    'RANKING': WidgetType.ranking,
+    'ORDERTRACKER': WidgetType.orderTracker,
   };
 
   /// Parses the backend wire value (exact-match, case-sensitive). Any

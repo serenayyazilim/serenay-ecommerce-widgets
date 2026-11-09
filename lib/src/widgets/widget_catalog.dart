@@ -5,6 +5,7 @@ import '../contracts/widget_entry.dart';
 import '../contracts/widget_type.dart';
 import '../core/theme/ecommerce_widget_theme.dart';
 import 'catalog/abandoned_cart_widget.dart';
+import 'catalog/accordion_widget.dart';
 import 'catalog/announcement_bar_widget.dart';
 import 'catalog/banner_grid_widget.dart';
 import 'catalog/brands_widget.dart';
@@ -25,8 +26,10 @@ import 'catalog/loyalty_progress_widget.dart';
 import 'catalog/mixed_carousel_widget.dart';
 import 'catalog/modal_widget.dart';
 import 'catalog/product_card_widget.dart';
+import 'catalog/order_tracker_widget.dart';
 import 'catalog/qna_widget.dart';
 import 'catalog/quick_filters_widget.dart';
+import 'catalog/ranking_widget.dart';
 import 'catalog/rating_widget.dart';
 import 'catalog/recommended_for_you_widget.dart';
 import 'catalog/reviews_widget.dart';
@@ -173,6 +176,12 @@ class WidgetCatalog {
         return QuickFiltersWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.hotspot:
         return HotspotWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.accordion:
+        return AccordionWidget(params: params, theme: theme);
+      case WidgetType.ranking:
+        return RankingWidget(params: params, callbacks: callbacks, theme: theme);
+      case WidgetType.orderTracker:
+        return OrderTrackerWidget(params: params, callbacks: callbacks, theme: theme);
       case WidgetType.unknown:
         final custom = entry.rawType == null ? null : _customBuilders[entry.rawType];
         if (custom != null) return custom(entry, callbacks, theme);
